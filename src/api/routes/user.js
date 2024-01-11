@@ -2,44 +2,98 @@ var express = require('express');
 var router = express.Router();
 
 const bcrypt = require("bcrypt");
-const User = require("./model/dbUserModel")
+const User = require("./model/user");
+
+const token = require("./token/tokenManager");
 
 // Register a new user
-router.get('/register', function({ body: { email, password } }, res) {
+router.get('/register', function({ body: { username, email, password } }, res) {
 
   // encrypt the password using bcrypt
-  password = bcrypt.hashSync(password, 10)
+  bcrypt.hashSync(password, 10)
 
   // create a new user with password
-  .then((password) => {
+  .then((hash) => {
 
     // create a new user
-    const newUser = new User({
+    const user = new User({
+      username,
       email,
-      password,
+      hash
     });
 
     // tries to save the new user
-    newUser.save()
+    user.save()
     .then(() => {
-      return res.status(201).json({ success: "User was created successfully!" })
+      return res.status(201).json({ success: "Account created successfully!" })
     })
-    .catch(() => {
-      return res.status(500).json({ error: "User failed to create!" });
-    })
+    .catch((error) => {
+      return res.status(500).json({
+        error: "Account creation failed!",
+        message: error.message
+      });
+    });
 
   })
   .catch(() => {
     return res.status(500).json({ error: "Password failed to hash! Please try again!" });
   });
 
-  return res.status(401).json({ error: "Unauthorized!" });
+  return res.status(500).json({ error: "Something went wrong!" });
 
 });
 
-/* GET users listing. */
-router.get('/kakashka', function(req, res, next) {
-  res.send('ya shokoladniy zayets');
+// Login a user
+router.get('/login', function({ body: { handle, password } }, res) {
+
+  // find the user by email
+  (User.findOne({ $or: [{ email: handle }, { username: handle }] }))
+
+  // create a new user with password
+  .then((user) => {
+
+    // compare the password with the user's hash
+    bcrypt.compare(password, user.hash)
+
+    .then((result) => {
+
+      // if the password is correct
+      if (!result) {
+
+        // if the password is incorrect
+        return res.status(400).json({ error: "Incorrect password!" });
+
+      }
+
+      // create a new token
+      generateToken(
+        { 
+          id: _id,
+          username: user.email 
+        },
+        "5d"
+      );
+
+      // return the token
+      return res.status(200).json({
+        success: "User was logged in successfully!",
+        token
+      });
+
+    })
+    .catch(() => {
+      return res.status(400).json({ error: "Password failed to compare! Please try again!" });
+    });
+
+
+  })
+  .catch(() => {
+    return res.status(404).json({ error: "No account is found with the given email!" });
+  });
+
+  return res.status(500).json({ error: "Something went wrong!" });
+
 });
+
 
 module.exports = router;

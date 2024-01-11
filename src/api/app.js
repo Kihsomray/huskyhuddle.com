@@ -6,13 +6,6 @@ var logger = require('morgan');
 
 const databaseConnect = require("./db/dbConnect");
 
-var channelRouter = require('./routes/channel');
-var directMessageRouter = require('./routes/direct-message');
-var guildRouter = require('./routes/guild');
-var messageRouter = require('./routes/message');
-var roleRouter = require('./routes/role');
-var userRouter = require('./routes/user');
-
 var app = express();
 
 // connect to database
@@ -28,12 +21,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/channel', channelRouter);
-app.use('/dm', directMessageRouter);
-app.use('/guild', guildRouter);
-app.use('/message', messageRouter);
-app.use('/role', roleRouter);
-app.use('/user', userRouter);
+app.use('/channel', require('./routes/channel'));
+app.use('/dm', require('./routes/direct-message'));
+app.use('/guild', require('./routes/guild'));
+app.use('/message', require('./routes/message'));
+app.use('/role', require('./routes/role'));
+app.use('/user', require('./routes/user'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
