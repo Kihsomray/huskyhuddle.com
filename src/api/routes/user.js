@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 const bcrypt = require("bcrypt");
-const User = require("./model/user");
+const User = require("../model/user");
 
-const token = require("./token/tokenManager");
+const token = require("../token/token-manager");
 
 // Register a new user
 router.get('/register', function({ body: { username, email, password } }, res) {
