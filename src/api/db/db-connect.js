@@ -13,7 +13,15 @@
 
 // module.exports = dbConnect;
 
-const DATABASE_URL='mysql://8ghle5plc901ec6w64fe:pscale_pw_FcwASMLEx1NxA9CH9AC6xjVLdANheYI3gDhYhnI2Vdd@aws.connect.psdb.cloud/husky-huddle?ssl={"rejectUnauthorized":true}';
+
+
+require('dotenv').config()
+
+let db = process.env.DATABASE_URL;
+
+console.log("this is " + db);
+
+
 
 const express = require('express');
 const mysql = require('mysql');
@@ -22,8 +30,8 @@ const mysql = require('mysql');
 // const mysqlConfig = {
 //     host: "aws.connect.psdb.cloud", 
 //     port: 3306,
-//     user: "8ghle5plc901ec6w64fe", 
-//     password: "pscale_pw_FcwASMLEx1NxA9CH9AC6xjVLdANheYI3gDhYhnI2Vdd",
+//     user: "gogvaiwd7d188g976xvq", 
+//     password: "",
 //     database: "husky-huddle",
 //     debug: false // Connection debugging mode is ON
 // };
@@ -42,7 +50,7 @@ const mysql = require('mysql');
 //     // console.log("result2");
 // };
 
-const connection = mysql.createConnection(DATABASE_URL);
+const connection = mysql.createConnection(db);
 
 // const app = express();
 
