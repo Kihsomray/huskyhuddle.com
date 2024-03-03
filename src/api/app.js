@@ -8,8 +8,27 @@ const databaseConnect = require("./db/db-connect");
 
 var app = express();
 
+
+
 // connect to database
-databaseConnect();
+// let dbConnection = databaseConnect();
+
+// console.log(dbConnection.config.database);
+
+
+
+// const sqlQuery = "SELECT * FROM categories;"
+// databaseConnect.query(sqlQuery, (err, result) => {
+//   if (err) {
+//       console.log("Error");
+//   } 
+//   console.log("result");
+//   console.log(result);
+//   console.log("result2");
+//   result1 = result;
+// });
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
