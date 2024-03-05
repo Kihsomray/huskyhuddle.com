@@ -8,7 +8,7 @@ const Auth = () => {
     //const backgroundImageUrl = 'url("background-image.jpg")';
 
     const containerStyle = {
-        backgroundImage: backgroundImageUrl,
+        //backgroundImage: backgroundImageUrl,
         backgroundSize: 'cover',
         backgroundPosition: 'top left',
         minHeight: '100vh',
