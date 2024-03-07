@@ -40,6 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', require('./routes/info'));
 app.use('/channel', require('./routes/channel'));
 app.use('/dm', require('./routes/direct-message'));
 app.use('/guild', require('./routes/guild'));

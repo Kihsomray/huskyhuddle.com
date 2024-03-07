@@ -8,10 +8,13 @@ const databaseConnect = require("../db/db-connect");
 
 router.get("/", function(req, res, next) {
 
+    console.log("Guild API");
+
     const sqlQuery = "SELECT * FROM Guild;"
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
+            console.log(err);
             res.status(400);
         } 
         // console.log("result");
