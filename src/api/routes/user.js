@@ -22,14 +22,18 @@ router.get("/", function(req, res, next) {
   });
 });
 
-// Create a new guild with the name provided in the body of the request with GuildName : "Some guild name goes here" in the json
+// Create a new user with the name provided in the body of the request with GuildName : "Some guild name goes here" in the json
 // {"UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
 router.post("/", function(req, res, next) {
   console.log("User POST API");
 
-  let UserName = req.body.UserName;
-  let UserEmail = req.body.UserEmail;
-  let UserPass = req.body.UserPass;
+  let UserName = req.header.UserName;
+  let UserEmail = req.header.UserEmail;
+  let UserPass = req.header.UserPass;
+
+  //let UserName = req.body.UserName;
+  //let UserEmail = req.body.UserEmail;
+  //let UserPass = req.body.UserPass;
 
   const sqlQuery = 
       `INSERT INTO User (UserName, UserEmail, UserPass)
@@ -38,7 +42,7 @@ router.post("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json({"BAD" : "TRUE OR IS IT FALSE"});
       } 
       return res.status(200).json(result);
   });
@@ -103,17 +107,40 @@ router.delete("/", function(req, res, next) {
 });
 
 // Get all users, returns a json with all guilds 
-router.get("/", function(req, res, next) {
-  console.log("User API");
+router.get("/auth/", function(req, res, next) {
+  //console.log("User auth");
 
-  const sqlQuery = "SELECT * FROM User;"
+  //console.log(req.headers);
+
+  const UserName = req.headers.username;
+  const UserPass = req.headers.userpass;
+
+  const sqlQuery = 
+    `SELECT UserID 
+    FROM User
+    WHERE UserName = '${UserName}' AND UserPass = '${UserPass}';`
+
+  //console.log(sqlQuery);
+
+
+  let exists;
   databaseConnect.query(sqlQuery, (err, result) => {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json({ "Exists" : "False"});
       } 
-      return res.status(200).json(result);
+      // console.log(result[0]);
+      
+      if (result[0] == undefined) {
+        return res.status(400).json({ "Exists" : 0})
+      }
+      console.log(result[0].UserID);
+      exists = 1; // {"Exists" : "True"}
+
+      console.log(result);
+
+      return res.status(200).json({"Exists" : exists, "UserID" : result[0].UserID});
   });
 });
 
