@@ -7,7 +7,7 @@ const databaseConnect = require("../db/db-connect");
 router.get("/", function(req, res, next) {
     return res.status(200).json({
         name : "HuskyHuddle",
-        version : 1.0
+        version : "1.0.0"
     });
 });
 

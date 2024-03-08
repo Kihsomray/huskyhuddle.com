@@ -6,6 +6,10 @@ const databaseConnect = require("../db/db-connect");
 
 // let dbConnection = databaseConnect;
 
+
+//// Webservice guild/
+
+
 // Get all guilds, returns a json with all guilds 
 router.get("/", function(req, res, next) {
     console.log("Guild API");
@@ -97,6 +101,8 @@ router.delete("/", function(req, res, next) {
 });
 
 
+
+//// Webservice guild/user/
 
 // Grab all of the GuildUsers of this specific guild by the GuildID in the body
 // {"GuildID" : "5"} as an example as of what to put in the body 
@@ -194,6 +200,33 @@ router.delete("/user/", function(req, res, next) {
         return res.status(200).json(result);
     });
 });
+
+
+//// Webservice guild/channel/
+
+
+// Grab all of the channels of this specific guild by the GuildID in the body
+// {"GuildID" : "5"} as an example as of what to put in the body 
+router.get("/channel/", function(req, res, next) {
+    console.log("All channels in this guild");
+
+    let GuildID = req.body.GuildID;
+
+    const sqlQuery = 
+        `SELECT ChannelID, ChannelName
+        FROM Channel
+        WHERE GuildID = ${GuildID};`
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            res.status(400);
+        } 
+        return res.status(200).json(result);
+    });
+});
+
 
 
 // How to get headers, like this
