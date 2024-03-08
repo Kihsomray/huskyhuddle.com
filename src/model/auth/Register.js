@@ -47,21 +47,16 @@ const Register = ({ onLogin }) => {
                     if (e1.status === 200) {
                         console.log(e1.data.UserID);
                         onLogin(e1.data.UserID);
-                    } else {
-                        setWarning('Failed to login user.');
-                        setShowWarning(true);
-                    }
+                    } 
                 }).catch((error) => {
                     setWarning('Failed to login user.');
                     setShowWarning(true);
                 });
 
-            } else {
-                setWarning('Failed to register user.');
-                setShowWarning(true);
-            }
+            } 
+
         }) .catch((error) => {
-            setWarning('Failed to register user.');
+            setWarning('That user already exists.');
             setShowWarning(true);
         });
 
