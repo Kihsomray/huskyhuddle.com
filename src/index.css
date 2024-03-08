@@ -17,6 +17,10 @@ code {
   color: #ffffff;
 } 
 
+.btn-gold-primary, .btn-gold-secondary, .btn-gold-tertiary {
+  color: #000000;
+}
+
 .bg-purple-primary, .btn-purple-primary {
   background-color: #32006e;
 }
@@ -25,15 +29,15 @@ code {
   background-color: #4b2e83;
 }
 
-.bg-gold-primary {
+.bg-gold-primary, .btn-gold-primary {
   background-color: #e8e3d3;
 }
 
-.bg-gold-secondary {
+.bg-gold-secondary, .btn-gold-secondary {
   background-color: #85754d;
 }
 
-.bg-gold-tertiary {
+.bg-gold-tertiary, .btn-gold-tertiary {
   background-color: #ffc700;
 }
 

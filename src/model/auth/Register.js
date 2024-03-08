@@ -1,20 +1,81 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import WarningModal from '../../modal/popup/WarningModal';
 
-const Register = ( {onLogin} ) => {
+const Register = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleRegister = (e) => {
-        e.preventDefault();
-        
-        // do all the validation here
+    const [showWarning, setShowWarning] = useState(false);
+    const [warning, setWarning] = useState('');
 
-        onLogin(username, password);
+    const handleShowWarning = () => {
+        setShowWarning(true);
+    };
+
+    const handleCloseWarning = () => {
+        setShowWarning(false);
+    };
+
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
+        let registerHeaders = {
+            "UserName": username,
+            "UserEmail": email,
+            "UserPass": password
+        }
+
+        await axios.post(
+            'http://localhost:4000/user',
+            null,
+            { headers: registerHeaders }
+        ).then(e => {
+            if (e.status === 200) {
+
+                const authHeaders = {
+                    username: username,
+                    password: password
+                }
+                axios.get(
+                    'http://localhost:4000/user/auth',
+                    null,
+                    { headers: authHeaders }
+                ).then(e1 => {
+                    if (e1.status === 200) {
+                        console.log(e1.data.UserID);
+                        onLogin(e1.data.UserID);
+                    } else {
+                        setWarning('Failed to login user.');
+                        setShowWarning(true);
+                    }
+                }).catch((error) => {
+                    setWarning('Failed to login user.');
+                    setShowWarning(true);
+                });
+
+            } else {
+                setWarning('Failed to register user.');
+                setShowWarning(true);
+            }
+        }) .catch((error) => {
+            setWarning('Failed to register user.');
+            setShowWarning(true);
+        });
+
+
     };
 
     return (
         <div className="container mt-5">
+            {showWarning && (
+                <WarningModal
+                    message={warning}
+                    onClose={handleCloseWarning}
+                />
+            )}
             <div className=" mx-auto" style={{ maxWidth: '400px' }}>
                 <div>
                     <form onSubmit={handleRegister}>

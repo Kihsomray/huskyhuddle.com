@@ -27,9 +27,15 @@ router.get("/", function(req, res, next) {
 router.post("/", function(req, res, next) {
   console.log("User POST API");
 
-  let UserName = req.header.UserName;
-  let UserEmail = req.header.UserEmail;
-  let UserPass = req.header.UserPass;
+  let UserName = req.headers.username;
+  let UserEmail = req.headers.useremail;
+  let UserPass = req.headers.userpass;
+
+  console.log(req.headers)
+
+  console.log(UserName);
+  console.log(UserEmail);
+  console.log(UserPass);
 
   //let UserName = req.body.UserName;
   //let UserEmail = req.body.UserEmail;
@@ -67,7 +73,7 @@ router.put("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json(result);
       } 
       return res.status(200).json(result);
   });
