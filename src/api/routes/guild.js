@@ -180,17 +180,17 @@ router.delete("/user/", function (req, res, next) {
 });
 
 // Get channels from this specific GuildID
-// {"GuildID": "S"} as an example as of what to put in the body
-router.get("/guild/channel/", function (req, res) {
+// {"GuildID": "5"} as an example as of what to put in the body
+router.get("/channel/", function (req, res) {
     console.log("Get all the channels from this guild");
 
-    let GuildID = req.params.GuildID;
+    let GuildID = req.body.GuildID;
 
     if (!GuildID) {
-        return res.status(400).json({ error: "No GuildID specified" });
+        return res.status(400).json({ error: "No GuildID specified"});
     }
 
-    const sqlQuery = `SELECT * FROM channels
+    const sqlQuery = `SELECT * FROM Channel
         WHERE GuildID = ${GuildID}`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
@@ -204,47 +204,47 @@ router.get("/guild/channel/", function (req, res) {
 });
 
 // Create a new channel within the specified guild
-router.post("/guild/channel/", function (req, result) {
+router.post("/channel/", function (req, res) {
     console.log("Create a new channel");
 
     let GuildID = req.body.GuildID;
     let ChannelName = req.body.ChannelName;
 
     const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
-        VALUES (${GuildID}. ${ChannelName})`;
+        VALUES (${GuildID}, '${ChannelName}')`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error creating new channel");
             console.log(err);
-            result.status(400);
+            return res.status(400);
         }
-        return result.status(200).json(result);
+        return res.status(200).json(result);
     });
 });
 
 // Update the name of the channel within the specified guild
-router.put("/guild/channel/", function (req, res) {
+router.put("/channel/", function (req, res) {
     console.log("Update channel name");
 
     let GuildID = req.body.GuildID;
     let ChannelID = req.body.ChannelID;
     let ChannelName = req.body.ChannelName;
 
-    const sqlQuery = `UPDATE Channel SET ChannelName = ${ChannelName}
+    const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
         WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
 
-    databaseConnect.query(sqlQuery, (err, res) => {
+    databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.error("Error updating channelname", err);
-            res.status(404);
+            return res.status(404);
         }
-        return res.status(200).json(res);
+        return res.status(200).json(result);
     });
 });
 
 //Delete a channel within a specified guild
-router.delete("/guild/channel/", function (req, res) {
+router.delete("/channel/", function (req, res) {
     console.log("Deleting a channel");
 
     let GuildID = req.body.GuildID;
@@ -253,12 +253,12 @@ router.delete("/guild/channel/", function (req, res) {
     const sqlQuery = `DELETE FROM Channel
                     WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
 
-    databaseConnect.query(sqlQuery, (err, res) => {
+    databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.error("Error deleting channel");
             res.status(400);
         }
-        return res.status(200).json(res);
+        return res.status(200).json(result);
     });
 });
 
