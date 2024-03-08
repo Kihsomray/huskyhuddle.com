@@ -102,7 +102,20 @@ router.delete("/", function(req, res, next) {
   });
 });
 
+// Get all users, returns a json with all guilds 
+router.get("/", function(req, res, next) {
+  console.log("User API");
 
+  const sqlQuery = "SELECT * FROM User;"
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          res.status(400);
+      } 
+      return res.status(200).json(result);
+  });
+});
 
 
 
