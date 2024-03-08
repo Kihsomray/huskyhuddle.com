@@ -8,7 +8,7 @@ const mysqlConfig = {
     host: "aws.connect.psdb.cloud", 
     port: 3306,
     user: "gogvaiwd7d188g976xvq", 
-    password: "pscale_pw_FeuTEtneIlJIfQH8r0hj5JM2jejUmtkG3GWDVPgZ3UJ", // REMOVE THIS IF YOU PUSH AT ANYTIME
+    password: "", // REMOVE THIS IF YOU PUSH AT ANYTIME
     database: "husky-huddle",
     ssl: true,
     debug: false // Connection debugging mode is ON
