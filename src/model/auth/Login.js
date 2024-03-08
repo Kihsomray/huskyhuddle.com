@@ -20,15 +20,16 @@ const Login = ({ onLogin }) => {
     const handleLogin = (e) => {
         e.preventDefault();
 
-        const data = {
+        const authHeaders = {
             username: username,
-            password: password
+            userpass: password
         }
-        axios.get(
+        axios.post(
             'http://localhost:4000/user/auth',
             null,
-            { headers: data }
+            { headers: authHeaders }
         ).then(e1 => {
+            console.log(e1.status)
             if (e1.status === 200) {
                 console.log(e1.data.UserID);
                 onLogin(e1.data.UserID);

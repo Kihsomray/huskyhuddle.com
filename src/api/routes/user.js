@@ -113,13 +113,17 @@ router.delete("/", function(req, res, next) {
 });
 
 // Get all users, returns a json with all guilds 
-router.get("/auth/", function(req, res, next) {
+router.post("/auth/", function(req, res, next) {
   //console.log("User auth");
 
   //console.log(req.headers);
 
   const UserName = req.headers.username;
   const UserPass = req.headers.userpass;
+
+  console.log(req.headers);
+  console.log(UserName);
+  console.log(UserPass);
 
   const sqlQuery = 
     `SELECT UserID 
@@ -139,6 +143,7 @@ router.get("/auth/", function(req, res, next) {
       // console.log(result[0]);
       
       if (result[0] == undefined) {
+        console.log(1);
         return res.status(400).json({ "Exists" : 0})
       }
       console.log(result[0].UserID);
@@ -146,7 +151,7 @@ router.get("/auth/", function(req, res, next) {
 
       console.log(result);
 
-      return res.status(200).json({"Exists" : exists, "UserID" : result[0].UserID});
+      return exists ? res.status(200).json({"UserID" : result[0].UserID}) : res.status(400).json({ "Exists" : "False"});
   });
 });
 

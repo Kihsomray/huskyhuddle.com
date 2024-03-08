@@ -37,9 +37,9 @@ const Register = ({ onLogin }) => {
 
                 const authHeaders = {
                     username: username,
-                    password: password
+                    userpass: password
                 }
-                axios.get(
+                axios.post(
                     'http://localhost:4000/user/auth',
                     null,
                     { headers: authHeaders }
