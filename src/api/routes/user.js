@@ -158,6 +158,26 @@ router.post("/auth/", function(req, res, next) {
 });
 
 
+// Get all users, returns a json with all guilds 
+router.get("/guild/", function(req, res, next) {
+  console.log("User API");
+
+  let UserID = req.headers.userid;
+
+  const sqlQuery = 
+    `SELECT * FROM Channel
+    WHERE GuildID = ${UserID}`;
+    
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          res.status(400);
+      } 
+      return res.status(200).json(result);
+  });
+});
+
 
 
 
