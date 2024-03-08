@@ -1,19 +1,53 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import WarningModal from '../../modal/popup/WarningModal';
 
 const Login = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const [showWarning, setShowWarning] = useState(false);
+    const [warning, setWarning] = useState('');
+
+    const handleShowWarning = () => {
+        setShowWarning(true);
+    };
+
+    const handleCloseWarning = () => {
+        setShowWarning(false);
+    };
+
     const handleLogin = (e) => {
         e.preventDefault();
 
-        // do all the validation here
+        const authHeaders = {
+            username: username,
+            userpass: password
+        }
+        axios.get(
+            'http://localhost:4000/user/auth',
+            { headers: authHeaders }
+        ).then(e1 => {
+            console.log(e1.status)
+            if (e1.status === 200) {
+                console.log(e1.data.UserID);
+                onLogin(e1.data.UserID);
+            }
+        }).catch((error) => {
+            setWarning('That account does not exist or incorrect password.');
+            setShowWarning(true);
+        });
 
-        onLogin(username, password);
     };
 
     return (
         <div className="container mt-5">
+            {showWarning && (
+                <WarningModal
+                    message={warning}
+                    onClose={handleCloseWarning}
+                />
+            )}
             <div className="mx-auto" style={{ maxWidth: '400px' }}>
                 <form onSubmit={handleLogin}>
                     <div className="mb-3">

@@ -59,14 +59,14 @@ const Auth = ({ onLogin }) => {
         <div style={containerStyle}>
             <div style={{ display: "flex", width: "100%" }} className='btn-purple-secondary'>
                 <img
-                    style={{ maxWidth: "100px", margin: "10px" }}
+                    style={{ maxWidth: "100px", margin: "10px", marginTop: "20px", marginBottom: "0px"}}
                     src="https://uw-s3-cdn.s3.us-west-2.amazonaws.com/wp-content/uploads/sites/230/2023/11/02134810/W-Logo_White.png"
                     alt="Logo"
                 />
                 <h1 style={headerStyle} >HuskyHuddle</h1>
             </div>
             <div className="card mx-auto" style={cardStyle}>
-                <div className="card-header bg-purple-primary text-white">
+                <div className="card-header bg-purple-secondary text-white">
                     <h3 className="mb-0">{isLogin ? "Login" : "Register"}</h3>
                 </div>
                 <div className="card-body bg-gold-primary">

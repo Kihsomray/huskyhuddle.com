@@ -31,6 +31,12 @@ router.post("/", function(req, res, next) {
   let UserEmail = req.headers.useremail;
   let UserPass = req.headers.userpass;
 
+  console.log(req.headers)
+
+  console.log(UserName);
+  console.log(UserEmail);
+  console.log(UserPass);
+
   //let UserName = req.body.UserName;
   //let UserEmail = req.body.UserEmail;
   //let UserPass = req.body.UserPass;
@@ -69,7 +75,7 @@ router.put("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json(result);
       } 
       return res.status(200).json(result);
   });
@@ -117,6 +123,10 @@ router.get("/auth/", function(req, res, next) {
   const UserName = req.headers.username;
   const UserPass = req.headers.userpass;
 
+  console.log(req.headers);
+  console.log(UserName);
+  console.log(UserPass);
+
   const sqlQuery = 
     `SELECT UserID 
     FROM User
@@ -135,6 +145,7 @@ router.get("/auth/", function(req, res, next) {
       // console.log(result[0]);
       
       if (result[0] == undefined) {
+        console.log(1);
         return res.status(400).json({ "Exists" : 0})
       }
       console.log(result[0].UserID);
@@ -142,10 +153,30 @@ router.get("/auth/", function(req, res, next) {
 
       console.log(result);
 
-      return res.status(200).json({"Exists" : exists, "UserID" : result[0].UserID});
+      return exists ? res.status(200).json({"UserID" : result[0].UserID}) : res.status(400).json({ "Exists" : "False"});
   });
 });
 
+
+// Get all users, returns a json with all guilds 
+router.get("/guild/", function(req, res, next) {
+  console.log("User API");
+
+  let UserID = req.headers.userid;
+
+  const sqlQuery = 
+    `SELECT * FROM Channel
+    WHERE GuildID = ${UserID}`;
+    
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          res.status(400);
+      } 
+      return res.status(200).json(result);
+  });
+});
 
 
 

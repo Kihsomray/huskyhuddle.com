@@ -1,28 +1,30 @@
 import React, { useState } from 'react';
 import Auth from './auth/Auth';
 import HomePage from './home/HomePage';
+import { useCookies } from 'react-cookie';
 
 const App = () => {
-    const [username, setUsername] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [cookies, setCookie, removeCookie] = useCookies(['login']);
+    const [userID, setUserID] = useState(null);
 
-    const handleLogin = (username, password) => {
-        console.log('Login', username)
-        setUsername(username);
-        setPassword(password);
+    const handleLogin = (userID) => {
+        let threeDays = new Date();
+        threeDays.setDate(threeDays.getDate() + 1);
+        setCookie('login', userID, { path: '/', expires: threeDays});
+        setUserID(userID);
     };
 
     const handleLogout = () => {
-        setUsername(null);
-        setPassword(null);
+        removeCookie('login');
+        setUserID(null);
     };
+
+    console.log(cookies.login);
 
     return (
         <div>
-            {(username && password) ? (
+            {(userID || cookies.login) ? (
                 <HomePage
-                    username={ username }
-                    password={ password }
                     onLogout={ handleLogout }
                 />
             ) : (
