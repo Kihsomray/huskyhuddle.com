@@ -48,9 +48,11 @@ router.post("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          return res.status(400).json({"BAD" : "TRUE OR IS IT FALSE"});
+          return res.status(400).json({"Error" : err.sqlMessage});
       } 
-      return res.status(200).json(result);
+
+      console.log(result.insertId);
+      return res.status(200).json({"UserID" : result.insertId});
   });
 });
 
