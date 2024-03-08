@@ -27,9 +27,9 @@ router.get("/", function(req, res, next) {
 router.post("/", function(req, res, next) {
   console.log("User POST API");
 
-  let UserName = req.header.UserName;
-  let UserEmail = req.header.UserEmail;
-  let UserPass = req.header.UserPass;
+  let UserName = req.headers.username;
+  let UserEmail = req.headers.useremail;
+  let UserPass = req.headers.userpass;
 
   //let UserName = req.body.UserName;
   //let UserEmail = req.body.UserEmail;
@@ -42,9 +42,11 @@ router.post("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          return res.status(400).json({"BAD" : "TRUE OR IS IT FALSE"});
+          return res.status(400).json({"Error" : err.sqlMessage});
       } 
-      return res.status(200).json(result);
+
+      console.log(result.insertId);
+      return res.status(200).json({"UserID" : result.insertId});
   });
 });
 
