@@ -24,9 +24,8 @@ const Login = ({ onLogin }) => {
             username: username,
             userpass: password
         }
-        axios.post(
+        axios.get(
             'http://localhost:4000/user/auth',
-            null,
             { headers: authHeaders }
         ).then(e1 => {
             console.log(e1.status)

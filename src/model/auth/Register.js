@@ -39,9 +39,8 @@ const Register = ({ onLogin }) => {
                     username: username,
                     userpass: password
                 }
-                axios.post(
+                axios.get(
                     'http://localhost:4000/user/auth',
-                    null,
                     { headers: authHeaders }
                 ).then(e1 => {
                     if (e1.status === 200) {

@@ -115,7 +115,7 @@ router.delete("/", function(req, res, next) {
 });
 
 // Get all users, returns a json with all guilds 
-router.post("/auth/", function(req, res, next) {
+router.get("/auth/", function(req, res, next) {
   //console.log("User auth");
 
   //console.log(req.headers);
