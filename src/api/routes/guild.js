@@ -5,6 +5,10 @@ const databaseConnect = require("../db/db-connect");
 
 // let dbConnection = databaseConnect;
 
+
+//// Webservice guild/
+
+
 // Get all guilds, returns a json with all guilds
 router.get("/", function (req, res, next) {
     console.log("Guild API");
@@ -89,6 +93,8 @@ router.delete("/", function (req, res, next) {
         return res.status(200).json(result);
     });
 });
+
+//// Webservice guild/user/
 
 // Grab all of the GuildUsers of this specific guild by the GuildID in the body
 // {"GuildID" : "5"} as an example as of what to put in the body
@@ -202,6 +208,91 @@ router.get("/channel/", function (req, res) {
         return res.status(200).json(result);
     });
 });
+
+// Create a new channel within the specified guild
+router.post("/channel/", function (req, res) {
+    console.log("Create a new channel");
+
+    let GuildID = req.body.GuildID;
+    let ChannelName = req.body.ChannelName;
+
+    const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
+        VALUES (${GuildID}, '${ChannelName}')`;
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("Error creating new channel");
+            console.log(err);
+            return res.status(400);
+        }
+        return res.status(200).json(result);
+    });
+});
+
+// Update the name of the channel within the specified guild
+router.put("/channel/", function (req, res) {
+    console.log("Update channel name");
+
+    let GuildID = req.body.GuildID;
+    let ChannelID = req.body.ChannelID;
+    let ChannelName = req.body.ChannelName;
+
+    const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
+        WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.error("Error updating channelname", err);
+            return res.status(404);
+        }
+        return res.status(200).json(result);
+    });
+});
+
+//Delete a channel within a specified guild
+router.delete("/channel/", function (req, res) {
+    console.log("Deleting a channel");
+
+    let GuildID = req.body.GuildID;
+    let ChannelID = req.body.ChannelID;
+
+    const sqlQuery = `DELETE FROM Channel
+                    WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.error("Error deleting channel");
+            res.status(400);
+        }
+        return res.status(200).json(result);
+    });
+});
+
+//// Webservice guild/channel/
+
+
+// Grab all of the channels of this specific guild by the GuildID in the body
+// {"GuildID" : "5"} as an example as of what to put in the body 
+router.get("/channel/", function(req, res, next) {
+    console.log("All channels in this guild");
+
+    let GuildID = req.body.GuildID;
+
+    const sqlQuery = 
+        `SELECT ChannelID, ChannelName
+        FROM Channel
+        WHERE GuildID = ${GuildID};`
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            res.status(400);
+        }
+        return res.status(200).json(result);
+    });
+});
+
 
 // Create a new channel within the specified guild
 router.post("/channel/", function (req, res) {
