@@ -35,7 +35,7 @@ const Login = ({ onLogin }) => {
                 onLogin(e1.data.UserID);
             }
         }).catch((error) => {
-            setWarning('That account does not exist.');
+            setWarning('That account does not exist or incorrect password.');
             setShowWarning(true);
         });
 
