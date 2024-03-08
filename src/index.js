@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Login from './model/auth/Login';
-import Register from './model/auth/Register';
-import Auth from './model/auth/Auth';
+import App from './model/App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
     <React.StrictMode>
-        <Auth />
+        <App />
     </React.StrictMode>
 );
 

@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 
-const Register = () => {
+const Register = ( {onLogin} ) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleRegister = (e) => {
         e.preventDefault();
-        console.log('Username:', username);
-        console.log('Email:', email);
-        console.log('Password:', password);
+        
+        // do all the validation here
+
+        onLogin(username, password);
     };
 
     return (
         <div className="container mt-5">
-            <div className="card mx-auto" style={{ maxWidth: '400px' }}>
-                <div className="card-header bg-success text-white">
-                    <h3 className="mb-0">Register</h3>
-                </div>
-                <div className="card-body">
+            <div className=" mx-auto" style={{ maxWidth: '400px' }}>
+                <div>
                     <form onSubmit={handleRegister}>
                         <div className="mb-3">
                             <label htmlFor="username" className="form-label">
@@ -56,7 +54,7 @@ const Register = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="btn btn-success btn-block">
+                        <button type="submit" className="btn btn-purple-secondary btn-block">
                             Register
                         </button>
                     </form>
