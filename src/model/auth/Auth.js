@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './Login';
 import Register from './Register';
+import axios from 'axios';
 
 const Auth = ({ onLogin }) => {
 
     const [isLogin, setLogin] = useState(true);
+    const [version, setVersion] = useState({ name: '', version: '' });
 
     const containerStyle = {
         backgroundSize: 'cover',
@@ -40,11 +42,24 @@ const Auth = ({ onLogin }) => {
         margin: 0,
     }
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/');
+                setVersion(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div style={containerStyle}>
             <div style={{ display: "flex", width: "100%" }} className='btn-purple-secondary'>
                 <img
-                    style={{ maxWidth: "100px", margin: "10px"}}
+                    style={{ maxWidth: "100px", margin: "10px" }}
                     src="https://uw-s3-cdn.s3.us-west-2.amazonaws.com/wp-content/uploads/sites/230/2023/11/02134810/W-Logo_White.png"
                     alt="Logo"
                 />
@@ -67,7 +82,7 @@ const Auth = ({ onLogin }) => {
                     </p>
                 </div>
             </div>
-            <p className='btn-purple-secondary' style={footerStyle}>&copy; HuskyHuddle Team 2024</p>
+            <p className='btn-purple-secondary' style={footerStyle}>&copy; {version.name} Team 2024 v{version.version}.</p>
         </div>
     );
 };
