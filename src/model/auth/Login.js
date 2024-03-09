@@ -33,11 +33,10 @@ const Login = ({ onLogin }) => {
                 console.log(e1.data.UserID);
                 onLogin(e1.data.UserID);
             }
-        }).catch((error) => {
+        }).catch((_) => {
             setWarning('That account does not exist or incorrect password.');
             setShowWarning(true);
         });
-
     };
 
     return (

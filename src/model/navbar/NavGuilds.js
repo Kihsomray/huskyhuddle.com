@@ -1,25 +1,39 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
 const NavGuilds = ({ onLogout }) => {
 
     const [username, setUsername] = useState('');
+    const [guilds, setGuilds] = useState([]);
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
 
-    const handleUsername = async () => {
-        await axios.get(
-            `http://localhost:4000/user/${cookies.login}`
-        ).then(e => {
-            setUsername(e.data[0].UserName);
-        }) .catch((error) => {
-            console.log("unable to fetch user data");
-        });
+    useEffect(() =>{
+        (async () => {
+            await axios.get(
+                `http://localhost:4000/user/${cookies.login}`
+            ).then(e => {
+                setUsername(e.data[0].UserName);
+            }).catch((_) => {
+                console.log("unable to fetch user data");
+            });
+        })();
+    }, [cookies.login]);
 
+    useEffect(() => {
+        (async () => {
+            await axios.get(
+                "http://localhost:4000/user/guild/",
+                { headers: { "userid": cookies.login } }
+            ).then(e => {
+                setGuilds(e.data);
+            }).catch((_) => {
+                console.log("unable to fetch user data");
+            });
+        })();
+    }, [cookies.login]);
 
-    };
-
-    handleUsername();
+    console.log(guilds);
 
     const iconStyle = {
         cursor: 'pointer',
@@ -53,21 +67,18 @@ const NavGuilds = ({ onLogout }) => {
                         <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671" />
                     </svg>
                 </span>
-                <span
-                    className='icon btn-purple-primary'
-                    style={iconStyle}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseExit}
-                >1</span>
-                <span
-                    className='icon btn-purple-primary'
-                    style={iconStyle}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseExit}
-                >2</span>
+                {guilds.map((guild, index) => (
+                    <span
+                        key={index}
+                        className='icon btn-purple-primary'
+                        style={iconStyle}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseExit}
+                    >{guild.GuildName[0].charAt(0)}</span>
+                ))}
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ marginRight: '10px', color: '#fff' }}>{username}</span>
+                <span style={{ marginRight: '14px', color: '#fff' }}>{username}</span>
                 <span
                     className='icon btn-purple-primary'
                     style={iconStyle}

@@ -160,9 +160,7 @@ router.get("/auth/", function(req, res, next) {
 
 // Get all users, returns a json with all guilds 
 router.get("/guild/", function(req, res, next) {
-  console.log("User API");
-
-  let UserID = req.headers.userid;
+  const UserID = req.headers.userid;
 
   const sqlQuery = 
     `SELECT g.GuildID, g.GuildName
@@ -170,11 +168,12 @@ router.get("/guild/", function(req, res, next) {
     JOIN Guild g ON gu.GuildID = g.GuildID
     WHERE gu.UserID = ${UserID};`;
     
+  console.log(UserID)
   databaseConnect.query(sqlQuery, (err, result) => {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json(result);
       } 
       return res.status(200).json(result);
   });
