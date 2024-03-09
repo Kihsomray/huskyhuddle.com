@@ -5,7 +5,9 @@ const databaseConnect = require("../db/db-connect");
 
 // let dbConnection = databaseConnect;
 
+
 //// Webservice guild/
+
 
 // Get all guilds, returns a json with all guilds
 router.get("/", function (req, res, next) {
@@ -15,7 +17,7 @@ router.get("/", function (req, res, next) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -34,7 +36,7 @@ router.post("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -55,7 +57,7 @@ router.put("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -78,7 +80,7 @@ router.delete("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         //return res.status(200).json(result);
     });
@@ -86,7 +88,7 @@ router.delete("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -111,7 +113,7 @@ router.get("/user/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            return res.status(400).json({"Error" : "Uh-oh"});
         }
         return res.status(200).json(result);
     });
@@ -156,7 +158,7 @@ router.put("/user/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -177,7 +179,7 @@ router.delete("/user/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -191,7 +193,7 @@ router.get("/channel/", function (req, res) {
     let GuildID = req.body.GuildID;
 
     if (!GuildID) {
-        return res.status(400).json({ error: "No GuildID specified" });
+        return res.status(400).json({ error: "No GuildID specified"});
     }
 
     const sqlQuery = `SELECT * FROM Channel
@@ -201,7 +203,7 @@ router.get("/channel/", function (req, res) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -260,7 +262,7 @@ router.delete("/channel/", function (req, res) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.error("Error deleting channel");
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -268,26 +270,29 @@ router.delete("/channel/", function (req, res) {
 
 //// Webservice guild/channel/
 
+
 // Grab all of the channels of this specific guild by the GuildID in the body
-// {"GuildID" : "5"} as an example as of what to put in the body
-router.get("/channel/", function (req, res, next) {
+// {"GuildID" : "5"} as an example as of what to put in the body 
+router.get("/channel/", function(req, res, next) {
     console.log("All channels in this guild");
 
     let GuildID = req.body.GuildID;
 
-    const sqlQuery = `SELECT ChannelID, ChannelName
+    const sqlQuery = 
+        `SELECT ChannelID, ChannelName
         FROM Channel
-        WHERE GuildID = ${GuildID};`;
+        WHERE GuildID = ${GuildID};`
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });
 });
+
 
 // Create a new channel within the specified guild
 router.post("/channel/", function (req, res) {
@@ -342,7 +347,7 @@ router.delete("/channel/", function (req, res) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.error("Error deleting channel");
-            return res.status(400);
+            res.status(400);
         }
         return res.status(200).json(result);
     });

@@ -165,8 +165,10 @@ router.get("/guild/", function(req, res, next) {
   let UserID = req.headers.userid;
 
   const sqlQuery = 
-    `SELECT * FROM Channel
-    WHERE GuildID = ${UserID}`;
+    `SELECT g.GuildID, g.GuildName
+    FROM GuildUser gu
+    JOIN Guild g ON gu.GuildID = g.GuildID
+    WHERE gu.UserID = ${UserID};`;
     
   databaseConnect.query(sqlQuery, (err, result) => {
       if (err) {
