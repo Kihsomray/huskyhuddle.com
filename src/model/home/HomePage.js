@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import NavGuilds from '../navbar/NavGuilds';
 
-const HomePage = ({ username, password, onLogout }) => {
+const HomePage = ({ onLogout }) => {
     console.log('Welcome {username} to the homepage');
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -15,17 +16,8 @@ const HomePage = ({ username, password, onLogout }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '1px solid #ccc' }}>
-                <div>
-                    {/* Add your clickable icons here */}
-                    <span style={{ marginRight: '10px' }}>Icon1</span>
-                    <span>Icon2</span>
-                </div>
-                <div>
-                    <p>User Name</p>
-                    <button onClick={onLogout}>Logout</button>
-                </div>
-            </div>
+
+            <NavGuilds onLogout={onLogout} />
 
             {/* Main Content Area */}
             <div style={{ display: 'flex', flex: 1 }}>
