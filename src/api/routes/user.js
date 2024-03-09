@@ -114,22 +114,6 @@ router.delete("/", function(req, res, next) {
   });
 });
 
-
-router.get("/:userId", function(req, res, next) {
-  const userid = req.params.userId;
-
-  const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
-
-  databaseConnect.query(sqlQuery, (err, result) => {
-      if (err) {
-          console.log("Error");
-          console.log(err);
-          return res.status(400).json(result);
-      } 
-      return res.status(200).json(result);
-  });
-});
-
 // Get all users, returns a json with all guilds 
 router.get("/auth/", function(req, res, next) {
   //console.log("User auth");
@@ -230,6 +214,21 @@ router.get("/test/", function(req, res, next) {
 });
 
 
+
+router.get("/:userId", function(req, res, next) {
+  const userid = req.params.userId;
+
+  const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
+
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
+      } 
+      return res.status(200).json(result);
+  });
+});
 
 // const fetchData = async () => {
 //   try {

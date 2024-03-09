@@ -1,6 +1,25 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-const NavGuilds = ({ onLogout, username }) => {
+const NavGuilds = ({ onLogout }) => {
+
+    const [username, setUsername] = useState('');
+    const [cookies, setCookie, removeCookie] = useCookies(['login']);
+
+    const handleUsername = async () => {
+        await axios.get(
+            `http://localhost:4000/user/${cookies.login}`
+        ).then(e => {
+            setUsername(e.data[0].UserName);
+        }) .catch((error) => {
+            console.log("unable to fetch user data");
+        });
+
+
+    };
+
+    handleUsername();
 
     const iconStyle = {
         cursor: 'pointer',
@@ -30,7 +49,7 @@ const NavGuilds = ({ onLogout, username }) => {
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span><img src="https://michael.yarmoshik.com/assets/images/dawg_dialogue.png" style={{ width: "70px", paddingBottom: "6px", paddingRight: "0px" }} alt="Logo"></img></span>
                 <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chevron-compact-right" viewBox="4 0 12 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-chevron-compact-right" viewBox="4 0 12 16">
                         <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671" />
                     </svg>
                 </span>
