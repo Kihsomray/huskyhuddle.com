@@ -16,7 +16,7 @@ router.get("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json(result);
       } 
       return res.status(200).json(result);
   });
@@ -109,6 +109,22 @@ router.delete("/", function(req, res, next) {
           console.log("Error");
           console.log(err);
           res.status(400);
+      } 
+      return res.status(200).json(result);
+  });
+});
+
+
+router.get("/:userId", function(req, res, next) {
+  const userid = req.params.userId;
+
+  const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
+
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
       } 
       return res.status(200).json(result);
   });
