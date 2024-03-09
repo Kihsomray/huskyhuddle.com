@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
-            res.status(400);
+            return res.status(400);
         }
         return res.status(200).json(result);
     });
@@ -33,7 +33,7 @@ router.get("/message/", function (req, res) {
             console.log(
                 "Error getting the last ${limit} messages sent into the channel"
             );
-            res.statis(400);
+            return res.status(400);
         }
         return res.status(200).json(res);
     });
@@ -59,7 +59,7 @@ router.post("/message/", function (req, res) {
     databaseConnect.query(sqlQuery, (err, res) => {
         if (err) {
             console.log("Error adding message to channel", err);
-            res.status(400);
+            return res.status(400);
         }
         return res.status(200).json(res);
     });
@@ -83,7 +83,7 @@ router.put("/message/", function (req, res) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error updating message content", err);
-            res.status(400);
+            return res.status(400);
         }
         return res.status(200).json(result);
     });
