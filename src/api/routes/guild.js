@@ -103,7 +103,7 @@ router.delete("/", function (req, res, next) {
 router.get("/user/", function (req, res, next) {
     console.log("All users in this guild");
 
-    let GuildID = req.body.GuildID;
+    let GuildID = req.headers.GuildID;
 
     const sqlQuery = `SELECT GU.UserID, U.UserName, GU.Role
         FROM GuildUser GU
