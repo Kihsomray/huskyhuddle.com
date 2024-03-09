@@ -47,7 +47,7 @@ router.post("/message/", function (req, res) {
 
     console.log("Sending a message to channel");
 
-    if (!ChannelId || !messageContent) {
+    if (!channelId || !messageContent) {
         return res
             .status(400)
             .json({ error: "ChannelID, MessageContent are required in body." });

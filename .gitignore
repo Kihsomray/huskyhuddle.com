@@ -24,4 +24,3 @@ yarn-error.log*
 
 src/api/.env
 .env
-src/api/db/db-connect.js
