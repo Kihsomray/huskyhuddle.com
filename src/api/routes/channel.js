@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
-            return res.status(400);
+            return res.status(400).json({ error: "Internal Server Error" });
         }
         return res.status(200).json(result);
     });
@@ -28,15 +28,17 @@ router.get("/message/", function (req, res, next) {
     console.log(`Getting the last ${limit} messages sent into the channel`);
 
     const sqlQuery = `SELECT * FROM Message 
-                    WHERE ChannelID = ${channelID};`;
+                    WHERE ChannelID = ${channelID} LIMIT ${limit};`;
     // const sqlQuery = `SELECT *  FROM Channel;`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log(
-                "Error getting the last ${limit} messages sent into the channel"
+                `Error getting the last ${limit} messages sent into the channel`
             );
-            return res.status(400).json({});
+            return res.status(400).json({
+                error: `Error getting the last ${limit} messages sent into the channel`,
+            });
         }
         return res.status(200).json(result);
     });
@@ -64,17 +66,19 @@ router.post("/message/", function (req, res) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error adding message to channel", err);
-            return res.status(400).json({"Error adding message to channel" : err});
+            return res
+                .status(400)
+                .json({ "Error adding message to channel": err });
         }
-        return res.status(200).json(result);
+        return res.status(200).json({ MessageID: result.insertId });
     });
 });
 
 //Edit message in a specific channel
-router.put("/message/", function (req, res) {
-    let channelId = req.body.ChannelId;
-    let messageId = req.body.MessageId;
-    let messageContent = req.body.MessageContent;
+router.put("/message/", function (req, res, next) {
+    let channelId = req.body.ChannelID;
+    let messageId = req.body.MessageID;
+    let messageContent = req.body.Content;
 
     if (!channelId || !messageId || !messageContent) {
         return res.status(400).json({
@@ -82,22 +86,29 @@ router.put("/message/", function (req, res) {
         });
     }
 
-    const sqlQuery = `UPDATE Message SET MessageContent = ${messageContent} 
+    const sqlQuery = `UPDATE Message SET MessageContent = "${messageContent}" 
                     WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error updating message content", err);
-            return res.status(400);
+            return res
+                .status(400)
+                .json({ error: "Error updating message content" });
+        }
+        if (result.affectedRows == 0) {
+            return res
+                .status(400)
+                .json({ error: "No message with messageID specified" });
         }
         return res.status(200).json(result);
     });
 });
 
 // Delete a message from this Channel
-router.delete("/message/", function (req, res) {
-    let channelId = req.body.ChannelId;
-    let messageId = req.body.MessageId;
+router.delete("/message/", function (req, res, next) {
+    let channelId = req.body.ChannelID;
+    let messageId = req.body.MessageID;
 
     if (!channelId || !messageId) {
         return res

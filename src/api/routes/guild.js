@@ -17,7 +17,9 @@ router.get("/", function (req, res, next) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
-            res.status(400);
+            return res
+                .status(400)
+                .json({ error: "Couldn't connect to database" });
         }
         return res.status(200).json(result);
     });
@@ -36,9 +38,9 @@ router.post("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return result.status(400);
         }
-        return res.status(200).json(result);
+        return result.status(200).json(result);
     });
 });
 
