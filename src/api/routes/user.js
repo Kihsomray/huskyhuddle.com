@@ -4,7 +4,14 @@ var axios = require('axios');
 
 const databaseConnect = require("../db/db-connect");
 
+// /user/ and /user/guild/
 
+// IDEA 
+// Keep track of ip addresses
+// ipify.org
+// Local servers?
+// Weather information based on ip address
+// openweathermap
 
 //// Webservice /user/
 
@@ -161,7 +168,7 @@ router.delete("/", function(req, res, next) {
   });
 });
 
-// Get all users, returns a json with all guilds 
+// Get all users, returns a json with all guilds     localhost4000/user/auth
 router.get("/auth/", function(req, res, next) {
   //console.log("User auth");
 

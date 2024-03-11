@@ -3,6 +3,8 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
+// /channel/ and /channel/message/
+
 router.get("/", function (req, res, next) {
     console.log("Getting all Channel ID and Names...");
 

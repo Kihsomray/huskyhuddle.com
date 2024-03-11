@@ -5,7 +5,7 @@ const databaseConnect = require("../db/db-connect");
 
 // let dbConnection = databaseConnect;
 
-
+// /guild/ and /guild/user/ and /guild/channel/
 
 //// Webservice guild/
 
