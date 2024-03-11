@@ -4,10 +4,11 @@ var axios = require('axios');
 
 const databaseConnect = require("../db/db-connect");
 
+
+
 //// Webservice /user/
 
-
-// Get all users, returns a json with all guilds 
+// Get all users, returns a json with all users and their info 
 router.get("/", function(req, res, next) {
   console.log("User API");
 
@@ -22,8 +23,10 @@ router.get("/", function(req, res, next) {
   });
 });
 
-// Create a new user with the name provided in the body of the request with GuildName : "Some guild name goes here" in the json
-// {"UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
+// Create a new user with the name provided 
+// Pass the data(username, useremail, and userpass) in the header
+// This is a second degree endpoint that calls another endpoint to get the person added to the default server
+// The default server is the first server that was created.
 router.post("/", function(req, res, next) {
   console.log("User POST API");
 
@@ -41,6 +44,8 @@ router.post("/", function(req, res, next) {
   //let UserEmail = req.body.UserEmail;
   //let UserPass = req.body.UserPass;
 
+  let userID = 0;
+
   const sqlQuery = 
       `INSERT INTO User (UserName, UserEmail, UserPass)
       VALUES ('${UserName}', '${UserEmail}', '${UserPass}');`;
@@ -50,10 +55,52 @@ router.post("/", function(req, res, next) {
           console.log(err);
           return res.status(400).json({"Error" : err.sqlMessage});
       } 
-
+      userID = result.insertId;
       console.log(result.insertId);
-      return res.status(200).json({"UserID" : result.insertId});
+
+
+      const registerHeaders = {
+        "guildid": "1",
+        "userid": userID,
+        "role": "Member"
+      };
+    
+      const fetchData = async (response) => {
+        try {
+            response = await axios.post(
+              'http://localhost:4000/guild/user/',
+              null,
+              { headers: registerHeaders }
+            );
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+      };
+    
+      fetchData().then(e => {
+        console.log(e.data);
+    
+        // const sqlQuery = "SELECT * FROM User;"
+        // databaseConnect.query(sqlQuery, (err, result) => {
+        //     if (err) {
+        //         console.log("Error");
+        //         console.log(err);
+        //         res.status(400);
+        //     } 
+            
+        //     return res.status(200).json(result);
+        // });
+      });
+    
+    
+      return res.status(200).json({"UserID" : userID});
+      //return res.status(200).json({"UserID" : result.insertId});
   });
+  
+
+  
+  
 });
 
 // Update a user with a new name, email and password, this requires all three pieces of data even if you only want one. 

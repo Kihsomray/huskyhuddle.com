@@ -6,8 +6,8 @@ const databaseConnect = require("../db/db-connect");
 // let dbConnection = databaseConnect;
 
 
-//// Webservice guild/
 
+//// Webservice guild/
 
 // Get all guilds, returns a json with all guilds
 router.get("/", function (req, res, next) {
