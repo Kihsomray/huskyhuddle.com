@@ -30,7 +30,7 @@ router.get("/", function (req, res, next) {
 router.post("/", function (req, res, next) {
     console.log("Guild POST API");
 
-    let GuildName = req.body.GuildName;
+    let GuildName = req.headers.GuildName;
 
     const sqlQuery = `INSERT INTO Guild (GuildName)
         VALUES ('${GuildName}');`;
@@ -49,8 +49,8 @@ router.post("/", function (req, res, next) {
 router.put("/", function (req, res, next) {
     console.log("Guild update");
 
-    let GuildName = req.body.GuildName;
-    let GuildID = req.body.GuildID;
+    let GuildName = req.headers.GuildName;
+    let GuildID = req.headers.GuildID;
 
     const sqlQuery = `UPDATE Guild
         SET GuildName = '${GuildName}'
@@ -70,7 +70,7 @@ router.put("/", function (req, res, next) {
 router.delete("/", function (req, res, next) {
     console.log("Guild Delete");
 
-    let GuildID = req.body.GuildID;
+    let GuildID = req.headers.GuildID;
 
     // Delete the members of a guild, this is safe because the users are still guildusers
     // of any other guild they are a part of but they are removed from this specific guild
@@ -126,9 +126,9 @@ router.get("/user/", function (req, res, next) {
 router.post("/user/", function (req, res, next) {
     console.log("Add a new user to the guild");
 
-    let GuildID = req.body.GuildID;
-    let UserID = req.body.UserID;
-    let Role = req.body.Role;
+    let GuildID = req.headers.GuildID;
+    let UserID = req.headers.UserID;
+    let Role = req.headers.Role;
 
     const sqlQuery = `INSERT INTO GuildUser (GuildID, UserID, Role)
         VALUES (${GuildID}, ${UserID}, '${Role}');`;
@@ -148,9 +148,9 @@ router.post("/user/", function (req, res, next) {
 router.put("/user/", function (req, res, next) {
     console.log("Update a GuildUsers role");
 
-    let GuildID = req.body.GuildID;
-    let UserID = req.body.UserID;
-    let Role = req.body.Role;
+    let GuildID = req.headers.GuildID;
+    let UserID = req.headers.UserID;
+    let Role = req.headers.Role;
 
     const sqlQuery = `UPDATE GuildUser
         SET Role = '${Role}'
@@ -171,8 +171,8 @@ router.put("/user/", function (req, res, next) {
 router.delete("/user/", function (req, res, next) {
     console.log("Remove a guild user");
 
-    let GuildID = req.body.GuildID;
-    let UserID = req.body.UserID;
+    let GuildID = req.headers.GuildID;
+    let UserID = req.headers.UserID;
 
     const sqlQuery = `DELETE FROM GuildUser
         WHERE GuildID = ${GuildID} AND UserID = ${UserID};`;
@@ -192,7 +192,7 @@ router.delete("/user/", function (req, res, next) {
 router.get("/channel/", function (req, res) {
     console.log("Get all the channels from this guild");
 
-    let GuildID = req.body.GuildID;
+    let GuildID = req.headers.GuildID;
 
     if (!GuildID) {
         return res.status(400).json({ error: "No GuildID specified"});
@@ -215,8 +215,8 @@ router.get("/channel/", function (req, res) {
 router.post("/channel/", function (req, res) {
     console.log("Create a new channel");
 
-    let GuildID = req.body.GuildID;
-    let ChannelName = req.body.ChannelName;
+    let GuildID = req.headers.GuildID;
+    let ChannelName = req.headers.ChannelName;
 
     const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
         VALUES (${GuildID}, '${ChannelName}')`;
@@ -235,9 +235,9 @@ router.post("/channel/", function (req, res) {
 router.put("/channel/", function (req, res) {
     console.log("Update channel name");
 
-    let GuildID = req.body.GuildID;
-    let ChannelID = req.body.ChannelID;
-    let ChannelName = req.body.ChannelName;
+    let GuildID = req.headers.GuildID;
+    let ChannelID = req.headers.ChannelID;
+    let ChannelName = req.headers.ChannelName;
 
     const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
         WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
@@ -255,8 +255,8 @@ router.put("/channel/", function (req, res) {
 router.delete("/channel/", function (req, res) {
     console.log("Deleting a channel");
 
-    let GuildID = req.body.GuildID;
-    let ChannelID = req.body.ChannelID;
+    let GuildID = req.headers.GuildID;
+    let ChannelID = req.headers.ChannelID;
 
     const sqlQuery = `DELETE FROM Channel
                     WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
@@ -278,7 +278,7 @@ router.delete("/channel/", function (req, res) {
 router.get("/channel/", function(req, res, next) {
     console.log("All channels in this guild");
 
-    let GuildID = req.body.GuildID;
+    let GuildID = req.headers.GuildID;
 
     const sqlQuery = 
         `SELECT ChannelID, ChannelName
@@ -300,8 +300,8 @@ router.get("/channel/", function(req, res, next) {
 router.post("/channel/", function (req, res) {
     console.log("Create a new channel");
 
-    let GuildID = req.body.GuildID;
-    let ChannelName = req.body.ChannelName;
+    let GuildID = req.headers.GuildID;
+    let ChannelName = req.headers.ChannelName;
 
     const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
         VALUES (${GuildID}, '${ChannelName}')`;
@@ -320,9 +320,9 @@ router.post("/channel/", function (req, res) {
 router.put("/channel/", function (req, res) {
     console.log("Update channel name");
 
-    let GuildID = req.body.GuildID;
-    let ChannelID = req.body.ChannelID;
-    let ChannelName = req.body.ChannelName;
+    let GuildID = req.headers.GuildID;
+    let ChannelID = req.headers.ChannelID;
+    let ChannelName = req.headers.ChannelName;
 
     const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
         WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
@@ -340,8 +340,8 @@ router.put("/channel/", function (req, res) {
 router.delete("/channel/", function (req, res) {
     console.log("Deleting a channel");
 
-    let GuildID = req.body.GuildID;
-    let ChannelID = req.body.ChannelID;
+    let GuildID = req.headers.GuildID;
+    let ChannelID = req.headers.ChannelID;
 
     const sqlQuery = `DELETE FROM Channel
                     WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
