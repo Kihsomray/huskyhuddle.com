@@ -25,12 +25,12 @@ router.get("/", function (req, res, next) {
     });
 });
 
-// Create a new guild with the name provided in the body of the request with GuildName : "Some guild name goes here" in the json
-// {"GuildName" : "newGuild"} as an example as of what to put in the body
+// Create a new guild with the name provided.
+// The guildid is to be passed in the header.
 router.post("/", function (req, res, next) {
     console.log("Guild POST API");
 
-    let GuildName = req.headers.GuildName;
+    let GuildName = req.headers.guildname;
 
     const sqlQuery = `INSERT INTO Guild (GuildName)
         VALUES ('${GuildName}');`;
@@ -45,12 +45,12 @@ router.post("/", function (req, res, next) {
 });
 
 // Update a guild with a new name based off of the guildID
-// {"GuildName" : "newGuild"} as an example as of what to put in the body
+// The guildid and guildname is to be passed in the header.
 router.put("/", function (req, res, next) {
     console.log("Guild update");
 
-    let GuildName = req.headers.GuildName;
-    let GuildID = req.headers.GuildID;
+    let GuildName = req.headers.guildname;
+    let GuildID = req.headers.guildid;
 
     const sqlQuery = `UPDATE Guild
         SET GuildName = '${GuildName}'
@@ -66,11 +66,11 @@ router.put("/", function (req, res, next) {
 });
 
 // Delete a guild and also remove all members of that guild by deleting all guildUsers of that guild
-// {"GuildID" : "5"} as an example as of what to put in the body
+// The guildid is to be passed in the header.
 router.delete("/", function (req, res, next) {
     console.log("Guild Delete");
 
-    let GuildID = req.headers.GuildID;
+    let GuildID = req.headers.guildid;
 
     // Delete the members of a guild, this is safe because the users are still guildusers
     // of any other guild they are a part of but they are removed from this specific guild
@@ -96,14 +96,16 @@ router.delete("/", function (req, res, next) {
     });
 });
 
+
+
 //// Webservice guild/user/
 
-// Grab all of the GuildUsers of this specific guild by the GuildID in the body
-// {"GuildID" : "5"} as an example as of what to put in the body
+// Grab all of the GuildUsers of this specific guild.
+// The guildid, userid, and role are to be passed in the header.
 router.get("/user/", function (req, res, next) {
     console.log("All users in this guild");
 
-    let GuildID = req.headers.GuildID;
+    let GuildID = req.headers.guildid;
 
     const sqlQuery = `SELECT GU.UserID, U.UserName, GU.Role
         FROM GuildUser GU
@@ -121,14 +123,14 @@ router.get("/user/", function (req, res, next) {
     });
 });
 
-// Add a new GuildUser to a guild with a role. GuildID, UserID, and Role required in the body.
-// {"GuildID" : "5", "UserID" : "5", "Member"} as an example as of what to put in the body
+// Add a new GuildUser to a guild with a role.
+// The guildid, userid, and role are to be passed in the header.
 router.post("/user/", function (req, res, next) {
     console.log("Add a new user to the guild");
 
-    let GuildID = req.headers.GuildID;
-    let UserID = req.headers.UserID;
-    let Role = req.headers.Role;
+    let GuildID = req.headers.guildid;
+    let UserID = req.headers.userid;
+    let Role = req.headers.role;
 
     const sqlQuery = `INSERT INTO GuildUser (GuildID, UserID, Role)
         VALUES (${GuildID}, ${UserID}, '${Role}');`;
@@ -143,14 +145,14 @@ router.post("/user/", function (req, res, next) {
     });
 });
 
-// Update a guildUsers Role within a guild. GuildID, UserID, and Role required in the body.
-// {"GuildID" : "5", "UserID" : "5", "Member"} as an example as of what to put in the body
+// Update a guildUsers Role within a guild.
+// The guildid, userid, and role are to be passed in the header
 router.put("/user/", function (req, res, next) {
     console.log("Update a GuildUsers role");
 
-    let GuildID = req.headers.GuildID;
-    let UserID = req.headers.UserID;
-    let Role = req.headers.Role;
+    let GuildID = req.headers.guildid;
+    let UserID = req.headers.userid;
+    let Role = req.headers.role;
 
     const sqlQuery = `UPDATE GuildUser
         SET Role = '${Role}'
@@ -166,13 +168,13 @@ router.put("/user/", function (req, res, next) {
     });
 });
 
-// Delete a GuildUser from a guild. GuildID and UserID required in the body.
-// {"GuildID" : "5", "UserID" : "5"} as an example as of what to put in the body
+// Delete a GuildUser from a guild.
+// The guildid and userid are to be passed in the header
 router.delete("/user/", function (req, res, next) {
     console.log("Remove a guild user");
 
-    let GuildID = req.headers.GuildID;
-    let UserID = req.headers.UserID;
+    let GuildID = req.headers.guildid;
+    let UserID = req.headers.userid;
 
     const sqlQuery = `DELETE FROM GuildUser
         WHERE GuildID = ${GuildID} AND UserID = ${UserID};`;
@@ -187,98 +189,16 @@ router.delete("/user/", function (req, res, next) {
     });
 });
 
-// Get channels from this specific GuildID
-// {"GuildID": "5"} as an example as of what to put in the body
-router.get("/channel/", function (req, res) {
-    console.log("Get all the channels from this guild");
 
-    let GuildID = req.headers.GuildID;
-
-    if (!GuildID) {
-        return res.status(400).json({ error: "No GuildID specified"});
-    }
-
-    const sqlQuery = `SELECT * FROM Channel
-        WHERE GuildID = ${GuildID}`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error");
-            console.log(err);
-            res.status(400);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-// Create a new channel within the specified guild
-router.post("/channel/", function (req, res) {
-    console.log("Create a new channel");
-
-    let GuildID = req.headers.GuildID;
-    let ChannelName = req.headers.ChannelName;
-
-    const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
-        VALUES (${GuildID}, '${ChannelName}')`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error creating new channel");
-            console.log(err);
-            return res.status(400);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-// Update the name of the channel within the specified guild
-router.put("/channel/", function (req, res) {
-    console.log("Update channel name");
-
-    let GuildID = req.headers.GuildID;
-    let ChannelID = req.headers.ChannelID;
-    let ChannelName = req.headers.ChannelName;
-
-    const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
-        WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.error("Error updating channelname", err);
-            return res.status(404);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-//Delete a channel within a specified guild
-router.delete("/channel/", function (req, res) {
-    console.log("Deleting a channel");
-
-    let GuildID = req.headers.GuildID;
-    let ChannelID = req.headers.ChannelID;
-
-    const sqlQuery = `DELETE FROM Channel
-                    WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.error("Error deleting channel");
-            res.status(400);
-        }
-        return res.status(200).json(result);
-    });
-});
 
 //// Webservice guild/channel/
 
-
 // Grab all of the channels of this specific guild by the GuildID in the body
-// {"GuildID" : "5"} as an example as of what to put in the body 
+// The guildid is to be passed in the header
 router.get("/channel/", function(req, res, next) {
     console.log("All channels in this guild");
 
-    let GuildID = req.headers.GuildID;
+    let GuildID = req.headers.guildid;
 
     const sqlQuery = 
         `SELECT ChannelID, ChannelName
@@ -297,11 +217,12 @@ router.get("/channel/", function(req, res, next) {
 
 
 // Create a new channel within the specified guild
+// The guild and channel name are both to be passed in the header
 router.post("/channel/", function (req, res) {
     console.log("Create a new channel");
 
-    let GuildID = req.headers.GuildID;
-    let ChannelName = req.headers.ChannelName;
+    let GuildID = req.headers.guildid;
+    let ChannelName = req.headers.channelname;
 
     const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
         VALUES (${GuildID}, '${ChannelName}')`;
@@ -317,12 +238,13 @@ router.post("/channel/", function (req, res) {
 });
 
 // Update the name of the channel within the specified guild
+// The guild and channel ID and channel name are to be passed in the header
 router.put("/channel/", function (req, res) {
     console.log("Update channel name");
 
-    let GuildID = req.headers.GuildID;
-    let ChannelID = req.headers.ChannelID;
-    let ChannelName = req.headers.ChannelName;
+    let GuildID = req.headers.guildid;
+    let ChannelID = req.headers.channelid;
+    let ChannelName = req.headers.channelname;
 
     const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
         WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
@@ -336,12 +258,13 @@ router.put("/channel/", function (req, res) {
     });
 });
 
-//Delete a channel within a specified guild
+// Delete a channel within a specified guild
+// The guild and channel ID are both to be passed in the header
 router.delete("/channel/", function (req, res) {
     console.log("Deleting a channel");
 
-    let GuildID = req.headers.GuildID;
-    let ChannelID = req.headers.ChannelID;
+    let GuildID = req.headers.guildid;
+    let ChannelID = req.headers.channelid;
 
     const sqlQuery = `DELETE FROM Channel
                     WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
@@ -354,9 +277,5 @@ router.delete("/channel/", function (req, res) {
         return res.status(200).json(result);
     });
 });
-
-// How to get headers, like this
-// let username = req.headers.username;
-// let password = req.headers.password;
 
 module.exports = router;
