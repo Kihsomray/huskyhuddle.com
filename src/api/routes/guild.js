@@ -32,7 +32,8 @@ router.post("/", function (req, res, next) {
 
     let GuildName = req.headers.guildname;
 
-    const sqlQuery = `INSERT INTO Guild (GuildName)
+    const sqlQuery = 
+        `INSERT INTO Guild (GuildName)
         VALUES ('${GuildName}');`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {

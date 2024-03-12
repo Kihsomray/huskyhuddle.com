@@ -212,7 +212,7 @@ router.get("/auth/", function(req, res, next) {
 });
 
 
-// Get all users, returns a json with all guilds 
+// Get all guilds this user is part of 
 router.get("/guild/", function(req, res, next) {
   const UserID = req.headers.userid;
 
@@ -233,7 +233,43 @@ router.get("/guild/", function(req, res, next) {
   });
 });
 
+// create a guild with this user as an admin
+router.post("/createguild/", function(req, res, next) {
+  const UserID = req.headers.userid;
+  const GuildName = req.headers.guildname;
+  const Role = "Admin";
+  
 
+  const sqlQuery = 
+    `INSERT INTO Guild (GuildName)
+    VALUES ('${GuildName}');`;
+    
+  console.log(UserID)
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
+      } 
+      const GuildID = result.insertId;
+
+      const sqlQuery2 = 
+        `INSERT INTO GuildUser (GuildID, UserID, Role)
+        VALUES (${GuildID}, ${UserID}, '${Role}');`;
+
+      databaseConnect.query(sqlQuery2, (err, result) => {
+        if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
+        } 
+        console.log("Everything worked");
+      });
+
+
+      return res.status(200).json({"GuildID" : GuildID});
+  });
+});
 
 
 // Test out axios to get some data from another webservice
