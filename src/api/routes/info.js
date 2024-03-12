@@ -3,6 +3,26 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Returns the program name and version
+ *     responses:
+ *       200:
+ *         description: Name and version of the program
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: HuskyHuddle
+ *                 version:
+ *                   type: string
+ *                   example: 1.0.0
+ */
 // Simple API to return the program name and version
 router.get("/", function(req, res, next) {
     return res.status(200).json({
