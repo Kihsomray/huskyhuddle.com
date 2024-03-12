@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import GuildHeader from '../guild/GuildHeader';
+import GuildChannels from '../guild/GuildChannels';
 
 const HomePage = ({ onLogout }) => {
-    console.log('Welcome {username} to the homepage');
+    
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
@@ -22,11 +23,7 @@ const HomePage = ({ onLogout }) => {
             {/* Main Content Area */}
             <div style={{ display: 'flex', flex: 1 }}>
                 {/* Sidebar */}
-                <div style={{ width: '200px', padding: '10px', borderRight: '1px solid #ccc' }}>
-                    <p>Channel 1</p>
-                    <p>Channel 2</p>
-                    {/* Add more channel names */}
-                </div>
+                <GuildChannels />
 
                 {/* Thread of Messages */}
                 <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }}>

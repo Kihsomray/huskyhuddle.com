@@ -33,8 +33,6 @@ const GuildHeader = ({ onLogout }) => {
         })();
     }, [cookies.login]);
 
-    console.log(guilds);
-
     const iconStyle = {
         cursor: 'pointer',
         marginRight: '10px',
