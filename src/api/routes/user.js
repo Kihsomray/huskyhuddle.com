@@ -6,41 +6,16 @@ const databaseConnect = require("../db/db-connect");
 
 //// Webservice /user/
 
-/**
- * @swagger
- * /user/:
- *   get:
- *     summary: Retrieves all users
- *     description: Returns a JSON object containing all users in the database.
- *     responses:
- *       200:
- *         description: A list of users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   UserID:
- *                     type: integer
- *                     description: The user ID
- *                     example: 1
- *                   UserName:
- *                     type: string
- *                     description: The user's name
- *                     example: JohnDoe
- *                   UserEmail:
- *                     type: string
- *                     description: The user's email address
- *                     example: johndoe@example.com
- *                   UserPass:
- *                     type: string
- *                     description: The user's hashed password
- *                     example: $2b$10$N9qo8uLOickgx2ZMRZoMye
- *       400:
- *         description: Error in fetching users
- */
+/*
+* @swagger
+* /user:   
+*   get:
+*     summary: Returns all users
+*     description: Returns a json with all users
+*     responses:
+*       200:
+*         description: All users
+*/
 // Get all users, returns a json with all guilds 
 router.get("/", function(req, res, next) {
   console.log("User API");
@@ -56,46 +31,16 @@ router.get("/", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/:
- *   post:
- *     summary: Creates a new user
- *     description: Adds a new user to the database with the provided username, email, and password.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               UserName:
- *                 type: string
- *                 description: The user's name
- *                 example: user10
- *               UserEmail:
- *                 type: string
- *                 description: The user's email address
- *                 example: user10@email.com
- *               UserPass:
- *                 type: string
- *                 description: The user's password
- *                 example: password
- *     responses:
- *       200:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 UserID:
- *                   type: integer
- *                   description: The newly created user's ID
- *                   example: 10
- *       400:
- *         description: Error in creating user
- */
+/*
+* @swagger
+* /user:   
+*   post:
+*     summary: Create a new user
+*     description: Create a new user
+*     responses:
+*       200:
+*         description: New user created
+*/
 // Create a new user with the name provided in the body of the request with GuildName : "Some guild name goes here" in the json
 // {"UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
 router.post("/", function(req, res, next) {
@@ -130,50 +75,16 @@ router.post("/", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/:
- *   put:
- *     summary: Updates an existing user
- *     description: Updates an existing user's information in the database with the provided user ID, username, email, and password.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               UserID:
- *                 type: integer
- *                 description: The user's ID
- *                 example: 9
- *               UserName:
- *                 type: string
- *                 description: The new username
- *                 example: user10
- *               UserEmail:
- *                 type: string
- *                 description: The new email address
- *                 example: user10@email.com
- *               UserPass:
- *                 type: string
- *                 description: The new password
- *                 example: newPassword
- *     responses:
- *       200:
- *         description: User updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 affectedRows:
- *                   type: integer
- *                   description: The number of rows affected
- *                   example: 1
- *       400:
- *         description: Error in updating user
- */
+/*
+* @swagger
+* /user:   
+*   put:
+*     summary: Update a user
+*     description: Update a user
+*     responses:
+*       200:
+*         description: User updated
+*/
 // Update a user with a new name, email and password, this requires all three pieces of data even if you only want one. 
 // Just input the previous data if you want it to stay the same
 // {"UserID" : "9", "UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
@@ -199,29 +110,16 @@ router.put("/", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/:
- *   delete:
- *     summary: Deletes a user
- *     description: Deletes a user and all associated guild memberships from the database based on the provided user ID.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               UserID:
- *                 type: integer
- *                 description: The user's ID to be deleted
- *                 example: 5
- *     responses:
- *       200:
- *         description: User and associated guild memberships deleted successfully
- *       400:
- *         description: Error in deleting user
- */
+/*
+* @swagger
+* /user:   
+*   delete:
+*     summary: Delete a user
+*     description: Delete a user
+*     responses:
+*       200:
+*         description: User deleted
+*/
 // Delete a user and also remove all guildUser that are from that user
 // {"UserID" : "5"} as an example as of what to put in the body
 router.delete("/", function(req, res, next) {
@@ -255,46 +153,18 @@ router.delete("/", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/{userId}:
- *   get:
- *     summary: Retrieves a specific user by ID
- *     description: Returns a JSON object containing the user's information from the database based on the provided user ID.
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         description: The ID of the user to retrieve.
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A user object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 UserID:
- *                   type: integer
- *                   description: The user ID
- *                   example: 1
- *                 UserName:
- *                   type: string
- *                   description: The user's name
- *                   example: JohnDoe
- *                 UserEmail:
- *                   type: string
- *                   description: The user's email address
- *                   example: johndoe@example.com
- *                 UserPass:
- *                   type: string
- *                   description: The user's hashed password
- *                   example: $2b$10$N9qo8uLOickgx2ZMRZoMye
- *       400:
- *         description: Error in fetching the user
- */
+/*
+* @swagger
+* /user/:userId:   
+*   get:
+*     summary: Get a user
+*     description: Get a user
+*     responses:
+*       200:
+*         description: User found
+*       400:
+*         description: User not found
+*/
 router.get("/:userId", function(req, res, next) {
   const userid = req.params.userId;
 
@@ -310,49 +180,18 @@ router.get("/:userId", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/auth/:
- *   get:
- *     summary: Authenticates a user
- *     description: Checks if a user with the given username and password exists in the database and returns their UserID if authentication is successful.
- *     parameters:
- *       - in: header
- *         name: username
- *         required: true
- *         description: The username of the user to authenticate.
- *         schema:
- *           type: string
- *       - in: header
- *         name: userpass
- *         required: true
- *         description: The password of the user to authenticate.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Authentication successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 UserID:
- *                   type: integer
- *                   description: The authenticated user's ID
- *                   example: 1
- *       400:
- *         description: Authentication failed
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 Exists:
- *                   type: integer
- *                   description: Indicates whether the user exists (0 for no, 1 for yes)
- *                   example: 0
- */
+/*
+* @swagger
+* /user/auth:   
+*   get:
+*     summary: Authenticate a user
+*     description: Authenticate a user using username and password
+*     responses:
+*       200:
+*         description: User authenticated
+*       400:
+*         description: User not found or invalid credentials
+*/
 // Get all users, returns a json with all guilds 
 router.get("/auth/", function(req, res, next) {
   //console.log("User auth");
@@ -396,40 +235,18 @@ router.get("/auth/", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/guild/:
- *   get:
- *     summary: Retrieves guilds for a specific user
- *     description: Returns a JSON object containing all guilds associated with the specified user ID.
- *     parameters:
- *       - in: header
- *         name: userid
- *         required: true
- *         description: The ID of the user whose guilds are to be retrieved.
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A list of guilds associated with the user
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   GuildID:
- *                     type: integer
- *                     description: The guild ID
- *                     example: 1
- *                   GuildName:
- *                     type: string
- *                     description: The name of the guild
- *                     example: "Knights of the Round Table"
- *       400:
- *         description: Error in fetching guilds
- */
+/*
+* @swagger
+* /user/guild:   
+*   get:
+*     summary: Get all guilds for a user
+*     description: Fetches all guilds associated with a user.
+*     responses:
+*       200:
+*         description: Successfully fetched guilds
+*       400:
+*         description: Error fetching guilds
+*/
 // Get all users, returns a json with all guilds 
 router.get("/guild/", function(req, res, next) {
   console.log("User API");
@@ -452,41 +269,18 @@ router.get("/guild/", function(req, res, next) {
   });
 });
 
-/**
- * @swagger
- * /user/test/:
- *   get:
- *     summary: Test endpoint to fetch data from another service and return all users
- *     description: Makes an external API call to 'http://localhost:4000/' and then returns all users from the database.
- *     responses:
- *       200:
- *         description: Successfully fetched external data and returned all users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   UserID:
- *                     type: integer
- *                     description: The user ID
- *                     example: 1
- *                   UserName:
- *                     type: string
- *                     description: The user's name
- *                     example: JohnDoe
- *                   UserEmail:
- *                     type: string
- *                     description: The user's email address
- *                     example: johndoe@example.com
- *                   UserPass:
- *                     type: string
- *                     description: The user's hashed password
- *                     example: $2b$10$N9qo8uLOickgx2ZMRZoMye
- *       400:
- *         description: Error in fetching data
- */
+/*
+* @swagger
+* /user/test:   
+*   get:
+*     summary: Test external API and fetch user data
+*     description: Fetches data from an external API and returns user data from the database.
+*     responses:
+*       200:
+*         description: Successfully fetched user data
+*       400:
+*         description: Error fetching data
+*/
 // Test out axios to get some data from another webservice
 router.get("/test/", function(req, res, next) {
   console.log("User API");
