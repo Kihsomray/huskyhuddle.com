@@ -38,9 +38,9 @@ router.post("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return result.status(400);
+            return result.status(400).json({"Error" : "Uhoh"});
         }
-        return result.status(200).json(result);
+        return res.status(200).json({"GuildID" : result.insertId});
     });
 });
 
