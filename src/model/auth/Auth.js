@@ -40,6 +40,8 @@ const Auth = ({ onLogin }) => {
         textAlign: 'left',
         padding: '10px',
         margin: 0,
+        fontWeight: 'normal',
+        fontSize: '0.9em',
     }
 
     useEffect(() => {
@@ -82,7 +84,7 @@ const Auth = ({ onLogin }) => {
                     </p>
                 </div>
             </div>
-            <p className='btn-purple-secondary' style={footerStyle}>&copy; {version.name} Team 2024 v{version.version}.</p>
+            <p className='btn-purple-secondary' style={footerStyle}>&copy; <b>{version.name} Team</b> 2024 - v{version.version}.</p>
         </div>
     );
 };

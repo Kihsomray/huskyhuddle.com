@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NavGuilds from '../navbar/NavGuilds';
+import GuildHeader from '../guild/GuildHeader';
 
 const HomePage = ({ onLogout }) => {
     console.log('Welcome {username} to the homepage');
@@ -17,7 +17,7 @@ const HomePage = ({ onLogout }) => {
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             {/* Header */}
 
-            <NavGuilds onLogout={onLogout} />
+            <GuildHeader onLogout={onLogout} />
 
             {/* Main Content Area */}
             <div style={{ display: 'flex', flex: 1 }}>

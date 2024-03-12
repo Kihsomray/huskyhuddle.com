@@ -9,14 +9,6 @@ const Login = ({ onLogin }) => {
     const [showWarning, setShowWarning] = useState(false);
     const [warning, setWarning] = useState('');
 
-    const handleShowWarning = () => {
-        setShowWarning(true);
-    };
-
-    const handleCloseWarning = () => {
-        setShowWarning(false);
-    };
-
     const handleLogin = (e) => {
         e.preventDefault();
 
@@ -44,7 +36,7 @@ const Login = ({ onLogin }) => {
             {showWarning && (
                 <WarningModal
                     message={warning}
-                    onClose={handleCloseWarning}
+                    onClose={() => setShowWarning(false)}
                 />
             )}
             <div className="mx-auto" style={{ maxWidth: '400px' }}>
