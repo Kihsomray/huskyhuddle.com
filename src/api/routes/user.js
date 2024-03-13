@@ -15,6 +15,7 @@ const databaseConnect = require("../db/db-connect");
 
 //// Webservice /user/
 
+
 // Get all users, returns a json with all users and their info 
 router.get("/", function(req, res, next) {
   console.log("User API");
@@ -30,6 +31,7 @@ router.get("/", function(req, res, next) {
   });
 });
 
+
 // Create a new user with the name provided 
 // Pass the data(username, useremail, and userpass) in the header
 // This is a second degree endpoint that calls another endpoint to get the person added to the default server
@@ -41,18 +43,6 @@ router.post("/", function(req, res, next) {
   let UserEmail = req.headers.useremail;
   let UserPass = req.headers.userpass;
 
-  console.log(req.headers)
-
-  console.log(UserName);
-  console.log(UserEmail);
-  console.log(UserPass);
-
-  //let UserName = req.body.UserName;
-  //let UserEmail = req.body.UserEmail;
-  //let UserPass = req.body.UserPass;
-
-  let userID = 0;
-
   const sqlQuery = 
       `INSERT INTO User (UserName, UserEmail, UserPass)
       VALUES ('${UserName}', '${UserEmail}', '${UserPass}');`;
@@ -62,9 +52,7 @@ router.post("/", function(req, res, next) {
           console.log(err);
           return res.status(400).json({"Error" : err.sqlMessage});
       } 
-      userID = result.insertId;
-      console.log(result.insertId);
-
+      const userID = result.insertId;
 
       const registerHeaders = {
         "guildid": "1",
@@ -99,27 +87,22 @@ router.post("/", function(req, res, next) {
         //     return res.status(200).json(result);
         // });
       });
-    
-    
       return res.status(200).json({"UserID" : userID});
       //return res.status(200).json({"UserID" : result.insertId});
   });
-  
-
-  
-  
 });
+
 
 // Update a user with a new name, email and password, this requires all three pieces of data even if you only want one. 
 // Just input the previous data if you want it to stay the same
-// {"UserID" : "9", "UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
+// Pass userid, username, useremail, and userpass in the header
 router.put("/", function(req, res, next) {
   console.log("User update");
 
-  let UserID = req.body.UserID;
-  let UserName = req.body.UserName;
-  let UserEmail = req.body.UserEmail;
-  let UserPass = req.body.UserPass;
+  let UserID = req.headers.userid;
+  let UserName = req.headers.username;
+  let UserEmail = req.headers.useremail;
+  let UserPass = req.headers.userpass;
 
   const sqlQuery = 
       `UPDATE User
@@ -136,11 +119,11 @@ router.put("/", function(req, res, next) {
 });
 
 // Delete a user and also remove all guildUser that are from that user
-// {"UserID" : "5"} as an example as of what to put in the body
+// Pass userid in the header
 router.delete("/", function(req, res, next) {
   console.log("User Delete");
 
-  let UserID = req.body.UserID;
+  let UserID = req.headers.userid;
 
   // Delete the members of a guild, this is safe because the users are still guildusers
   // of any other guild they are a part of but they are removed from this specific guild  
@@ -154,7 +137,7 @@ router.delete("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json({"Error" : err});
       } 
       //return res.status(200).json(result);
   });
@@ -170,24 +153,13 @@ router.delete("/", function(req, res, next) {
 
 // Get all users, returns a json with all guilds     localhost4000/user/auth
 router.get("/auth/", function(req, res, next) {
-  //console.log("User auth");
-
-  //console.log(req.headers);
-
   const UserName = req.headers.username;
   const UserPass = req.headers.userpass;
-
-  console.log(req.headers);
-  console.log(UserName);
-  console.log(UserPass);
 
   const sqlQuery = 
     `SELECT UserID 
     FROM User
     WHERE UserName = '${UserName}' AND UserPass = '${UserPass}';`
-
-  //console.log(sqlQuery);
-
 
   let exists;
   databaseConnect.query(sqlQuery, (err, result) => {
@@ -196,7 +168,6 @@ router.get("/auth/", function(req, res, next) {
           console.log(err);
           return res.status(400).json({ "Exists" : "False"});
       } 
-      // console.log(result[0]);
       
       if (result[0] == undefined) {
         console.log(1);

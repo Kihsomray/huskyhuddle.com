@@ -50,6 +50,7 @@ app.use('/guild', require('./routes/guild'));
 app.use('/message', require('./routes/message'));
 app.use('/role', require('./routes/role'));
 app.use('/user', require('./routes/user'));
+app.use('/admin', require('./routes/admin'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
