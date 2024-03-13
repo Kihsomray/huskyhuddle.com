@@ -63,6 +63,16 @@ const GuildMessages = ({ guild, channel }) => {
     }, [messages]);
 
     useEffect(() => {
+        setMessages([]);
+        setLatestMessageID(0);
+    }, [channel]);
+
+    useEffect(() => {
+        setMessages([]);
+        setLatestMessageID(-1);
+    }, [guild]);
+
+    useEffect(() => {
         running();
         const interval = setInterval(() => {
             running();
@@ -70,11 +80,6 @@ const GuildMessages = ({ guild, channel }) => {
 
         return () => clearInterval(interval);
     }, [latestMessageID]);
-
-    useEffect(() => {
-        setMessages([]);
-        setLatestMessageID(0);
-    }, [channel]);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: "100%", backgroundColor: '#828385', }}>
