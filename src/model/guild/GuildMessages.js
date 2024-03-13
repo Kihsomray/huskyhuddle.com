@@ -1,16 +1,61 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 
-const GuildMessages = ({ onSelectedChannel, guild }) => {
+const GuildMessages = ({ guild, channel }) => {
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [cookies, setCookie, removeCookie] = useCookies(['login']);
+    const [time, setTime] = useState(new Date());
 
     const handleSendMessage = () => {
-        if (newMessage.trim() !== '') {
-            setMessages([...messages, { user: 'User1', text: newMessage }]);
-            setNewMessage('');
-        }
+        if (newMessage.trim() === '') return;
+        (async () => {
+            await axios.post(
+                "http://localhost:4000/channel/message/",
+                null,
+                {
+                    headers: {
+                        "guildid": guild.GuildID,
+                        "channelid": channel.ChannelID,
+                        "userid": cookies.login,
+                        "content": newMessage,
+                    }
+                }
+            ).then(_ => {
+                setMessages([...messages, { user: 'User1', text: newMessage }]);
+                setNewMessage('');
+            }).catch((_) => {
+                console.log("unable to fetch channel messages");
+            });
+        })();
     };
+
+    const running = (async () => {
+        await axios.get(
+            "http://localhost:4000/channel/message/",
+            {
+                headers: {
+                    "guildid": guild.GuildID,
+                    "channelid": channel.ChannelID,
+                    "limit": 10
+                }
+            }
+        ).then(e => {
+            setMessages(e.data);
+        }).catch((_) => {
+            console.log("unable to fetch channel messages");
+        });
+    });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            running();
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, [channel]);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: "100%", backgroundColor: '#828385', }}>
@@ -31,7 +76,7 @@ const GuildMessages = ({ onSelectedChannel, guild }) => {
                 height: '100%',
             }}>
                 {messages.map((message, index) => (
-                    <div 
+                    <div
                         style={{
                             padding: '10px',
                             marginBottom: '10px',
@@ -52,16 +97,15 @@ const GuildMessages = ({ onSelectedChannel, guild }) => {
                                 maxWidth: '80%',
                             }}
                         >
-                            
+
                             {/* User Icon */}
                             <span
                                 className='bg-purple-primary'
                                 style={{
                                     padding: '10px',
-                                    margin: "0px",
                                     borderRadius: '6px',
                                 }}
-                            >{message.user.charAt(0)}</span>
+                            >{(message.UserID + " ").charAt(0)}</span>
 
                             {/* User Name */}
                             <span
@@ -71,14 +115,16 @@ const GuildMessages = ({ onSelectedChannel, guild }) => {
                                     borderRadius: '6px',
                                 }}
                             >{message.user}</span>
-                        </span> 
+
+                        </span>
 
                         {/* User Message */}
                         <span
+                            className='txt-purple-secondary'
                             style={{
                                 fontSize: '15px',
                             }}
-                        >{message.text}</span>
+                        >{message.MessageContent}</span>
                     </div>
                 ))}
             </div>

@@ -7,13 +7,14 @@ import GuildUsers from '../guild/GuildUsers';
 const HomePage = ({ onLogout }) => {
     
     const [guild, setGuild] = useState({ "GuildID": 0, GuildName: "Select a Guild" });
+    const [channel, setChannel] = useState({ "ChannelID": 0, ChannelName: "Select a Channel" });
 
     const onSelectedGuild = (guild) => {
         setGuild(guild);
     };
 
     const onSelectedChannel = (channel) => {
-        console.log(channel);
+        setChannel(channel);
     };
 
     return (
@@ -22,7 +23,7 @@ const HomePage = ({ onLogout }) => {
 
             <div style={{ display: 'flex', flex: 1 }}>
                 <GuildChannels onSelectedChannel={onSelectedChannel} guild={guild} />
-                <GuildMessages onSelectedChannel={onSelectedChannel} guild={guild} />
+                <GuildMessages onSelectedChannel={onSelectedChannel} guild={guild} channel={channel} />
                 <GuildUsers guild={guild} />
             </div>
         </div>
