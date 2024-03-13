@@ -9,14 +9,6 @@ const Login = ({ onLogin }) => {
     const [showWarning, setShowWarning] = useState(false);
     const [warning, setWarning] = useState('');
 
-    const handleShowWarning = () => {
-        setShowWarning(true);
-    };
-
-    const handleCloseWarning = () => {
-        setShowWarning(false);
-    };
-
     const handleLogin = (e) => {
         e.preventDefault();
 
@@ -33,11 +25,10 @@ const Login = ({ onLogin }) => {
                 console.log(e1.data.UserID);
                 onLogin(e1.data.UserID);
             }
-        }).catch((error) => {
+        }).catch((_) => {
             setWarning('That account does not exist or incorrect password.');
             setShowWarning(true);
         });
-
     };
 
     return (
@@ -45,7 +36,7 @@ const Login = ({ onLogin }) => {
             {showWarning && (
                 <WarningModal
                     message={warning}
-                    onClose={handleCloseWarning}
+                    onClose={() => setShowWarning(false)}
                 />
             )}
             <div className="mx-auto" style={{ maxWidth: '400px' }}>

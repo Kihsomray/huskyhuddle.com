@@ -1,17 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
 
 body {
-  background-color: #6b6b6b;
+  background: url(images/uwbackground.jpg) no-repeat center center fixed #6b6b6b;
+  background-size: cover;
   margin: 0;
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  user-select: none;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+
 
 .btn-purple-primary, .btn-purple-secondary {
   color: #ffffff;
@@ -41,6 +45,22 @@ code {
   background-color: #ffc700;
 }
 
-.bg-primary {
-  background-color: #212425;
+.txt-purple-primary {
+  color: #32006e;
+}
+
+.txt-purple-secondary {
+  color: #4b2e83;
+}
+
+.txt-gold-primary{
+  color: #e8e3d3;
+}
+
+.txt-gold-secondary{
+  color: #85754d;
+}
+
+.txt-gold-tertiary {
+  color: #ffc700;
 }
