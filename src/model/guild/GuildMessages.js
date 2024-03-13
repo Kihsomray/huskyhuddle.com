@@ -52,8 +52,6 @@ const GuildMessages = ({ guild, channel }) => {
                     });
                     const list = [...messages, ...e.data];
                     setLatestMessageID(e.data[e.data.length - 1]["MessageID"]);
-                    
-                    console.log(list);
 
                     // loop through messages, combine the messages if the previous id is the same
                     let temp = [];
@@ -72,9 +70,7 @@ const GuildMessages = ({ guild, channel }) => {
                         }
                     });
 
-                    console.log(temp);
                     setMessages(temp);
-
 
                 }
 
@@ -176,6 +172,7 @@ const GuildMessages = ({ guild, channel }) => {
                                         paddingLeft: '8px',
                                         margin: "0px",
                                         borderRadius: '6px',
+                                        color: message.UserID == cookies.login ? "#99ff99" : '#fff'
                                     }}
                                 >{message.UserName}</span>
 
