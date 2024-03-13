@@ -24,7 +24,7 @@ const GuildMessages = ({ guild, channel }) => {
                     }
                 }
             ).then(_ => {
-                setMessages([...messages, { user: 'User1', text: newMessage }]);
+                setMessages([...messages, { MessageContent: newMessage, UserID: cookies.login}]);
                 setNewMessage('');
             }).catch((_) => {
                 console.log("unable to fetch channel messages");
