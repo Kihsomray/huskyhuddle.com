@@ -197,6 +197,7 @@ router.get("/latestmessage/", function (req, res, next) {
         if (err) {
             console.log(
                 `Error getting the last ${latestMID} messages sent into the channel`
+                + err
             );
             return res.status(400).json({
                 error: err,
