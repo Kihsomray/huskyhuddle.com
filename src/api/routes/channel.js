@@ -30,9 +30,9 @@ router.get("/message/", function (req, res, next) {
     console.log(`Getting the last ${Limit} messages sent into the channel`);
 
     const sqlQuery = 
-        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName
+        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
         FROM (
-            SELECT MessageID, MessageContent, UserID
+            SELECT MessageID, MessageContent, UserID, MessageDate
             FROM Message
             WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}
             ORDER BY MessageID DESC
@@ -62,6 +62,10 @@ router.post("/message/", function (req, res) {
     let UserID = req.headers.userid;
     let GuildID = req.headers.guildid;
     let messageContent = req.headers.content;
+    let DateTime = new Date();
+    let DateString = DateTime.toLocaleString('en-GB', { timeZone: 'PST' });
+    //console.log("Date time is ");
+    //console.log(DateString);
 
     console.log("Sending a message to channel");
 
@@ -72,8 +76,8 @@ router.post("/message/", function (req, res) {
     }
 
     const sqlQuery = 
-        `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID) 
-        VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID});`;
+        `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID, MessageDate)
+        VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID}, STR_TO_DATE("${DateString}", "%d/%m/%Y, %H:%i:%s"));`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
