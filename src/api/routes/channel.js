@@ -4,7 +4,6 @@ var router = express.Router();
 const databaseConnect = require("../db/db-connect");
 
 // /channel/ and /channel/message/
-
 router.get("/", function (req, res, next) {
     console.log("Getting all Channel ID and Names...");
 
@@ -22,37 +21,38 @@ router.get("/", function (req, res, next) {
 // Get the latest x messages sent into the channel
 // {"Limit" : "5", ChannelID: "1"} as an example as of what to put in the body
 router.get("/message/", function (req, res, next) {
-    let limit = req.body.Limit;
-    let channelID = req.body.ChannelID;
+    let Limit = req.headers.limit;
+    let GuildID = req.headers.guildid;
+    let ChannelID = req.headers.channelid;
 
-    console.log(limit + " " + channelID);
+    console.log(Limit + " " + ChannelID);
 
-    console.log(`Getting the last ${limit} messages sent into the channel`);
+    console.log(`Getting the last ${Limit} messages sent into the channel`);
 
-    const sqlQuery = `SELECT * FROM Message 
-                    WHERE ChannelID = ${channelID} LIMIT ${limit};`;
+    const sqlQuery = 
+        `SELECT * FROM Message 
+        WHERE ChannelID = ${ChannelID} AND GuildID = ${GuildID} LIMIT ${Limit};`;
     // const sqlQuery = `SELECT *  FROM Channel;`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log(
-                `Error getting the last ${limit} messages sent into the channel`
+                `Error getting the last ${Limit} messages sent into the channel`
             );
             return res.status(400).json({
-                error: `Error getting the last ${limit} messages sent into the channel`,
+                error: `Error getting the last ${Limit} messages sent into the channel`,
             });
         }
         return res.status(200).json(result);
     });
 });
 
-//POST request to handler to add a message to a channel
-
+// POST request to handler to add a message to a channel
 router.post("/message/", function (req, res) {
-    let channelId = req.body.ChannelID;
-    let UserID = req.body.UserID;
-    let GuildID = req.body.GuildID;
-    let messageContent = req.body.Content;
+    let channelId = req.headers.ChannelID;
+    let UserID = req.headers.UserID;
+    let GuildID = req.headers.GuildID;
+    let messageContent = req.headers.Content;
 
     console.log("Sending a message to channel");
 
@@ -78,9 +78,9 @@ router.post("/message/", function (req, res) {
 
 //Edit message in a specific channel
 router.put("/message/", function (req, res, next) {
-    let channelId = req.body.ChannelID;
-    let messageId = req.body.MessageID;
-    let messageContent = req.body.Content;
+    let channelId = req.headers.ChannelID;
+    let messageId = req.headers.MessageID;
+    let messageContent = req.headers.Content;
 
     if (!channelId || !messageId || !messageContent) {
         return res.status(400).json({
@@ -109,8 +109,8 @@ router.put("/message/", function (req, res, next) {
 
 // Delete a message from this Channel
 router.delete("/message/", function (req, res, next) {
-    let channelId = req.body.ChannelID;
-    let messageId = req.body.MessageID;
+    let channelId = req.headers.ChannelID;
+    let messageId = req.headers.MessageID;
 
     if (!channelId || !messageId) {
         return res
