@@ -30,15 +30,16 @@ router.get("/message/", function (req, res, next) {
     console.log(`Getting the last ${Limit} messages sent into the channel`);
 
     const sqlQuery = 
-        `SELECT MessageID, MessageContent, UserID
+        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName
         FROM (
             SELECT MessageID, MessageContent, UserID
             FROM Message
             WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}
             ORDER BY MessageID DESC
             LIMIT ${Limit}
-        ) AS LatestMessages
-        ORDER BY MessageID ASC;`;
+        ) AS M
+        JOIN User AS U ON M.UserID = U.UserID
+        ORDER BY M.MessageID ASC;`;
     // const sqlQuery = `SELECT *  FROM Channel;`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
