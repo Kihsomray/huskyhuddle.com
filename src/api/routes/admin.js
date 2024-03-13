@@ -232,7 +232,7 @@ router.put("/guild/", function (req, res, next) {
     });
 });
 
-// Delete a channel within a guild with the channelid provided.
+// Delete the entire guild
 // The userid, guildid is to be passed in the header.
 router.delete("/guild/", function (req, res, next) {
     console.log("/Admin/guild/ DELETE API");
@@ -290,5 +290,103 @@ router.delete("/guild/", function (req, res, next) {
         });
     });
 });
+
+
+// Change a members role.
+// The admins userid, guildid, useridchange, and role to be passed in the header.
+router.put("/user/", function (req, res, next) {
+    console.log("/Admin/channel/ PUT API");
+
+    const UserID = req.headers.userid;
+    const GuildID = req.headers.guildid;
+    const UserIDToChange = req.headers.useridchange;
+    const Role = req.headers.role;
+
+    const sqlQueryRole = 
+        `SELECT Role
+        FROM GuildUser
+        WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
+
+    databaseConnect.query(sqlQueryRole, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            return result.status(400).json({"Error" : "Uhoh"});
+        }
+
+        // console.log(result);
+        // console.log(result.length);
+
+        if (result.length == 0) {
+            return res.status(400).json({"Error" : "User is not member of Guild"});
+        } else if (result[0].Role !== "Admin") {
+            return res.status(400).json({"Error" : "User is not an Admin"});
+        }
+        
+        //return res.status(200).json(result[0]);
+        // If here the user is an admin
+
+        const sqlQuery = 
+            `UPDATE GuildUser
+            SET Role = '${Role}'
+            WHERE GuildID = ${GuildID} AND UserID = ${UserIDToChange};`;
+        databaseConnect.query(sqlQuery, (err, result) => {
+            if (err) {
+                console.log("Error");
+                console.log(err);
+                return result.status(400).json({"Error" : err});
+            }
+            return res.status(200).json({"NewRole" : Role});
+        });
+    });
+});
+
+// Remove a user from the guild
+// The userid, guildid is to be passed in the header.
+router.delete("/user/", function (req, res, next) {
+    console.log("/Admin/guild/ DELETE API");
+
+    const UserID = req.headers.userid;
+    const GuildID = req.headers.guildid;
+    const UserIDToRemove = req.headers.useridremove;
+
+    const sqlQueryRole = 
+        `SELECT Role
+        FROM GuildUser
+        WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
+
+    databaseConnect.query(sqlQueryRole, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            return result.status(400).json({"Error" : err});
+        }
+
+        // console.log(result);
+        // console.log(result.length);
+
+        if (result.length == 0) {
+            return res.status(400).json({"Error" : "User is not member of Guild"});
+        } else if (result[0].Role !== "Admin") {
+            return res.status(400).json({"Error" : "User is not an Admin"});
+        }
+        
+        //return res.status(200).json(result[0]);
+        // If here the user is an admin
+
+        const sqlQueryGuildUser = 
+            `DELETE FROM GuildUser
+            WHERE GuildID = ${GuildID} AND UserID = ${UserIDToRemove};`;
+        databaseConnect.query(sqlQueryGuildUser, (err, result) => {
+            if (err) {
+                console.log("Error");
+                console.log(err);
+                return result.status(400).json({"Error" : err});
+            }
+            return res.status(200).json({"NumOfUsersRemoved": result.affectedRows});
+        });
+    });
+});
+
 
 module.exports = router;
