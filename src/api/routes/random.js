@@ -118,6 +118,18 @@ router.post("/user/", async function (req, res, next) {
     }
 });
 
+/*
+ * @swagger
+ * /random/user/guild:
+ *   post:
+ *     summary: Creates a random user and adds them to a guild
+ *     description: Creates a random user and adds them to a guild with the specified guild id and role
+ *     responses:
+ *       200:
+ *         description: A message
+ *       400:
+ *         description: Error creating user or adding to guild
+ */
 //Creates a random user from an external API and puts them into a guild
 //{ "GuildID" = X, "GuildRole" = X} is the reqeust body format
 router.post("/user/guild/", async function (req, res, next) {

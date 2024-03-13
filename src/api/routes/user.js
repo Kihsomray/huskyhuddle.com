@@ -294,6 +294,18 @@ router.get("/guild/", function(req, res, next) {
   });
 });
 
+/*
+* @swagger
+* /user/createguild:
+*   post:
+*     summary: Create a new guild
+*     description: Create a new guild with the user as an admin
+*     responses:
+*       200:
+*         description: New guild created
+*       400:
+*         description: Error creating guild
+*/
 // create a guild with this user as an admin
 router.post("/createguild/", function(req, res, next) {
   const UserID = req.headers.userid;
@@ -373,7 +385,18 @@ router.get("/test/", function(req, res, next) {
 });
 
 
-
+/*
+* @swagger
+* /user/{userId}:   
+*   get:
+*     summary: Get user by ID
+*     description: Returns a single user by their ID
+*     responses:
+*       200:
+*         description: A single user
+*       404:
+*         description: User not found
+*/
 router.get("/:userId", function(req, res, next) {
   const userid = req.params.userId;
 
