@@ -73,6 +73,7 @@ const GuildMessages = ({ guild, channel }) => {
 
     useEffect(() => {
         setLatestMessageID(0);
+        setMessages([]);
         running();
     }, [channel]);
 
@@ -92,7 +93,10 @@ const GuildMessages = ({ guild, channel }) => {
                 style={{
                     padding: '10px',
                     height: '100%',
-                    overflowY: 'auto'
+                    overflowY: 'auto',
+                    scrollBehavior: 'smooth',
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "#676767 #828385",
                 }}
             >
                 {messages.map((message, index) => (
