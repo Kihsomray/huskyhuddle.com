@@ -144,10 +144,68 @@ router.delete("/message/", function (req, res, next) {
     });
 });
 
-//delete a spcific channel using channelId
+// Get the latest x messages sent into the channel
+router.get("/isLatest/", function (req, res, next) {
+    let latestMID = req.headers.latestmessageid;
+    let GuildID = req.headers.guildid;
+    let ChannelID = req.headers.channelid;
 
-//patch. Changes the channel name within guild
+    // console.log(Limit + " " + ChannelID);
 
-//Post. Create a new channel within a guild
+    // console.log(`Getting the last ${Limit} messages sent into the channel`);
+
+    const sqlQuery = 
+        `SELECT CASE
+        WHEN ${latestMID} = (
+            SELECT MAX(MessageID)
+            FROM Message
+            WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}
+        ) THEN 1
+        ELSE 0
+        END AS IsLatestMessage;`;
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log(
+                `Error getting the last ${latestMID} messages sent into the channel`
+            );
+            return res.status(400).json({
+                error: `Error getting the last ${latestMID} messages sent into the channel`,
+            });
+        }
+        return res.status(200).json(result);
+    });
+});
+
+
+
+// Get the latest x messages sent into the channel
+router.get("/latestmessage/", function (req, res, next) {
+    console.log("latest message");
+    let latestMID = req.headers.latestmessageid;
+    let GuildID = req.headers.guildid;
+    let ChannelID = req.headers.channelid;
+
+    const sqlQuery = 
+        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
+        FROM Message M
+        JOIN User U ON M.UserID = U.UserID
+        WHERE M.GuildID = ${GuildID} AND M.ChannelID = ${ChannelID} AND M.MessageID > ${latestMID}
+        ORDER BY M.MessageID ASC;`;
+
+    databaseConnect.query(sqlQuery, (err, result) => {
+        if (err) {
+            console.log(
+                `Error getting the last ${latestMID} messages sent into the channel`
+            );
+            return res.status(400).json({
+                error: err,
+            });
+        }
+        return res.status(200).json(result);
+    });
+});
+
+
 
 module.exports = router;
