@@ -40,6 +40,15 @@ const GuildMessages = ({ guild, channel }) => {
                 { headers: { "guildid": guild.GuildID, "channelid": channel.ChannelID, latestmessageid: latestMessageID } }
             ).then(e => {
                 if (e.data.length > 0) {
+                    e.data.forEach((message) => {
+                        if (!message.MessageDate) message.MessageDate = "unknown";
+                        else {
+                            const updated = message.MessageDate.split(",");
+                            const date = updated[0].split("-");
+                            const time = updated[1].split("-");
+                            message.MessageDate = `${date[1]}/${date[2]}/${date[0]} @ ${time[0]}:${time[1]}`;
+                        }
+                    });
                     setMessages([...messages, ...e.data]);
                     setLatestMessageID(e.data[e.data.length - 1]["MessageID"]);
                 }
@@ -175,7 +184,7 @@ const GuildMessages = ({ guild, channel }) => {
                                     <span
                                         className='txt-gray-secondary'
                                         style={{
-                                            fontSize: '8px',
+                                            fontSize: '9px',
                                             color: '#bbb',
                                         }}
                                     >
