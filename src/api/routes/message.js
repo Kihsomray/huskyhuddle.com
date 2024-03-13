@@ -165,13 +165,15 @@ router.delete("/channel", function (req, res, next) {
     });
 });
 
-// Creates a new message with a random quote by a random user from an external API
+// Creates a new message with a random quote by a user from an external API
 router.post("/random/", async function (req, res, next) {
-    let channelId = req.body.ChannelID;
+    let ChannelId = req.body.ChannelID;
+    let GuildID = req.body.GuildID;
+    let UserID = req.body.UserID;
 
-    if (!channelId) {
+    if (!ChannelId || !GuildID || !UserID) {
         return res.status(400).json({
-            error: "ChannelID is required in the body in the request",
+            error: "ChannelID, GuildID, and UserID is required in the body in the request",
         });
     }
     try {
@@ -180,13 +182,10 @@ router.post("/random/", async function (req, res, next) {
         );
         const jokeData = jokeResponse.data;
 
-        const userResponse = await axios.get("https://randomuser.me/api/");
-        const userData = userResponse.data.results[0];
+        let messageContent = `${jokeData.setup}\n${jokeData.punchline}`;
 
-        let messageContent = `${jokeData.setup}\n${jokeData.punchline}\n\nPosted by ${userData.name.first} ${userData.name.last}`;
-
-        const sqlQuery = `INSERT INTO Message (ChannelID, MessageContent)
-                        VALUES (${channelId}, "${messageContent}");`;
+        const sqlQuery = `INSERT INTO Message (GuildID, ChannelID, UserID, MessageContent)
+                        VALUES (${GuildID}, ${ChannelId}, ${UserID}, "${messageContent}");`;
 
         databaseConnect.query(sqlQuery, (err, result) => {
             if (err) {
