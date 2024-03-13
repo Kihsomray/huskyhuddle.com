@@ -6,6 +6,7 @@ const GuildMessages = ({ guild, channel }) => {
 
     const containerRef = useRef(null);
     const [messages, setMessages] = useState([]);
+    const [latestMessageID, setLatestMessageID] = useState(0); // messages[messages.length - 1].MessageID
     const [newMessage, setNewMessage] = useState('');
     const [cookies] = useCookies(['login']);
 
@@ -32,22 +33,22 @@ const GuildMessages = ({ guild, channel }) => {
         })();
     };
 
-    const running = (async () => {
-        await axios.get(
-            "http://localhost:4000/channel/message/",
-            {
-                headers: {
-                    "guildid": guild.GuildID,
-                    "channelid": channel.ChannelID,
-                    "limit": 25
+    const running = () => {
+        (async () => {
+            await axios.get(
+                `http://localhost:4000/channel/latestmessage`,
+                { headers: { "guildid": guild.GuildID, "channelid": channel.ChannelID, latestmessageid: latestMessageID } }
+            ).then(e => {
+                if (e.data.length > 0) {
+                    setMessages([...messages, ...e.data]);
+                    setLatestMessageID(e.data[e.data.length - 1]["MessageID"]);
                 }
-            }
-        ).then(e => {
-            setMessages(e.data);
-        }).catch((_) => {
-            console.log("unable to fetch channel messages");
-        });
-    });
+
+            }).catch((_) => {
+                console.log("unable to fetch channel messages");
+            });
+        })();
+    };
 
     const scrollToBottom = () => {
         if (containerRef.current) {
@@ -57,16 +58,22 @@ const GuildMessages = ({ guild, channel }) => {
 
     useEffect(() => {
         // Scroll to the bottom when the component mounts or whenever content changes
+
         scrollToBottom();
-      }, [ messages]);
+    }, [messages]);
 
     useEffect(() => {
+        console.log("running");
         running();
         const interval = setInterval(() => {
             running();
-        }, 2000);
+        }, 400);
 
         return () => clearInterval(interval);
+    }, [latestMessageID]);
+
+    useEffect(() => {
+        setLatestMessageID(0);
     }, [channel]);
 
     return (
