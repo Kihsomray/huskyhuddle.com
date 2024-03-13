@@ -5,8 +5,8 @@ var router = express.Router();
 * @swagger
 * /role:   
 *   get:
-*     summary: Returns all roles
-*     description: Returns a json with all roles
+*     summary: Returns string response "Role API is working properly"
+*     description: Returns response that role API is working
 *     responses:
 *       200:
 *         description: All roles

@@ -29,6 +29,18 @@ router.get("/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /message/channel:
+ *   get:
+ *     summary: Get all messages within a channel within a guild
+ *     description: Fetches all messages associated with channel within guild.
+ *     responses:
+ *       200:
+ *         description: Successfully fetched messages
+ *       400:
+ *         description: Error fetching messages
+ */
 //Get all messages within a channel within a guild
 router.get("/channel/", function (req, res, next) {
     console.log("Get all messages within a channel within a guild");
@@ -58,6 +70,18 @@ router.get("/channel/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /message/channel/latest:
+ *   get:
+ *     summary: Get the latest X messages into this channel
+ *     description: Get the latest X messages into this channel
+ *     responses:
+ *       200:
+ *         description: Successfully fetched messages
+ *       400:
+ *         description: Error fetching messages
+ */
 //Get the latest X messages into this channel
 //{"Limit" : "5"} as an example as of what to put in the body
 router.get("/channel/latest/", function (req, res, next) {
@@ -83,6 +107,18 @@ router.get("/channel/latest/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /message/channel:
+ *   post:
+ *     summary: Add a message to the channel
+ *     description: Add a message to the channel
+ *     responses:
+ *       200:
+ *         description: Successfully added message
+ *       400:
+ *         description: Error adding message
+ */
 // Add a message to the channel
 router.post("/channel/", function (req, res) {
     let channelId = req.body.ChannelID;
@@ -111,6 +147,18 @@ router.post("/channel/", function (req, res) {
     });
 });
 
+/*
+ * @swagger
+ * /message/channel:
+ *   put:
+ *     summary: Edit message in a specific channel
+ *     description: Edit message in a specific channel
+ *     responses:
+ *       200:
+ *         description: Successfully edited message
+ *       400:
+ *         description: Error editing message
+ */
 //Edit message in a specific channel
 router.put("/channel/", function (req, res, next) {
     let channelId = req.body.ChannelID;
@@ -141,6 +189,18 @@ router.put("/channel/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /message/channel:
+ *   delete:
+ *     summary: Delete a message from this Channel
+ *     description: Delete a message from this Channel
+ *     responses:
+ *       200:
+ *         description: Successfully deleted message
+ *       400:
+ *         description: Error deleting message
+ */
 // Delete a message from this Channel
 router.delete("/channel", function (req, res, next) {
     let channelId = req.body.ChannelID;
@@ -165,6 +225,18 @@ router.delete("/channel", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /message/random:
+ *   post:
+ *     summary: Create a new message with a random quote
+ *     description: Create a new message with a random quote by a user from an external API
+ *     responses:
+ *       200:
+ *         description: Successfully created message
+ *       400:
+ *         description: Error creating message
+ */
 // Creates a new message with a random quote by a user from an external API
 router.post("/random/", async function (req, res, next) {
     let ChannelId = req.body.ChannelID;
