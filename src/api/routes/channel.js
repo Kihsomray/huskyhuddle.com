@@ -3,6 +3,17 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
+/*
+ * @swagger
+ * /channel:
+ *   get:
+ *     summary: Returns all channels
+ *     description: Returns a json with all channels
+ *     responses:
+ *       200:
+ *         description: All channels
+ */
+// Get all channels, returns a json with all channels
 router.get("/", function (req, res, next) {
     console.log("Getting all Channel ID and Names...");
 
@@ -17,6 +28,18 @@ router.get("/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /channel/message:
+ *   get:
+ *     summary: Returns the last messages sent into the channel
+ *     description: Returns a json with the last messages sent into the channel
+ *     responses:
+ *       200:
+ *         description: Last messages sent into the channel
+ *       400:
+ *         description: Error getting the last messages sent into the channel
+ */
 // {"Limit" : "5", ChannelID: "1"} as an example as of what to put in the body
 router.get("/message/", function (req, res, next) {
     let limit = req.body.Limit;
@@ -43,6 +66,18 @@ router.get("/message/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /channel/message:
+ *   post:
+ *     summary: Add a new message to the channel
+ *     description: Add a new message to the channel
+ *     responses:
+ *       200:
+ *         description: New message added
+ *       400:
+ *         description: Error adding message to the channel
+ */
 //POST request to handler to add a message to a channel
 router.post("/message/", function (req, res) {
     let channelId = req.body.ChannelID;
@@ -72,6 +107,18 @@ router.post("/message/", function (req, res) {
     });
 });
 
+/*
+ * @swagger
+ * /channel/message:
+ *   put:
+ *     summary: Update a message in a channel
+ *     description: Update a message in a channel
+ *     responses:
+ *       200:
+ *         description: Message updated
+ *       400:
+ *         description: Error updating message
+ */
 //Edit message in a specific channel
 router.put("/message/", function (req, res, next) {
     let channelId = req.body.ChannelID;
@@ -103,6 +150,18 @@ router.put("/message/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /channel/message:
+ *   delete:
+ *     summary: Delete a message from a channel
+ *     description: Delete a message from a channel
+ *     responses:
+ *       200:
+ *         description: Message deleted
+ *       400:
+ *         description: Error deleting message
+ */
 // Delete a message from this Channel
 router.delete("/message/", function (req, res, next) {
     let channelId = req.body.ChannelID;
