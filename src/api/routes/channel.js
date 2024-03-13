@@ -3,7 +3,6 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
-
 router.get("/", function (req, res, next) {
     console.log("Getting all Channel ID and Names...");
 
@@ -17,7 +16,6 @@ router.get("/", function (req, res, next) {
         return res.status(200).json(result);
     });
 });
-
 
 // {"Limit" : "5", ChannelID: "1"} as an example as of what to put in the body
 router.get("/message/", function (req, res, next) {
@@ -74,7 +72,6 @@ router.post("/message/", function (req, res) {
     });
 });
 
-
 //Edit message in a specific channel
 router.put("/message/", function (req, res, next) {
     let channelId = req.body.ChannelID;
@@ -105,7 +102,6 @@ router.put("/message/", function (req, res, next) {
         return res.status(200).json(result);
     });
 });
-
 
 // Delete a message from this Channel
 router.delete("/message/", function (req, res, next) {
