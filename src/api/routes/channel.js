@@ -3,6 +3,8 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
+// /channel/ and /channel/message/
+
 /*
  * @swagger
  * /channel:

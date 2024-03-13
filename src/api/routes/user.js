@@ -4,6 +4,15 @@ var axios = require('axios');
 
 const databaseConnect = require("../db/db-connect");
 
+// /user/ and /user/guild/
+
+// IDEA 
+// Keep track of ip addresses
+// ipify.org
+// Local servers?
+// Weather information based on ip address
+// openweathermap
+
 //// Webservice /user/
 
 /*
@@ -16,7 +25,7 @@ const databaseConnect = require("../db/db-connect");
 *       200:
 *         description: All users
 */
-// Get all users, returns a json with all guilds 
+// Get all users, returns a json with all users and their info 
 router.get("/", function(req, res, next) {
   console.log("User API");
 
@@ -41,24 +50,17 @@ router.get("/", function(req, res, next) {
 *       200:
 *         description: New user created
 */
-// Create a new user with the name provided in the body of the request with GuildName : "Some guild name goes here" in the json
-// {"UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
+
+// Create a new user with the name provided 
+// Pass the data(username, useremail, and userpass) in the header
+// This is a second degree endpoint that calls another endpoint to get the person added to the default server
+// The default server is the first server that was created.
 router.post("/", function(req, res, next) {
   console.log("User POST API");
 
   let UserName = req.headers.username;
   let UserEmail = req.headers.useremail;
   let UserPass = req.headers.userpass;
-
-  console.log(req.headers)
-
-  console.log(UserName);
-  console.log(UserEmail);
-  console.log(UserPass);
-
-  //let UserName = req.body.UserName;
-  //let UserEmail = req.body.UserEmail;
-  //let UserPass = req.body.UserPass;
 
   const sqlQuery = 
       `INSERT INTO User (UserName, UserEmail, UserPass)
@@ -69,11 +71,47 @@ router.post("/", function(req, res, next) {
           console.log(err);
           return res.status(400).json({"Error" : err.sqlMessage});
       } 
+      const userID = result.insertId;
 
-      console.log(result.insertId);
-      return res.status(200).json({"UserID" : result.insertId});
+      const registerHeaders = {
+        "guildid": "1",
+        "userid": userID,
+        "role": "Member"
+      };
+    
+      const fetchData = async (response) => {
+        try {
+            response = await axios.post(
+              'http://localhost:4000/guild/user/',
+              null,
+              { headers: registerHeaders }
+            );
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+      };
+    
+      fetchData().then(e => {
+        console.log(e.data);
+    
+        // const sqlQuery = "SELECT * FROM User;"
+        // databaseConnect.query(sqlQuery, (err, result) => {
+        //     if (err) {
+        //         console.log("Error");
+        //         console.log(err);
+        //         res.status(400);
+        //     } 
+            
+        //     return res.status(200).json(result);
+        // });
+      });
+      return res.status(200).json({"UserID" : userID});
+      //return res.status(200).json({"UserID" : result.insertId});
   });
 });
+
+
 
 /*
 * @swagger
@@ -87,14 +125,14 @@ router.post("/", function(req, res, next) {
 */
 // Update a user with a new name, email and password, this requires all three pieces of data even if you only want one. 
 // Just input the previous data if you want it to stay the same
-// {"UserID" : "9", "UserName" : "user10", "UserEmail" : "user10@email.com", "UserPass" : "password"} as an example as of what to put in the body
+// Pass userid, username, useremail, and userpass in the header
 router.put("/", function(req, res, next) {
   console.log("User update");
 
-  let UserID = req.body.UserID;
-  let UserName = req.body.UserName;
-  let UserEmail = req.body.UserEmail;
-  let UserPass = req.body.UserPass;
+  let UserID = req.headers.userid;
+  let UserName = req.headers.username;
+  let UserEmail = req.headers.useremail;
+  let UserPass = req.headers.userpass;
 
   const sqlQuery = 
       `UPDATE User
@@ -121,11 +159,11 @@ router.put("/", function(req, res, next) {
 *         description: User deleted
 */
 // Delete a user and also remove all guildUser that are from that user
-// {"UserID" : "5"} as an example as of what to put in the body
+// Pass userid in the header
 router.delete("/", function(req, res, next) {
   console.log("User Delete");
 
-  let UserID = req.body.UserID;
+  let UserID = req.headers.userid;
 
   // Delete the members of a guild, this is safe because the users are still guildusers
   // of any other guild they are a part of but they are removed from this specific guild  
@@ -139,7 +177,7 @@ router.delete("/", function(req, res, next) {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json({"Error" : err});
       } 
       //return res.status(200).json(result);
   });
@@ -194,24 +232,13 @@ router.get("/:userId", function(req, res, next) {
 */
 // Get all users, returns a json with all guilds 
 router.get("/auth/", function(req, res, next) {
-  //console.log("User auth");
-
-  //console.log(req.headers);
-
   const UserName = req.headers.username;
   const UserPass = req.headers.userpass;
-
-  console.log(req.headers);
-  console.log(UserName);
-  console.log(UserPass);
 
   const sqlQuery = 
     `SELECT UserID 
     FROM User
     WHERE UserName = '${UserName}' AND UserPass = '${UserPass}';`
-
-  //console.log(sqlQuery);
-
 
   let exists;
   databaseConnect.query(sqlQuery, (err, result) => {
@@ -220,7 +247,6 @@ router.get("/auth/", function(req, res, next) {
           console.log(err);
           return res.status(400).json({ "Exists" : "False"});
       } 
-      // console.log(result[0]);
       
       if (result[0] == undefined) {
         console.log(1);
@@ -247,11 +273,9 @@ router.get("/auth/", function(req, res, next) {
 *       400:
 *         description: Error fetching guilds
 */
-// Get all users, returns a json with all guilds 
+// Get all guilds this user is part of 
 router.get("/guild/", function(req, res, next) {
-  console.log("User API");
-
-  let UserID = req.headers.userid;
+  const UserID = req.headers.userid;
 
   const sqlQuery = 
     `SELECT g.GuildID, g.GuildName
@@ -259,17 +283,54 @@ router.get("/guild/", function(req, res, next) {
     JOIN Guild g ON gu.GuildID = g.GuildID
     WHERE gu.UserID = ${UserID};`;
     
+  console.log(UserID)
   databaseConnect.query(sqlQuery, (err, result) => {
       if (err) {
           console.log("Error");
           console.log(err);
-          res.status(400);
+          return res.status(400).json(result);
       } 
       return res.status(200).json(result);
   });
 });
 
-/*
+// create a guild with this user as an admin
+router.post("/createguild/", function(req, res, next) {
+  const UserID = req.headers.userid;
+  const GuildName = req.headers.guildname;
+  const Role = "Admin";
+  
+
+  const sqlQuery = 
+    `INSERT INTO Guild (GuildName)
+    VALUES ('${GuildName}');`;
+    
+  console.log(UserID)
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
+      } 
+      const GuildID = result.insertId;
+
+      const sqlQuery2 = 
+        `INSERT INTO GuildUser (GuildID, UserID, Role)
+        VALUES (${GuildID}, ${UserID}, '${Role}');`;
+
+      databaseConnect.query(sqlQuery2, (err, result) => {
+        if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
+        } 
+        console.log("Everything worked");
+      });
+
+
+      return res.status(200).json({"GuildID" : GuildID});
+  });
+});/*
 * @swagger
 * /user/test:   
 *   get:
@@ -312,6 +373,21 @@ router.get("/test/", function(req, res, next) {
 });
 
 
+
+router.get("/:userId", function(req, res, next) {
+  const userid = req.params.userId;
+
+  const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
+
+  databaseConnect.query(sqlQuery, (err, result) => {
+      if (err) {
+          console.log("Error");
+          console.log(err);
+          return res.status(400).json(result);
+      } 
+      return res.status(200).json(result);
+  });
+});
 
 // const fetchData = async () => {
 //   try {
