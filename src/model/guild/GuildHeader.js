@@ -73,7 +73,7 @@ const GuildHeader = ({ onLogout, onSelectedGuild }) => {
                         style={iconStyle}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseExit}
-                        onClick={() => onSelectedGuild(guild)}
+                        onClick={() =>onSelectedGuild(guild)}
                     >{guild.GuildName.charAt(0)}</span>
                 ))}
             </div>

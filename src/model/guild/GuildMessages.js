@@ -24,7 +24,7 @@ const GuildMessages = ({ guild, channel }) => {
                     }
                 }
             ).then(_ => {
-                setMessages([...messages, { MessageContent: newMessage, UserID: cookies.login}]);
+                setMessages([...messages, { MessageContent: newMessage, UserID: cookies.login }]);
                 setNewMessage('');
             }).catch((_) => {
                 console.log("unable to fetch channel messages");
@@ -39,7 +39,7 @@ const GuildMessages = ({ guild, channel }) => {
                 headers: {
                     "guildid": guild.GuildID,
                     "channelid": channel.ChannelID,
-                    "limit": 10
+                    "limit": 25
                 }
             }
         ).then(e => {
@@ -65,15 +65,13 @@ const GuildMessages = ({ guild, channel }) => {
                 padding: '12px',
                 backgroundColor: '#676767',
                 whiteSpace: 'nowrap',
-                overflow: 'hidden',
             }} className="txt-gold-primary">
                 General
             </div>
             <div style={{
-                flex: 1,
                 padding: '10px',
-                overflowY: 'auto',
                 height: '100%',
+                overflowY: 'auto'
             }}>
                 {messages.map((message, index) => (
                     <div
@@ -122,7 +120,11 @@ const GuildMessages = ({ guild, channel }) => {
                         <span
                             className='txt-purple-secondary'
                             style={{
+                                maxWidth: '90%',
                                 fontSize: '15px',
+                                display: 'inline-block',
+                                overflowWrap: 'anywhere',
+                                whiteSpace: 'normal'
                             }}
                         >{message.MessageContent}</span>
                     </div>
@@ -132,6 +134,7 @@ const GuildMessages = ({ guild, channel }) => {
                 padding: '10px',
                 display: 'flex',
                 alignItems: 'center',
+                height: '60px',
             }}>
                 <input
                     className='bg-gold-primary txt-purple-primary'

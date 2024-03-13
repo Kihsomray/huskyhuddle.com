@@ -27,7 +27,7 @@ const App = () => {
     console.log(cookies.login);
 
     return (
-        <div>
+        <div style={{ height: "100%"}}>
             {(
                 warning && !cookies.warning && <WarningModal
                     message={"Warning: please do not input any real passwords. This is a demo application."}
