@@ -41,6 +41,7 @@ const GuildMessages = ({ guild, channel }) => {
             ).then(e => {
                 if (e.data.length > 0) {
                     e.data.forEach((message) => {
+                        message.MessageContent = message.MessageContent;
                         if (!message.MessageDate) message.MessageDate = "unknown";
                         else {
                             const updated = message.MessageDate.split(",");
@@ -49,8 +50,32 @@ const GuildMessages = ({ guild, channel }) => {
                             message.MessageDate = `${date[1]}/${date[2]}/${date[0]} @ ${time[0]}:${time[1]}`;
                         }
                     });
-                    setMessages([...messages, ...e.data]);
+                    const list = [...messages, ...e.data];
                     setLatestMessageID(e.data[e.data.length - 1]["MessageID"]);
+                    
+                    console.log(list);
+
+                    // loop through messages, combine the messages if the previous id is the same
+                    let temp = [];
+                    let lastID = 0;
+                    let lastDate = "";
+                    console.log(list)
+                    list.forEach((message) => {
+                        const split = message.MessageDate.split(":");
+                        if (message.UserID === lastID && split.length > 1 && split[1] == lastDate) {
+                            temp[temp.length - 1].MessageContent += "\n" + message.MessageContent;
+                            lastDate = split[1];
+                        } else {
+                            temp.push(message);
+                            lastID = message.UserID;
+                            lastDate = split[1];
+                        }
+                    });
+
+                    console.log(temp);
+                    setMessages(temp);
+
+
                 }
 
             }).catch((_) => {
@@ -176,10 +201,12 @@ const GuildMessages = ({ guild, channel }) => {
                                             fontSize: '15px',
                                             display: 'inline-block',
                                             overflowWrap: 'anywhere',
-                                            whiteSpace: 'normal'
+                                            whiteSpace: 'pre-line'
                                         }}
                                     >
-                                        {message.MessageContent}
+                                        <pre style={{ all: "inherit"}} >
+                                            {message.MessageContent}
+                                        </pre>
                                     </span>
                                     <span
                                         className='txt-gray-secondary'
