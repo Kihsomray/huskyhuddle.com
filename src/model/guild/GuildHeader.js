@@ -58,7 +58,7 @@ const GuildHeader = ({ onLogout, onSelectedGuild }) => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: "space-between", borderBottom: '2px solid #ffc700' }} className="bg-purple-secondary">
+        <div style={{ display: 'flex', justifyContent: "space-between", borderBottom: '2px solid #ffc700', maxHeight: '100vh' }} className="bg-purple-secondary">
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span><img src="https://michael.yarmoshik.com/assets/images/dawg_dialogue.png" style={{ width: "70px", paddingBottom: "6px", paddingRight: "0px" }} alt="Logo"></img></span>
                 <span>
@@ -73,7 +73,7 @@ const GuildHeader = ({ onLogout, onSelectedGuild }) => {
                         style={iconStyle}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseExit}
-                        onClick={() => onSelectedGuild(guild)}
+                        onClick={() =>onSelectedGuild(guild)}
                     >{guild.GuildName.charAt(0)}</span>
                 ))}
             </div>

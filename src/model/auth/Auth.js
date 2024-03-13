@@ -11,7 +11,7 @@ const Auth = ({ onLogin }) => {
     const containerStyle = {
         backgroundSize: 'cover',
         backgroundPosition: 'top left',
-        minHeight: '100vh',
+        minHeight: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
