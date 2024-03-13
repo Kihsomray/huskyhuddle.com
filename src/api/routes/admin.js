@@ -7,6 +7,16 @@ const databaseConnect = require("../db/db-connect");
 
 //// Web service for all admin commands
 
+/*
+ * @swagger
+ * /admin:
+ *   get:
+ *     summary: Returns all admin commands
+ *     description: Returns a json with all admin commands
+ *     responses:
+ *       200:
+ *         description: All admin commands
+ */
 // Check if this user is an admin
 router.get("/", async function (req, res, next) {
     console.log("Admin API");
@@ -39,6 +49,18 @@ router.get("/", async function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /admin/channel:
+ *   post:
+ *     summary: Create a new channel within a guild
+ *     description: Create a new channel within a guild with the name provided
+ *     responses:
+ *       200:
+ *         description: New channel created
+ *       400:
+ *         description: Error creating new channel
+ */
 // Create a new channel within a guild with the name provided.
 // The userid, guildid and channelname is to be passed in the header.
 router.post("/channel/", function (req, res, next) {
@@ -86,6 +108,18 @@ router.post("/channel/", function (req, res, next) {
     });
 });
 
+/*
+* @swagger
+* /admin/channel:   
+*   put:
+*     summary: Update the name of the channel
+*     description: Update the name of the channel within the specified guild
+*     responses:
+*       200:
+*         description: Channel name updated
+*       400:
+*         description: Error updating channel name
+*/
 // change a channels name within a guild with the name provided.
 // The userid, guildid and channelname, channelid is to be passed in the header.
 router.put("/channel/", function (req, res, next) {
@@ -135,6 +169,18 @@ router.put("/channel/", function (req, res, next) {
     });
 });
 
+/*
+* @swagger
+* /admin/channel:   
+*   delete:
+*     summary: Delete a channel
+*     description: Delete a channel within a specified guild
+*     responses:
+*       200:
+*         description: Channel deleted
+*       400:
+*         description: Error deleting channel
+*/
 // Delete a channel within a guild with the channelid provided.
 // The userid, guildid and channelid is to be passed in the header.
 router.delete("/channel/", function (req, res, next) {
@@ -183,7 +229,18 @@ router.delete("/channel/", function (req, res, next) {
 });
 
 
-
+/*
+* @swagger
+* /guild:   
+*   put:
+*     summary: Update the name of the guild
+*     description: Update the name of the guild with the specified ID
+*     responses:
+*       200:
+*         description: Guild name updated
+*       400:
+*         description: Error updating guild name
+*/
 // change a guilds name with the name provided.
 // The userid, guildid and guildname is to be passed in the header.
 router.put("/guild/", function (req, res, next) {
@@ -232,6 +289,18 @@ router.put("/guild/", function (req, res, next) {
     });
 });
 
+/*
+* @swagger
+* /guild:
+*   delete:
+*     summary: Delete a guild
+*     description: Delete a guild with the specified guildid
+*     responses:
+*       200:
+*         description: Guild deleted
+*       400:
+*         description: Error deleting guild
+*/
 // Delete the entire guild
 // The userid, guildid is to be passed in the header.
 router.delete("/guild/", function (req, res, next) {
@@ -291,7 +360,18 @@ router.delete("/guild/", function (req, res, next) {
     });
 });
 
-
+/*
+* @swagger
+* /admin/user:
+*   put:
+*     summary: Update a user's role
+*     description: Update a user's role within the specified guild
+*     responses:
+*       200:
+*         description: User's role updated
+*       400:
+*         description: Error updating user's role
+*/
 // Change a members role.
 // The admins userid, guildid, useridchange, and role to be passed in the header.
 router.put("/user/", function (req, res, next) {
@@ -341,6 +421,18 @@ router.put("/user/", function (req, res, next) {
     });
 });
 
+/*
+* @swagger
+* /user:
+*   delete:
+*     summary: Remove a user from the guild
+*     description: Remove a user from the guild with the specified userid and guildid
+*     responses:
+*       200:
+*         description: User removed
+*       400:
+*         description: Error removing user
+*/
 // Remove a user from the guild
 // The userid, guildid is to be passed in the header.
 router.delete("/user/", function (req, res, next) {

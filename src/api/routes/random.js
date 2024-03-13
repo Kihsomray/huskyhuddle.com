@@ -4,6 +4,19 @@ var axios = require("axios");
 
 const databaseConnect = require("../db/db-connect");
 
+
+/*
+ * @swagger
+ * /random:
+ *   get:
+ *     summary: Returns all messages from table
+ *     description: Returns messages from the table
+ *     responses:
+ *       200:
+ *         description: A message
+ *       400:
+ *         description: Error fetching message
+ */
 router.get("/", function (req, res, next) {
     console.log("Random is working");
 
@@ -19,6 +32,18 @@ router.get("/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /random/user:
+ *   get:
+ *     summary: Returns a random username within a guild
+ *     description: Returns a random username within a guild
+ *     responses:
+ *       200:
+ *         description: A message
+ *       400:
+ *         description: Error fetching message
+ */
 //Get a random username within a guild, provided with the GuildID
 router.get("/user/", function (req, res, next) {
     console.log("Getting a random username within the guild...");
@@ -51,6 +76,18 @@ router.get("/user/", function (req, res, next) {
     });
 });
 
+/*
+ * @swagger
+ * /random/user:
+ *   post:
+ *     summary: Creates a random user
+ *     description: Creates a random user to be added into database
+ *     responses:
+ *       200:
+ *         description: A message
+ *       400:
+ *         description: Error fetching message
+ */
 //Creates a random user from an external API
 router.post("/user/", async function (req, res, next) {
     console.log("Creating a random user to be added into the database...");

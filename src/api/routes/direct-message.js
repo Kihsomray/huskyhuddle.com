@@ -5,8 +5,8 @@ var router = express.Router();
 * @swagger
 * /direct-message:   
 *   get:
-*     summary: Returns all direct messages
-*     description: Returns a json with all direct messages
+*     summary: Returns message about API working 
+*     description: Returns a message "Direct Message API is working properly"
 *     responses:
 *       200:
 *         description: All direct messages
