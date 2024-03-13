@@ -1,9 +1,10 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 
 const GuildMessages = ({ guild, channel }) => {
 
+    const containerRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [cookies] = useCookies(['login']);
@@ -48,7 +49,19 @@ const GuildMessages = ({ guild, channel }) => {
         });
     });
 
+    const scrollToBottom = () => {
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    };
+
     useEffect(() => {
+        // Scroll to the bottom when the component mounts or whenever content changes
+        scrollToBottom();
+      }, [ messages]);
+
+    useEffect(() => {
+        running();
         const interval = setInterval(() => {
             running();
         }, 2000);
@@ -65,13 +78,16 @@ const GuildMessages = ({ guild, channel }) => {
                 backgroundColor: '#676767',
                 whiteSpace: 'nowrap',
             }} className="txt-gold-primary">
-                General
+                {channel.ChannelName}
             </div>
-            <div style={{
-                padding: '10px',
-                height: '100%',
-                overflowY: 'auto'
-            }}>
+            <div
+                ref={containerRef}
+                style={{
+                    padding: '10px',
+                    height: '100%',
+                    overflowY: 'auto'
+                }}
+            >
                 {messages.map((message, index) => (
                     <div
                         style={{
@@ -81,7 +97,6 @@ const GuildMessages = ({ guild, channel }) => {
                             borderRadius: '6px',
                             maxWidth: '100%',
                             fontSize: '14px',
-
                         }}
                         key={index}>
                         <span style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'row' }}>
