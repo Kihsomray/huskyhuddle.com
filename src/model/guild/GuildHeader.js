@@ -2,10 +2,11 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
-const GuildHeader = ({ onLogout }) => {
+const GuildHeader = ({ onLogout, onSelectedGuild }) => {
 
     const [username, setUsername] = useState('');
     const [guilds, setGuilds] = useState([]);
+    const [guild, setGuild] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
 
     useEffect(() =>{
@@ -57,7 +58,7 @@ const GuildHeader = ({ onLogout }) => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: "space-between", borderBottom: '1px solid #ccc' }} className="bg-purple-secondary">
+        <div style={{ display: 'flex', justifyContent: "space-between", borderBottom: '2px solid #ffc700' }} className="bg-purple-secondary">
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span><img src="https://michael.yarmoshik.com/assets/images/dawg_dialogue.png" style={{ width: "70px", paddingBottom: "6px", paddingRight: "0px" }} alt="Logo"></img></span>
                 <span>
@@ -72,7 +73,8 @@ const GuildHeader = ({ onLogout }) => {
                         style={iconStyle}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseExit}
-                    >{guild.GuildName[0].charAt(0)}</span>
+                        onClick={() => onSelectedGuild(guild)}
+                    >{guild.GuildName.charAt(0)}</span>
                 ))}
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
