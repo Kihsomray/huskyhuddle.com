@@ -63,10 +63,10 @@ router.post("/user/", async function (req, res, next) {
         //Extract the randm user information
         let userName = `${userData.login.username}`;
         let userEmail = userData.email;
-        let userPassword = userData.login.password;
+        //let userPassword = userData.login.password;
 
         let sqlQuery = `INSERT INTO User (UserName, UserEmail, UserPass)
-            VALUES ("${userName}","${userEmail}","${userPassword}");`;
+            VALUES ("${userName}","${userEmail}","password");`;
         databaseConnect.query(sqlQuery, (err, result) => {
             if (err) {
                 return res.status(400).json({
