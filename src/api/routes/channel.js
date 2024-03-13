@@ -30,8 +30,11 @@ router.get("/message/", function (req, res, next) {
     console.log(`Getting the last ${Limit} messages sent into the channel`);
 
     const sqlQuery = 
-        `SELECT * FROM Message 
-        WHERE ChannelID = ${ChannelID} AND GuildID = ${GuildID} LIMIT ${Limit};`;
+        `SELECT MessageID, MessageContent, UserID
+        FROM Message
+        WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}
+        ORDER BY MessageID DESC
+        LIMIT ${Limit};`;
     // const sqlQuery = `SELECT *  FROM Channel;`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
@@ -48,22 +51,24 @@ router.get("/message/", function (req, res, next) {
 });
 
 // POST request to handler to add a message to a channel
+// Send userid, channelid, guildid, and messagecontent
 router.post("/message/", function (req, res) {
-    let channelId = req.headers.ChannelID;
-    let UserID = req.headers.UserID;
-    let GuildID = req.headers.GuildID;
-    let messageContent = req.headers.Content;
+    let channelId = req.headers.channelid;
+    let UserID = req.headers.userid;
+    let GuildID = req.headers.guildid;
+    let messageContent = req.headers.content;
 
     console.log("Sending a message to channel");
 
     if (!channelId || !messageContent) {
         return res
             .status(400)
-            .json({ error: "ChannelID, MessageContent are required in body." });
+            .json({ error: "ChannelID, MessageContent are required in header." });
     }
 
-    const sqlQuery = `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID) 
-                    VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID});`;
+    const sqlQuery = 
+        `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID) 
+        VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID});`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
