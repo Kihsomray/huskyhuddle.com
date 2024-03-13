@@ -31,10 +31,14 @@ router.get("/message/", function (req, res, next) {
 
     const sqlQuery = 
         `SELECT MessageID, MessageContent, UserID
-        FROM Message
-        WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}
-        ORDER BY MessageID DESC
-        LIMIT ${Limit};`;
+        FROM (
+            SELECT MessageID, MessageContent, UserID
+            FROM Message
+            WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}
+            ORDER BY MessageID DESC
+            LIMIT ${Limit}
+        ) AS LatestMessages
+        ORDER BY MessageID ASC;`;
     // const sqlQuery = `SELECT *  FROM Channel;`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
