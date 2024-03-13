@@ -26,8 +26,8 @@ router.get("/", async function (req, res, next) {
             return result.status(400).json({"Error" : "Uhoh"});
         }
 
-        console.log(result);
-        console.log(result.length);
+        // console.log(result);
+        // console.log(result.length);
 
         if (result.length == 0) {
             return res.status(400).json({"Error" : "User is not member of Guild"});
@@ -60,8 +60,8 @@ router.post("/channel/", function (req, res, next) {
             return result.status(400).json({"Error" : "Uhoh"});
         }
 
-        console.log(result);
-        console.log(result.length);
+        // console.log(result);
+        // console.log(result.length);
 
         if (result.length == 0) {
             return res.status(400).json({"Error" : "User is not member of Guild"});
@@ -89,7 +89,7 @@ router.post("/channel/", function (req, res, next) {
 // change a channels name within a guild with the name provided.
 // The userid, guildid and channelname, channelid is to be passed in the header.
 router.put("/channel/", function (req, res, next) {
-    console.log("/Admin/channel/ POST API");
+    console.log("/Admin/channel/ PUT API");
 
     const UserID = req.headers.userid;
     const GuildID = req.headers.guildid;
@@ -108,8 +108,8 @@ router.put("/channel/", function (req, res, next) {
             return result.status(400).json({"Error" : "Uhoh"});
         }
 
-        console.log(result);
-        console.log(result.length);
+        // console.log(result);
+        // console.log(result.length);
 
         if (result.length == 0) {
             return res.status(400).json({"Error" : "User is not member of Guild"});
@@ -156,8 +156,8 @@ router.delete("/channel/", function (req, res, next) {
             return result.status(400).json({"Error" : "Uhoh"});
         }
 
-        console.log(result);
-        console.log(result.length);
+        // console.log(result);
+        // console.log(result.length);
 
         if (result.length == 0) {
             return res.status(400).json({"Error" : "User is not member of Guild"});
@@ -184,5 +184,111 @@ router.delete("/channel/", function (req, res, next) {
 
 
 
+// change a guilds name with the name provided.
+// The userid, guildid and guildname is to be passed in the header.
+router.put("/guild/", function (req, res, next) {
+    console.log("/Admin/channel/ PUT API");
+
+    const UserID = req.headers.userid;
+    const GuildID = req.headers.guildid;
+    const GuildName = req.headers.guildname;
+
+    const sqlQueryRole = 
+        `SELECT Role
+        FROM GuildUser
+        WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
+
+    databaseConnect.query(sqlQueryRole, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            return result.status(400).json({"Error" : "Uhoh"});
+        }
+
+        // console.log(result);
+        // console.log(result.length);
+
+        if (result.length == 0) {
+            return res.status(400).json({"Error" : "User is not member of Guild"});
+        } else if (result[0].Role !== "Admin") {
+            return res.status(400).json({"Error" : "User is not an Admin"});
+        }
+        
+        //return res.status(200).json(result[0]);
+        // If here the user is an admin
+
+        const sqlQuery = 
+            `UPDATE Guild
+            SET GuildName = '${GuildName}'
+            WHERE GuildID = ${GuildID};`;
+        databaseConnect.query(sqlQuery, (err, result) => {
+            if (err) {
+                console.log("Error");
+                console.log(err);
+                return result.status(400).json({"Error" : err});
+            }
+            return res.status(200).json({"NewName" : GuildName});
+        });
+    });
+});
+
+// Delete a channel within a guild with the channelid provided.
+// The userid, guildid is to be passed in the header.
+router.delete("/guild/", function (req, res, next) {
+    console.log("/Admin/guild/ DELETE API");
+
+    const UserID = req.headers.userid;
+    const GuildID = req.headers.guildid;
+
+    const sqlQueryRole = 
+        `SELECT Role
+        FROM GuildUser
+        WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
+
+    databaseConnect.query(sqlQueryRole, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            return result.status(400).json({"Error" : err});
+        }
+
+        // console.log(result);
+        // console.log(result.length);
+
+        if (result.length == 0) {
+            return res.status(400).json({"Error" : "User is not member of Guild"});
+        } else if (result[0].Role !== "Admin") {
+            return res.status(400).json({"Error" : "User is not an Admin"});
+        }
+        
+        //return res.status(200).json(result[0]);
+        // If here the user is an admin
+
+        const sqlQueryGuildUser = 
+            `DELETE FROM GuildUser
+            WHERE GuildID = ${GuildID};`;
+        databaseConnect.query(sqlQueryGuildUser, (err, result) => {
+            if (err) {
+                console.log("Error");
+                console.log(err);
+                return result.status(400).json({"Error" : err});
+            }
+            //return res.status(200).json({"NumOfGuildsRemoved": result.affectedRows});
+            console.log("All guildUsers removed")
+        });
+
+        const sqlQuery = 
+            `DELETE FROM Guild
+            WHERE GuildID = ${GuildID};`;
+        databaseConnect.query(sqlQuery, (err, result) => {
+            if (err) {
+                console.log("Error");
+                console.log(err);
+                return result.status(400).json({"Error" : err});
+            }
+            return res.status(200).json({"NumOfGuildsRemoved": result.affectedRows});
+        });
+    });
+});
 
 module.exports = router;
