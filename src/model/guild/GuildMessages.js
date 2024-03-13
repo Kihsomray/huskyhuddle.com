@@ -66,15 +66,14 @@ const GuildMessages = ({ guild, channel }) => {
         running();
         const interval = setInterval(() => {
             running();
-        }, 500);
+        }, 750);
 
         return () => clearInterval(interval);
     }, [latestMessageID]);
 
     useEffect(() => {
-        setLatestMessageID(0);
         setMessages([]);
-        running();
+        setLatestMessageID(0);
     }, [channel]);
 
     return (
