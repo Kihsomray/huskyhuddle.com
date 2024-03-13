@@ -23,7 +23,7 @@ const GuildMessages = ({ guild, channel }) => {
                     }
                 }
             ).then(_ => {
-                setMessages([...messages, { MessageContent: newMessage, UserID: cookies.login }]);
+                setMessages([...messages, { MessageDate: "sending...", UserID: cookies.login }]);
                 setNewMessage('');
             }).catch((_) => {
                 console.log("unable to fetch channel messages");
@@ -81,77 +81,78 @@ const GuildMessages = ({ guild, channel }) => {
                             borderRadius: '6px',
                             maxWidth: '100%',
                             fontSize: '14px',
+
                         }}
                         key={index}>
-                        <span
-                            style={{
-                                padding: '10px',
-                                paddingTop: '10px',
-                                paddingLeft: '0px',
-                                marginBottom: '10px',
-                                marginRight: '6px',
-                                borderRadius: '6px',
-                                backgroundColor: '#565656',
-                                color: '#fff',
-                                maxWidth: '80%',
-                            }}
-                        >
-
-                            {/* User Icon */}
+                        <span style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'row' }}>
                             <span
-                                className='bg-purple-primary'
                                 style={{
                                     padding: '10px',
+                                    paddingLeft: '0px',
+                                    marginRight: '10px',
                                     borderRadius: '6px',
+                                    backgroundColor: '#565656',
+                                    color: '#fff',
+                                    maxWidth: '80%'
                                 }}
-                            >{message.UserID}</span>
+                            >
 
-                            {/* User Name */}
+                                {/* User Icon */}
+                                <span
+                                    className='bg-purple-primary'
+                                    style={{
+                                        padding: '10px',
+                                        borderRadius: '6px',
+                                    }}
+                                >{message.UserID}</span>
+
+                                {/* User Name */}
+                                <span
+                                    style={{
+                                        paddingLeft: '8px',
+                                        margin: "0px",
+                                        borderRadius: '6px',
+                                    }}
+                                >{message.UserName}</span>
+
+                            </span>
+
+                            {/* User Message */}
                             <span
+                                className='txt-purple-secondary'
                                 style={{
-                                    paddingLeft: '8px',
-                                    margin: "0px",
-                                    borderRadius: '6px',
+                                    maxWidth: '90%',
+                                    fontSize: '15px',
+                                    display: 'inline-block',
+                                    overflowWrap: 'anywhere',
+                                    whiteSpace: 'normal',
                                 }}
-                            >{message.UserName}</span>
-
-                        </span>
-
-                        {/* User Message */}
-                        <span
-                            className='txt-purple-secondary'
-                            style={{
-                                maxWidth: '90%',
-                                fontSize: '15px',
-                                display: 'inline-block',
-                                overflowWrap: 'anywhere',
-                                whiteSpace: 'normal',
-                                paddingTop: '10px',
-                            }}
-                        >
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <span
-                                    className='txt-purple-secondary'
-                                    style={{
-                                        maxWidth: '100%',
-                                        fontSize: '15px',
-                                        display: 'inline-block',
-                                        overflowWrap: 'anywhere',
-                                        whiteSpace: 'normal'
-                                    }}
-                                >
-                                    {message.MessageContent}
-                                </span>
-                                <span
-                                    className='txt-gray-secondary'
-                                    style={{
-                                        fontSize: '8px',
-                                        color: '#bbb',
-                                    }}
-                                >
-                                    {message.MessageDate} {/* Assuming you have a function to format the timestamp */}
-                                </span>
-                            </div>
+                            >
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span
+                                        className='txt-purple-secondary'
+                                        style={{
+                                            paddingTop: '2px',
+                                            maxWidth: '100%',
+                                            fontSize: '15px',
+                                            display: 'inline-block',
+                                            overflowWrap: 'anywhere',
+                                            whiteSpace: 'normal'
+                                        }}
+                                    >
+                                        {message.MessageContent}
+                                    </span>
+                                    <span
+                                        className='txt-gray-secondary'
+                                        style={{
+                                            fontSize: '8px',
+                                            color: '#bbb',
+                                        }}
+                                    >
+                                        {message.MessageDate} {/* Assuming you have a function to format the timestamp */}
+                                    </span>
+                                </div>
+                            </span>
                         </span>
                     </div>
                 ))}
@@ -178,6 +179,7 @@ const GuildMessages = ({ guild, channel }) => {
                     placeholder="Message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage() }}
                 />
                 <button
                     className='btn-purple-primary'

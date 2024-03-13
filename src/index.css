@@ -9,9 +9,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
-  overflow: auto;
-  max-height: 100vh;
-  
+  height: 100vh;
 }
 
 code {

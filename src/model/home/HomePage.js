@@ -18,12 +18,12 @@ const HomePage = ({ onLogout }) => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', }}>
-            <GuildHeader style={{ display: "flex", height: '100%'}}
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', }}>
+            <GuildHeader
                 onLogout={onLogout} onSelectedGuild={onSelectedGuild}
             />
 
-            <div style={{ display: 'flex', height: "100%", maxHeight: "100%" }}>
+            <div style={{ display: 'flex', height: "100%", overflow: "auto" }}>
                 <GuildChannels onSelectedChannel={onSelectedChannel} guild={guild} />
                 <GuildMessages onSelectedChannel={onSelectedChannel} guild={guild} channel={channel} />
                 <GuildUsers guild={guild} />
