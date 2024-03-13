@@ -3,7 +3,16 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
-
+/*
+* @swagger
+* /message:   
+*   get:
+*     summary: Returns all messages
+*     description: Returns a json with all messages
+*     responses:
+*       200:
+*         description: All messages
+*/
 // YOUR ENDPOINT HERE, It will be called by GET local host 4000 /message/
 router.get("/", function (req, res, next) {
     
