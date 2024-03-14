@@ -5,11 +5,38 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+
 // const databaseConnect = require("./db/db-connect");
 
 var app = express();
 
 app.use(cors());
+
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "HuskyHuddle API",
+            version: "1.0.0",
+            description: "A Chat Application API"
+        },
+        servers: [
+            {
+                url: "http://localhost:4000"
+            }
+        ],
+        
+    },
+    apis: ["./routes/*.js"]
+};
+
+const specs = swaggerJsDoc(options);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 // connect to database
 // let dbConnection = databaseConnect();

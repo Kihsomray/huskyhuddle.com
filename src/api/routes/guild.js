@@ -9,7 +9,9 @@ const databaseConnect = require("../db/db-connect");
 
 //// Webservice guild/
 
-/*
+
+
+/**
 * @swagger
 * /guild:   
 *   get:
@@ -35,12 +37,18 @@ router.get("/", function (req, res, next) {
     });
 });
 
-/*
+/**
 * @swagger
-* /guild:   
+* /guild:
 *   post:
 *     summary: Create a new guild
-*     description: Create a new guild with the name provided. The guildid is to be passed in the header.
+*     description: Create a new guild with the name provided. The guildname is to be passed in the header.
+*     parameters:
+*       - in: header
+*         name: guildname
+*         required: true
+*         schema:
+*           type: string
 *     responses:
 *       200:
 *         description: New guild created
@@ -66,7 +74,7 @@ router.post("/", function (req, res, next) {
     });
 });
 
-/*
+/**
 * @swagger
 * /guild:   
 *   put:
@@ -99,7 +107,7 @@ router.put("/", function (req, res, next) {
     });
 });
 
-/*
+/**
 * @swagger
 * /guild:   
 *   delete:
@@ -144,7 +152,7 @@ router.delete("/", function (req, res, next) {
 
 //// Webservice guild/user/
 
-/*
+/**
 * @swagger
 * /guild/user:   
 *   get:
@@ -178,7 +186,7 @@ router.get("/user/", function (req, res, next) {
 });
 
 
-/*
+/**
 * @swagger
 * /guild/user:   
 *   post:
@@ -213,7 +221,7 @@ router.post("/user/", function (req, res, next) {
 });
 
 
-/*
+/**
 * @swagger
 * /guild/user:   
 *   put:
@@ -249,7 +257,7 @@ router.put("/user/", function (req, res, next) {
 });
 
 
-/*
+/**
 * @swagger
 * /guild/user:   
 *   delete:
@@ -284,7 +292,7 @@ router.delete("/user/", function (req, res, next) {
 
 //// Webservice guild/channel/
 
-/*
+/**
 * @swagger
 * /guild/channel:   
 *   get:
@@ -315,7 +323,7 @@ router.get("/channel/", function (req, res, next) {
     });
 });
 
-/*
+/**
 * @swagger
 * /guild/channel:   
 *   post:
@@ -349,7 +357,7 @@ router.post("/channel/", function (req, res) {
 });
 
 
-/*
+/**
 * @swagger
 * /guild/channel:   
 *   put:
@@ -383,7 +391,7 @@ router.put("/channel/", function (req, res) {
 });
 
 
-/*
+/**
 * @swagger
 * /guild/channel:   
 *   delete:
@@ -418,7 +426,7 @@ router.delete("/channel/", function (req, res) {
 
 //// Webservice guild/
 
-/*
+/**
  * @swagger
  * /guild:
  *   get:
@@ -444,7 +452,7 @@ router.get("/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild:
  *   post:
@@ -473,7 +481,7 @@ router.post("/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild:
  *   put:
@@ -504,7 +512,7 @@ router.put("/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild:
  *   delete:
@@ -547,7 +555,7 @@ router.delete("/", function (req, res, next) {
 
 //// Webservice guild/user/
 
-/*
+/**
  * @swagger
  * /guild/user:
  *   get:
@@ -582,7 +590,7 @@ router.get("/user/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/user:
  *   post:
@@ -616,7 +624,7 @@ router.post("/user/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/user:
  *   put:
@@ -651,7 +659,7 @@ router.put("/user/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/user:
  *   delete:
@@ -684,7 +692,7 @@ router.delete("/user/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   get:
@@ -720,7 +728,7 @@ router.get("/channel/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   post:
@@ -752,7 +760,7 @@ router.post("/channel/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   put:
@@ -784,7 +792,7 @@ router.put("/channel/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   delete:
@@ -817,7 +825,7 @@ router.delete("/channel/", function (req, res) {
 
 //// Webservice guild/channel/
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   get:
@@ -850,7 +858,7 @@ router.get("/channel/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   post:
@@ -882,7 +890,7 @@ router.post("/channel/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   put:
@@ -914,7 +922,7 @@ router.put("/channel/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /guild/channel:
  *   delete:
