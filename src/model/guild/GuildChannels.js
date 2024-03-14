@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import CreateModal from '../../modal/server/CreateModal';
 import { useCookies } from 'react-cookie';
+import WarningModal from '../../modal/warning/WarningModal';
 
 const GuildChannels = ({ onSelectedChannel, guild }) => {
 
@@ -9,6 +10,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
     const [showCreateChannel, setShowCreateChannel] = useState(false);
     const [channels, setChannels] = useState([]);
     const [selectedChannel, setSelectedChannel] = useState(null);
+    const [warning, setWarning] = useState(false);
 
     const iconStyle = {
         cursor: 'pointer',
@@ -75,11 +77,16 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                             setChannels([...channels, ...[channel]]);
                             onChannelSelected(channel);
                         }).catch((_) => {
+                            setWarning(true);
                             console.log("unable to create new channel");
                         });
                     })();
                     setShowCreateChannel(false);
                 }}
+            />}
+            {warning && <WarningModal
+                message={"You do not have the correct permissions!"}
+                onClose={() => setWarning(false)}
             />}
             <div style={{
                 display: 'flex',
@@ -103,7 +110,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                         width: '200px',
                         height: '32px'
                     }}
-                >Channels</span>
+                >Chats</span>
                 </>}
                 {channels.map((channel, index) => (
                     <span
