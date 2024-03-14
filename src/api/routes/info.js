@@ -3,7 +3,7 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
-/* 
+/** 
 * @swagger
 * /info:   
 *   get:

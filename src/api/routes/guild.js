@@ -9,7 +9,12 @@ const databaseConnect = require("../db/db-connect");
 
 //// Webservice guild/
 
-
+/**
+ * @swagger
+ * tags:
+ *   name: Guilds
+ *   description: The guild managing API
+ */
 
 /**
 * @swagger
@@ -17,6 +22,7 @@ const databaseConnect = require("../db/db-connect");
 *   get:
 *     summary: Returns all guilds
 *     description: Returns a json with all guilds
+*     tags: [Guilds]
 *     responses:
 *       200:
 *         description: All guilds
