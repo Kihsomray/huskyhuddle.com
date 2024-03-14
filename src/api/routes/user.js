@@ -280,6 +280,19 @@ router.post("/createguild/", function(req, res, next) {
   });
 });
 
+
+/*
+* @swagger
+* /user/test:   
+*   get:
+*     summary: Test external API and fetch user data
+*     description: Fetches data from an external API and returns user data from the database.
+*     responses:
+*       200:
+*         description: Successfully fetched user data
+*       400:
+*         description: Error fetching data
+*/
 // Test out axios to get some data from another webservice
 router.get("/test/", function(req, res, next) {
   console.log("User API");
@@ -308,22 +321,6 @@ router.get("/test/", function(req, res, next) {
     });
   });
   
-});
-
-
-router.get("/:userId", function(req, res, next) {
-  const userid = req.params.userId;
-
-  const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
-
-  databaseConnect.query(sqlQuery, (err, result) => {
-      if (err) {
-          console.log("Error");
-          console.log(err);
-          return res.status(400).json(result);
-      } 
-      return res.status(200).json(result);
-  });
 });
 
 
@@ -524,32 +521,32 @@ router.get("/test/", function(req, res, next) {
 });
 
 
-/*
-* @swagger
-* /user/{userId}:   
-*   get:
-*     summary: Get user by ID
-*     description: Returns a single user by their ID
-*     responses:
-*       200:
-*         description: A single user
-*       404:
-*         description: User not found
-*/
-router.get("/:userId", function(req, res, next) {
-  const userid = req.params.userId;
+// /*
+// * @swagger
+// * /user/{userId}:   
+// *   get:
+// *     summary: Get user by ID
+// *     description: Returns a single user by their ID
+// *     responses:
+// *       200:
+// *         description: A single user
+// *       404:
+// *         description: User not found
+// */
+// router.get("/:userId", function(req, res, next) {
+//   const userid = req.params.userId;
 
-  const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
+//   const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
 
-  databaseConnect.query(sqlQuery, (err, result) => {
-      if (err) {
-          console.log("Error");
-          console.log(err);
-          return res.status(400).json(result);
-      } 
-      return res.status(200).json(result);
-  });
-});
+//   databaseConnect.query(sqlQuery, (err, result) => {
+//       if (err) {
+//           console.log("Error");
+//           console.log(err);
+//           return res.status(400).json(result);
+//       } 
+//       return res.status(200).json(result);
+//   });
+// });
 
 // const fetchData = async () => {
 //   try {
