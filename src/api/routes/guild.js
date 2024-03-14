@@ -234,7 +234,7 @@ router.post("/channel/", function (req, res) {
             console.log(err);
             return res.status(400);
         }
-        return res.status(200).json(result);
+        return res.status(200).json({ ChannelID: result.insertId });
     });
 });
 
