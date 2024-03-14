@@ -74,6 +74,7 @@ app.use("/user", require("./routes/user"));
 app.use("/admin", require("./routes/admin"));
 app.use("/random", require("./routes/random"));
 app.use("/joke", require("./routes/joke"));
+app.use("/stats", require("./routes/stats"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
