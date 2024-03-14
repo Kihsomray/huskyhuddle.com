@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Auth from './auth/Auth';
 import HomePage from './home/HomePage';
 import { useCookies } from 'react-cookie';
-import WarningModal from '../modal/popup/WarningModal';
+import WarningModal from '../modal/warning/WarningModal';
 
 const App = () => {
     const [warning, setShowWarning] = useState(true);
