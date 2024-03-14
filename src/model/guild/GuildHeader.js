@@ -6,7 +6,7 @@ const GuildHeader = ({ onLogout, onSelectedGuild }) => {
 
     const [username, setUsername] = useState('');
     const [guilds, setGuilds] = useState([]);
-    const [guild, setGuild] = useState('');
+    const [currentGuild, setCurrentGuild] = useState(null);
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
 
     useEffect(() =>{
@@ -48,19 +48,37 @@ const GuildHeader = ({ onLogout, onSelectedGuild }) => {
     };
 
     const handleMouseEnter = (e) => {
-        e.target.style.borderRadius = '25%'
+        const bool = (currentGuild && e.currentTarget.id == currentGuild.GuildID);
+        e.target.style.borderRadius = bool ? '25% 25% 0% 0%' : '25%'
+        if (bool) {
+            e.target.style.marginTop = '8px'
+            e.target.style.paddingBottom = '8px'
+            e.target.style.height = '62px'
+        }
         e.target.className = 'icon btn-gold-secondary'
     };
 
     const handleMouseExit = (e) => {
+        if (currentGuild && e.currentTarget.id == currentGuild.GuildID) {
+            e.target.className = 'icon btn-gold-tertiary'
+            return;
+        }
         e.target.style.borderRadius = '40%'
+        e.target.style.marginTop = '0px'
+        e.target.style.height = '54px'
+        e.target.style.paddingBottom = '0px'
         e.target.className = 'icon btn-purple-primary'
+    };
+
+    const onGuildSelected = (guild) => {
+        setCurrentGuild(guild);
+        onSelectedGuild(guild);
     };
 
     return (
         <div style={{ display: 'flex', justifyContent: "space-between", borderBottom: '2px solid #ffc700', maxHeight: '100vh' }} className="bg-purple-secondary">
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span><img src="https://michael.yarmoshik.com/assets/images/dawg_dialogue.png" style={{ width: "70px", paddingBottom: "6px", paddingRight: "0px" }} alt="Logo"></img></span>
+                <span><img src="logo192.png" style={{ width: "70px", height: "70px", padding: "6px", paddingRight: "0px" }} alt="Logo"></img></span>
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-chevron-compact-right" viewBox="4 0 12 16">
                         <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671" />
@@ -68,12 +86,13 @@ const GuildHeader = ({ onLogout, onSelectedGuild }) => {
                 </span>
                 {guilds.map((guild, index) => (
                     <span
+                        id={guild.GuildID}
                         key={index}
-                        className='icon btn-purple-primary'
-                        style={iconStyle}
+                        className={(currentGuild && guild.GuildID == currentGuild.GuildID) ? 'icon btn-gold-tertiary' : 'icon btn-purple-primary'}
+                        style={{...iconStyle, ...(currentGuild && guild.GuildID == currentGuild.GuildID) ? {borderRadius: "25% 25% 0% 0%", marginTop: "8px", height: "62px", paddingBottom: "8px"} : {borderRadius: "40%", marginTop: "0px", height: "54px", paddingBottom: "0px"}}}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseExit}
-                        onClick={() =>onSelectedGuild(guild)}
+                        onClick={() => onGuildSelected(guild)}
                     >{guild.GuildName.charAt(0)}</span>
                 ))}
             </div>

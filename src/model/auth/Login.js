@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import WarningModal from '../../modal/popup/WarningModal';
+import WarningModal from '../../modal/warning/WarningModal';
 
 const Login = ({ onLogin }) => {
     const [username, setUsername] = useState('');

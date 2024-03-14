@@ -103,7 +103,7 @@ router.post("/channel/", function (req, res, next) {
                 console.log(err);
                 return result.status(400).json({"Error" : err});
             }
-            return res.status(200).json({"ChannelID" : result.insertId});
+            return res.status(200).json({"ChannelID" : result.insertId, "ChannelName" : ChannelName});
         });
     });
 });

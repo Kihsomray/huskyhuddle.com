@@ -1,11 +1,16 @@
 import axios from 'axios';
-import { set } from 'mongoose';
 import React, { useState, useEffect } from 'react';
+import CreateModal from '../../modal/server/CreateModal';
+import { useCookies } from 'react-cookie';
+import WarningModal from '../../modal/warning/WarningModal';
 
 const GuildChannels = ({ onSelectedChannel, guild }) => {
 
+    const [cookies] = useCookies(['login']);
+    const [showCreateChannel, setShowCreateChannel] = useState(false);
     const [channels, setChannels] = useState([]);
     const [selectedChannel, setSelectedChannel] = useState(null);
+    const [warning, setWarning] = useState(false);
 
     const iconStyle = {
         cursor: 'pointer',
@@ -45,7 +50,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                 "http://localhost:4000/guild/channel/",
                 { headers: { "guildid": guild.GuildID } }
             ).then(e => {
-                if (e.data.length > 0) {
+                if (e.data.length > 0 && !selectedChannel) {
                     onChannelSelected(e.data[0]);
                 }
                 setChannels(e.data);
@@ -53,10 +58,36 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                 console.log("unable to fetch guild channels");
             });
         })();
-    }, [guild.GuildName]);
+    }, [guild.GuildName, channels.length]);
 
     return (
         <div style={{ height: '100%', backgroundColor: '#565656' }}>
+            {showCreateChannel && <CreateModal
+                message={"Create a new channel"}
+                onClose={() => setShowCreateChannel(false)}
+                onSubmit={(e) => {
+                    (async () => {
+                        await axios.post(
+                            "http://localhost:4000/admin/channel/",
+                            null,
+                            { headers: { "guildid": guild.GuildID, "userid": cookies.login, "channelname": e } }
+                        ).then(e1 => {
+                            console.log(e1.data)
+                            const channel = {ChannelID: e1.data.ChannelID, ChannelName: e};
+                            setChannels([...channels, ...[channel]]);
+                            onChannelSelected(channel);
+                        }).catch((_) => {
+                            setWarning(true);
+                            console.log("unable to create new channel");
+                        });
+                    })();
+                    setShowCreateChannel(false);
+                }}
+            />}
+            {warning && <WarningModal
+                message={"You do not have the correct permissions!"}
+                onClose={() => setWarning(false)}
+            />}
             <div style={{
                 display: 'flex',
                 justifyContent: "space-between",
@@ -79,7 +110,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                         width: '200px',
                         height: '32px'
                     }}
-                >Channels</span>
+                >Chats</span>
                 </>}
                 {channels.map((channel, index) => (
                     <span
@@ -113,7 +144,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                     style={iconStyle}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseExit}
-                    onClick={() => { }}
+                    onClick={() => setShowCreateChannel(true)}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16" style={{ marginRight: "10px" }}>
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
