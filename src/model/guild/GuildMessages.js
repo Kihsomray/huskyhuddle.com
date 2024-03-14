@@ -94,13 +94,8 @@ const GuildMessages = ({ guild, channel }) => {
 
     useEffect(() => {
         setMessages([]);
-        setLatestMessageID(0);
-    }, [channel]);
-
-    useEffect(() => {
-        setMessages([]);
-        setLatestMessageID(-1);
-    }, [guild]);
+        setLatestMessageID(latestMessageID < 1 ? latestMessageID - 1 : 0);
+    }, [channel, guild]);
 
     useEffect(() => {
         running();
