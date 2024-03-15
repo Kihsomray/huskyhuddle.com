@@ -35,7 +35,8 @@ const databaseConnect = require("../db/db-connect");
 router.get("/", function (req, res, next) {
     console.log("Guild API");
 
-    const sqlQuery = "SELECT * FROM Guild;";
+    const sqlQuery = 
+        `SELECT * FROM Guild;`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
@@ -73,13 +74,14 @@ router.post("/", function (req, res, next) {
 
     let GuildName = req.headers.guildname;
 
-    const sqlQuery = `INSERT INTO Guild (GuildName)
+    const sqlQuery = 
+        `INSERT INTO Guild (GuildName)
         VALUES ('${GuildName}');`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
             console.log(err);
-            return result.status(400).json({ Error: "Uhoh" });
+            return result.status(400).json({ Error: err });
         }
         return res.status(200).json({ GuildID: result.insertId, GuildName: GuildName });
     });
@@ -117,14 +119,15 @@ router.put("/", function (req, res, next) {
     let GuildName = req.headers.guildname;
     let GuildID = req.headers.guildid;
 
-    const sqlQuery = `UPDATE Guild
+    const sqlQuery = 
+        `UPDATE Guild
         SET GuildName = '${GuildName}'
         WHERE GuildID = ${GuildID};`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -174,7 +177,7 @@ router.delete("/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -206,7 +209,8 @@ router.get("/user/", function (req, res, next) {
 
     let GuildID = req.headers.guildid;
 
-    const sqlQuery = `SELECT GU.UserID, U.UserName, GU.Role
+    const sqlQuery = 
+        `SELECT GU.UserID, U.UserName, GU.Role
         FROM GuildUser GU
         JOIN User U ON GU.UserID = U.UserID
         WHERE GU.GuildID = ${GuildID}
@@ -216,7 +220,7 @@ router.get("/user/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            return res.status(400).json({ Error: "Uh-oh" });
+            return res.status(400).json({ Error: err });
         }
         return res.status(200).json(result);
     });
@@ -260,14 +264,15 @@ router.post("/user/", function (req, res, next) {
     let UserID = req.headers.userid;
     let Role = req.headers.role;
 
-    const sqlQuery = `INSERT INTO GuildUser (GuildID, UserID, Role)
+    const sqlQuery = 
+        `INSERT INTO GuildUser (GuildID, UserID, Role)
         VALUES (${GuildID}, ${UserID}, '${Role}');`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -311,7 +316,8 @@ router.put("/user/", function (req, res, next) {
     let UserID = req.headers.userid;
     let Role = req.headers.role;
 
-    const sqlQuery = `UPDATE GuildUser
+    const sqlQuery = 
+        `UPDATE GuildUser
         SET Role = '${Role}'
         WHERE GuildID = ${GuildID} AND UserID = ${UserID};`;
 
@@ -319,7 +325,7 @@ router.put("/user/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -357,14 +363,15 @@ router.delete("/user/", function (req, res, next) {
     let GuildID = req.headers.guildid;
     let UserID = req.headers.userid;
 
-    const sqlQuery = `DELETE FROM GuildUser
+    const sqlQuery = 
+        `DELETE FROM GuildUser
         WHERE GuildID = ${GuildID} AND UserID = ${UserID};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -396,7 +403,8 @@ router.get("/channel/", function (req, res, next) {
 
     let GuildID = req.headers.guildid;
 
-    const sqlQuery = `SELECT ChannelID, ChannelName
+    const sqlQuery = 
+        `SELECT ChannelID, ChannelName
         FROM Channel
         WHERE GuildID = ${GuildID};`;
 
@@ -404,7 +412,7 @@ router.get("/channel/", function (req, res, next) {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -442,14 +450,15 @@ router.post("/channel/", function (req, res) {
     let GuildID = req.headers.guildid;
     let ChannelName = req.headers.channelname;
 
-    const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
+    const sqlQuery = 
+        `INSERT INTO Channel (GuildID, ChannelName)
         VALUES (${GuildID}, '${ChannelName}')`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error creating new channel");
             console.log(err);
-            return res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json({ ChannelID: result.insertId });
     });
@@ -493,13 +502,14 @@ router.put("/channel/", function (req, res) {
     let ChannelID = req.headers.channelid;
     let ChannelName = req.headers.channelname;
 
-    const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
+    const sqlQuery = 
+        `UPDATE Channel SET ChannelName = '${ChannelName}'
         WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.error("Error updating channelname", err);
-            return res.status(404);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });
@@ -537,13 +547,14 @@ router.delete("/channel/", function (req, res) {
     let GuildID = req.headers.guildid;
     let ChannelID = req.headers.channelid;
 
-    const sqlQuery = `DELETE FROM Channel
-                    WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
+    const sqlQuery = 
+        `DELETE FROM Channel
+        WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.error("Error deleting channel");
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
         return res.status(200).json(result);
     });

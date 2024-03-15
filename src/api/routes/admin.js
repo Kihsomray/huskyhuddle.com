@@ -9,6 +9,17 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
+ * tags:
+ *   - name: Admin
+ *     description: The guild managing API
+ *   - name: Admin/Channel
+ *     description: The user managing API within guilds
+ *   - name: Guild/Channel
+ *     description: The channel managing API within guilds.
+ */
+
+/**
+ * @swagger
  * /admin:
  *   get:
  *     summary: Returns all admin commands
