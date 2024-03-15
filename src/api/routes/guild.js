@@ -17,16 +17,16 @@ const databaseConnect = require("../db/db-connect");
  */
 
 /**
-* @swagger
-* /guild:   
-*   get:
-*     summary: Returns all guilds
-*     description: Returns a json with all guilds
-*     tags: [Guilds]
-*     responses:
-*       200:
-*         description: All guilds
-*/
+ * @swagger
+ * /guild:
+ *   get:
+ *     summary: Returns all guilds
+ *     description: Returns a json with all guilds
+ *     tags: [Guilds]
+ *     responses:
+ *       200:
+ *         description: All guilds
+ */
 // Get all guilds, returns a json with all guilds
 router.get("/", function (req, res, next) {
     console.log("Guild API");
@@ -44,23 +44,23 @@ router.get("/", function (req, res, next) {
 });
 
 /**
-* @swagger
-* /guild:
-*   post:
-*     summary: Create a new guild
-*     description: Create a new guild with the name provided. The guildname is to be passed in the header.
-*     parameters:
-*       - in: header
-*         name: guildname
-*         required: true
-*         schema:
-*           type: string
-*     responses:
-*       200:
-*         description: New guild created
-*       400:
-*         description: Error creating new guild
-*/
+ * @swagger
+ * /guild:
+ *   post:
+ *     summary: Create a new guild
+ *     description: Create a new guild with the name provided. The guildname is to be passed in the header.
+ *     parameters:
+ *       - in: header
+ *         name: guildname
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: New guild created
+ *       400:
+ *         description: Error creating new guild
+ */
 // Create a new guild with the name provided.
 // The guildid is to be passed in the header.
 router.post("/", function (req, res, next) {
@@ -81,17 +81,17 @@ router.post("/", function (req, res, next) {
 });
 
 /**
-* @swagger
-* /guild:   
-*   put:
-*     summary: Update a guild
-*     description: Update a guild with a new name based off of the guildID. The guildid and guildname is to be passed in the header.
-*     responses:
-*       200:
-*         description: Guild updated
-*       400:
-*         description: Error updating guild
-*/
+ * @swagger
+ * /guild:
+ *   put:
+ *     summary: Update a guild
+ *     description: Update a guild with a new name based off of the guildID. The guildid and guildname is to be passed in the header.
+ *     responses:
+ *       200:
+ *         description: Guild updated
+ *       400:
+ *         description: Error updating guild
+ */
 // Update a guild with a new name based off of the guildID
 // The guildid and guildname is to be passed in the header.
 router.put("/", function (req, res, next) {
@@ -114,17 +114,17 @@ router.put("/", function (req, res, next) {
 });
 
 /**
-* @swagger
-* /guild:   
-*   delete:
-*     summary: Delete a guild
-*     description: Delete a guild
-*     responses:
-*       200:
-*         description: Guild deleted
-*       400:
-*         description: Error deleting guild
-*/
+ * @swagger
+ * /guild:
+ *   delete:
+ *     summary: Delete a guild
+ *     description: Delete a guild
+ *     responses:
+ *       200:
+ *         description: Guild deleted
+ *       400:
+ *         description: Error deleting guild
+ */
 // Delete a guild and also remove all members of that guild by deleting all guildUsers of that guild
 // The guildid is to be passed in the header.
 router.delete("/", function (req, res, next) {
@@ -159,15 +159,15 @@ router.delete("/", function (req, res, next) {
 //// Webservice guild/user/
 
 /**
-* @swagger
-* /guild/user:   
-*   get:
-*     summary: Returns all users in this guild
-*     description: Returns a json with all users in this guild
-*     responses:
-*       200:
-*         description: All users in this guild
-*/
+ * @swagger
+ * /guild/user:
+ *   get:
+ *     summary: Returns all users in this guild
+ *     description: Returns a json with all users in this guild
+ *     responses:
+ *       200:
+ *         description: All users in this guild
+ */
 // Grab all of the GuildUsers of this specific guild.
 // The guildid, userid, and role are to be passed in the header.
 router.get("/user/", function (req, res, next) {
@@ -191,19 +191,18 @@ router.get("/user/", function (req, res, next) {
     });
 });
 
-
 /**
-* @swagger
-* /guild/user:   
-*   post:
-*     summary: Add a new user to a guild
-*     description: Add a new user to a guild with a role. The guildid, userid, and role are to be passed in the header.
-*     responses:
-*       200:
-*         description: User added
-*       400:
-*         description: Error adding user
-*/
+ * @swagger
+ * /guild/user:
+ *   post:
+ *     summary: Add a new user to a guild
+ *     description: Add a new user to a guild with a role. The guildid, userid, and role are to be passed in the header.
+ *     responses:
+ *       200:
+ *         description: User added
+ *       400:
+ *         description: Error adding user
+ */
 // Add a new GuildUser to a guild with a role.
 // The guildid, userid, and role are to be passed in the header.
 router.post("/user/", function (req, res, next) {
@@ -226,19 +225,18 @@ router.post("/user/", function (req, res, next) {
     });
 });
 
-
 /**
-* @swagger
-* /guild/user:   
-*   put:
-*     summary: Update a guildUsers role
-*     description: Update a guildUsers role. The guildid, userid, and role are to be passed in the header
-*     responses:
-*       200:
-*         description: User updated
-*       400:
-*         description: Error updating user
-*/
+ * @swagger
+ * /guild/user:
+ *   put:
+ *     summary: Update a guildUsers role
+ *     description: Update a guildUsers role. The guildid, userid, and role are to be passed in the header
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       400:
+ *         description: Error updating user
+ */
 // Update a guildUsers Role within a guild.
 // The guildid, userid, and role are to be passed in the header
 router.put("/user/", function (req, res, next) {
@@ -262,19 +260,18 @@ router.put("/user/", function (req, res, next) {
     });
 });
 
-
 /**
-* @swagger
-* /guild/user:   
-*   delete:
-*     summary: Delete a guildUser
-*     description: Delete a guildUser. The guildid and userid are to be passed in the header
-*     responses:
-*       200:
-*         description: User deleted
-*       400:
-*         description: Error deleting user
-*/
+ * @swagger
+ * /guild/user:
+ *   delete:
+ *     summary: Delete a guildUser
+ *     description: Delete a guildUser. The guildid and userid are to be passed in the header
+ *     responses:
+ *       200:
+ *         description: User deleted
+ *       400:
+ *         description: Error deleting user
+ */
 // Delete a GuildUser from a guild.
 // The guildid and userid are to be passed in the header
 router.delete("/user/", function (req, res, next) {
@@ -299,15 +296,15 @@ router.delete("/user/", function (req, res, next) {
 //// Webservice guild/channel/
 
 /**
-* @swagger
-* /guild/channel:   
-*   get:
-*     summary: Returns all channels in this guild
-*     description: Returns a json with all channels in this guild
-*     responses:
-*       200:
-*         description: All channels in this guild
-*/
+ * @swagger
+ * /guild/channel:
+ *   get:
+ *     summary: Returns all channels in this guild
+ *     description: Returns a json with all channels in this guild
+ *     responses:
+ *       200:
+ *         description: All channels in this guild
+ */
 // Grab all of the channels of this specific guild by the GuildID in the body
 // The guildid is to be passed in the header
 router.get("/channel/", function (req, res, next) {
@@ -330,17 +327,17 @@ router.get("/channel/", function (req, res, next) {
 });
 
 /**
-* @swagger
-* /guild/channel:   
-*   post:
-*     summary: Create a new channel
-*     description: Create a new channel within the specified guild
-*     responses:
-*       200:
-*         description: New channel created
-*       400:
-*         description: Error creating channel
-*/
+ * @swagger
+ * /guild/channel:
+ *   post:
+ *     summary: Create a new channel
+ *     description: Create a new channel within the specified guild
+ *     responses:
+ *       200:
+ *         description: New channel created
+ *       400:
+ *         description: Error creating channel
+ */
 // Create a new channel within the specified guild
 // The guild and channel name are both to be passed in the header
 router.post("/channel/", function (req, res) {
@@ -362,19 +359,18 @@ router.post("/channel/", function (req, res) {
     });
 });
 
-
 /**
-* @swagger
-* /guild/channel:   
-*   put:
-*     summary: Update the name of the channel
-*     description: Update the name of the channel within the specified guild
-*     responses:
-*       200:
-*         description: Channel updated
-*       400:
-*         description: Error updating channel
-*/
+ * @swagger
+ * /guild/channel:
+ *   put:
+ *     summary: Update the name of the channel
+ *     description: Update the name of the channel within the specified guild
+ *     responses:
+ *       200:
+ *         description: Channel updated
+ *       400:
+ *         description: Error updating channel
+ */
 // Update the name of the channel within the specified guild
 // The guild and channel ID and channel name are to be passed in the header
 router.put("/channel/", function (req, res) {
@@ -396,19 +392,18 @@ router.put("/channel/", function (req, res) {
     });
 });
 
-
 /**
-* @swagger
-* /guild/channel:   
-*   delete:
-*     summary: Delete a channel
-*     description: Delete a channel within a specified guild
-*     responses:
-*       200:
-*         description: Channel deleted
-*       400:
-*         description: Error deleting channel
-*/
+ * @swagger
+ * /guild/channel:
+ *   delete:
+ *     summary: Delete a channel
+ *     description: Delete a channel within a specified guild
+ *     responses:
+ *       200:
+ *         description: Channel deleted
+ *       400:
+ *         description: Error deleting channel
+ */
 // Delete a channel within a specified guild
 // The guild and channel ID are both to be passed in the header
 router.delete("/channel/", function (req, res) {
@@ -830,134 +825,6 @@ router.delete("/channel/", function (req, res) {
 });
 
 //// Webservice guild/channel/
-
-/**
- * @swagger
- * /guild/channel:
- *   get:
- *     summary: Get all channels for a guild
- *     description: Fetches all channels associated with a guild.
- *     responses:
- *       200:
- *         description: Successfully fetched channels
- *       400:
- *         description: Error fetching channels
- */
-// Grab all of the channels of this specific guild by the GuildID in the body
-// {"GuildID" : "5"} as an example as of what to put in the body
-router.get("/channel/", function (req, res, next) {
-    console.log("All channels in this guild");
-
-    let GuildID = req.body.GuildID;
-
-    const sqlQuery = `SELECT ChannelID, ChannelName
-        FROM Channel
-        WHERE GuildID = ${GuildID};`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error");
-            console.log(err);
-            res.status(400);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-/**
- * @swagger
- * /guild/channel:
- *   post:
- *     summary: Create a new channel
- *     description: Create a new channel within the specified guild
- *     responses:
- *       200:
- *         description: New channel created
- *       400:
- *         description: Error creating channel
- */
-// Create a new channel within the specified guild
-router.post("/channel/", function (req, res) {
-    console.log("Create a new channel");
-
-    let GuildID = req.body.GuildID;
-    let ChannelName = req.body.ChannelName;
-
-    const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
-        VALUES (${GuildID}, '${ChannelName}')`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error creating new channel");
-            console.log(err);
-            return res.status(400);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-/**
- * @swagger
- * /guild/channel:
- *   put:
- *     summary: Update the name of the channel
- *     description: Update the name of the channel within the specified guild
- *     responses:
- *       200:
- *         description: Channel name updated
- *       400:
- *         description: Error updating channel name
- */
-// Update the name of the channel within the specified guild
-router.put("/channel/", function (req, res) {
-    console.log("Update channel name");
-
-    let GuildID = req.body.GuildID;
-    let ChannelID = req.body.ChannelID;
-    let ChannelName = req.body.ChannelName;
-
-    const sqlQuery = `UPDATE Channel SET ChannelName = '${ChannelName}'
-        WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.error("Error updating channelname", err);
-            return res.status(404);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-/**
- * @swagger
- * /guild/channel:
- *   delete:
- *     summary: Delete a channel
- *     description: Delete a channel within a specified guild
- *     responses:
- *       200:
- *         description: Channel deleted
- *       400:
- *         description: Error deleting channel
- */
-//Delete a channel within a specified guild
-router.delete("/channel/", function (req, res) {
-    console.log("Deleting a channel");
-
-    let GuildID = req.body.GuildID;
-    let ChannelID = req.body.ChannelID;
-
-    const sqlQuery = `DELETE FROM Channel
-                    WHERE GuildID = ${GuildID} AND ChannelID = ${ChannelID}`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.error("Error deleting channel");
-            res.status(400);
-        }
-        return res.status(200).json(result);
-    });
-});
 
 // How to get headers, like this
 // let username = req.headers.username;
