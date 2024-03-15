@@ -137,6 +137,12 @@ router.put("/", function (req, res, next) {
  *     summary: Delete a guild
  *     description: Delete a guild
  *     tags: [Guild]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Guild deleted
@@ -183,6 +189,12 @@ router.delete("/", function (req, res, next) {
  *     summary: Returns all users in this guild
  *     description: Returns a json with all users in this guild
  *     tags: [Guild/User]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: All users in this guild
@@ -217,6 +229,22 @@ router.get("/user/", function (req, res, next) {
  *     summary: Add a new user to a guild
  *     description: Add a new user to a guild with a role. The guildid, userid, and role are to be passed in the header.
  *     tags: [Guild/User]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: role
+ *          name: role
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: User added
@@ -252,6 +280,22 @@ router.post("/user/", function (req, res, next) {
  *     summary: Update a guildUsers role
  *     description: Update a guildUsers role. The guildid, userid, and role are to be passed in the header
  *     tags: [Guild/User]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: role
+ *          name: role
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: User updated
@@ -288,6 +332,17 @@ router.put("/user/", function (req, res, next) {
  *     summary: Delete a guildUser
  *     description: Delete a guildUser. The guildid and userid are to be passed in the header
  *     tags: [Guild/User]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: User deleted
@@ -324,6 +379,12 @@ router.delete("/user/", function (req, res, next) {
  *     summary: Returns all channels in this guild
  *     description: Returns a json with all channels in this guild
  *     tags: [Guild/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: All channels in this guild
