@@ -240,7 +240,7 @@ router.get("/user/", function (req, res, next) {
  *          required: true
  *          schema:
  *            type: integer
- *       -  in: role
+ *       -  in: header
  *          name: role
  *          required: true
  *          schema:
@@ -291,7 +291,7 @@ router.post("/user/", function (req, res, next) {
  *          required: true
  *          schema:
  *            type: integer
- *       -  in: role
+ *       -  in: header
  *          name: role
  *          required: true
  *          schema:
@@ -417,6 +417,17 @@ router.get("/channel/", function (req, res, next) {
  *     summary: Create a new channel
  *     description: Create a new channel within the specified guild
  *     tags: [Guild/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelname
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: New channel created
@@ -451,6 +462,22 @@ router.post("/channel/", function (req, res) {
  *     summary: Update the name of the channel
  *     description: Update the name of the channel within the specified guild
  *     tags: [Guild/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelname
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: Channel updated
@@ -485,6 +512,17 @@ router.put("/channel/", function (req, res) {
  *     summary: Delete a channel
  *     description: Delete a channel within a specified guild
  *     tags: [Guild/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Channel deleted
