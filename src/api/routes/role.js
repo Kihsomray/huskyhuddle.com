@@ -5,13 +5,24 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
- * /role:
+ * tags:
+ *   - name: Role
+ *     description: Role managing API
+ */
+
+
+/**
+ * @swagger
+ * /role/:
  *   get:
- *     summary: Returns string response "Role API is working properly"
- *     description: Returns response that role API is working
+ *     summary: All the existing roles in the Web Application
+ *     description: Selects distinct role in GuildUser table in database
+ *     tags: [Role]
  *     responses:
  *       200:
- *         description: All roles
+ *         description: All roles listed
+ *       400:
+ *         description: Error listing all roles
  */
 router.get("/", function (req, res, next) {
     console.log("Role API");
@@ -31,13 +42,16 @@ router.get("/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
+ * /role/count/:
  *   get:
- *     summary: Counts the number of UserIDs and sort by role
- *     description: Returns the Number of Users based on the role
+ *     summary: Count the number of Users based on role
+ *     description: Group all users based on their role and count how many there are
+ *     tags: [Role]
  *     responses:
  *       200:
- *         description: Returned correct number of users based on the role
+ *         description: Users with the same role counted
+ *       400:
+ *         description: Error counting users with the same role
  */
 router.get("/count/", function (req, res, next) {
     console.log("Counting number of Users based on role");
@@ -58,13 +72,16 @@ router.get("/count/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
+ * /role/inguild/:
  *   get:
- *     summary: Counts the number of users in a guild based on a role
- *     description: Counts the number of users in a guild based on a role
+ *     summary: Counting the number of users in a guild based on the role
+ *     description: Selects Guildname, and counts the number of total users and counts the number of users with the same roles in the guild
+ *     tags: [Role]
  *     responses:
  *       200:
- *         description: Counted all guild users based on role
+ *         description: All users in guild counted
+ *       400:
+ *         description: Error counting all users in the guild
  */
 router.get("/inguild/", function (req, res, next) {
     console.log("Counting number of users in a guild based on role");
