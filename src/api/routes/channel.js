@@ -3,13 +3,25 @@ var router = express.Router();
 
 const databaseConnect = require("../db/db-connect");
 
-// /channel/ and /channel/message/
+/**
+ * @swagger
+ * tags:
+ *   - name: Channel
+ *     description: The Channel managing API
+ *   - name: Channel/Message
+ *     description: The Channel/Message managing API
+ *   - name: Channel/Latest
+ *     description: The Channel Latest messages managing API
+ */
+
+
 /**
  * @swagger
  * /channel:
  *   get:
  *     summary: Returns all channels
  *     description: Returns a json with all channels
+ *     tags: [Channel]
  *     responses:
  *       200:
  *         description: All channels
@@ -18,7 +30,8 @@ const databaseConnect = require("../db/db-connect");
 router.get("/", function (req, res, next) {
     console.log("Getting all Channel ID and Names...");
 
-    const sqlQuery = `SELECT *  FROM Channel;`;
+    const sqlQuery = 
+        `SELECT *  FROM Channel;`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -35,13 +48,29 @@ router.get("/", function (req, res, next) {
  *   get:
  *     summary: Returns the last messages sent into the channel
  *     description: Returns a json with the last messages sent into the channel
+ *     tags: [Channel/Message]
+ *     parameters:
+ *       -  in: header
+ *          name: limit
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Last messages sent into the channel
  *       400:
  *         description: Error getting the last messages sent into the channel
  */
-// {"Limit" : "5", ChannelID: "1"} as an example as of what to put in the body
 router.get("/message/", function (req, res, next) {
     let Limit = req.headers.limit;
     let GuildID = req.headers.guildid;
@@ -51,7 +80,8 @@ router.get("/message/", function (req, res, next) {
 
     console.log(`Getting the last ${Limit} messages sent into the channel`);
 
-    const sqlQuery = `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
+    const sqlQuery = 
+        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
         FROM (
             SELECT MessageID, MessageContent, UserID, MessageDate
             FROM Message
@@ -76,14 +106,34 @@ router.get("/message/", function (req, res, next) {
     });
 });
 
-// POST request to handler to add a message to a channel
-// Send userid, channelid, guildid, and messagecontent
 /**
  * @swagger
  * /channel/message:
  *   post:
  *     summary: Add a new message to the channel
  *     description: Add a new message to the channel
+ *     tags: [Channel/Message]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: content
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: New message added
@@ -112,7 +162,8 @@ router.post("/message/", function (req, res) {
             });
     }
 
-    const sqlQuery = `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID, MessageDate)
+    const sqlQuery = 
+        `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID, MessageDate)
         VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID}, STR_TO_DATE("${DateString}", "%d/%m/%Y, %H:%i:%s"));`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
@@ -132,6 +183,23 @@ router.post("/message/", function (req, res) {
  *   put:
  *     summary: Update a message in a channel
  *     description: Update a message in a channel
+ *     tags: [Channel/Message]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: messageid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: content
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: Message updated
@@ -140,9 +208,9 @@ router.post("/message/", function (req, res) {
  */
 //Edit message in a specific channel
 router.put("/message/", function (req, res, next) {
-    let channelId = req.headers.ChannelID;
-    let messageId = req.headers.MessageID;
-    let messageContent = req.headers.Content;
+    let channelId = req.headers.channelid;
+    let messageId = req.headers.messageid;
+    let messageContent = req.headers.content;
 
     if (!channelId || !messageId || !messageContent) {
         return res.status(400).json({
@@ -150,8 +218,9 @@ router.put("/message/", function (req, res, next) {
         });
     }
 
-    const sqlQuery = `UPDATE Message SET MessageContent = "${messageContent}" 
-                    WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
+    const sqlQuery = 
+        `UPDATE Message SET MessageContent = "${messageContent}" 
+        WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -175,6 +244,18 @@ router.put("/message/", function (req, res, next) {
  *   delete:
  *     summary: Delete a message from a channel
  *     description: Delete a message from a channel
+ *     tags: [Channel/Message]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: messageid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Message deleted
@@ -183,8 +264,8 @@ router.put("/message/", function (req, res, next) {
  */
 // Delete a message from this Channel
 router.delete("/message/", function (req, res, next) {
-    let channelId = req.headers.ChannelID;
-    let messageId = req.headers.MessageID;
+    let channelId = req.headers.channelid;
+    let messageId = req.headers.messageid;
 
     if (!channelId || !messageId) {
         return res
@@ -192,8 +273,9 @@ router.delete("/message/", function (req, res, next) {
             .json({ error: "ChannelId and messageId are required in body" });
     }
 
-    let sqlQuery = `DELETE FROM Message
-                    WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
+    let sqlQuery = 
+        `DELETE FROM Message
+        WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -204,8 +286,37 @@ router.delete("/message/", function (req, res, next) {
     });
 });
 
+/**
+ * @swagger
+ * /channel/islatest:
+ *   get:
+ *     summary: Get if this message is the latest
+ *     description: Get if this message is the latest
+ *     tags: [Channel/Latest]
+ *     parameters:
+ *       -  in: header
+ *          name: latestmessageid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *     responses:
+ *       200:
+ *         description: Message deleted
+ *       400:
+ *         description: Error deleting message
+ */
 // Get the latest x messages sent into the channel
-router.get("/isLatest/", function (req, res, next) {
+router.get("/islatest/", function (req, res, next) {
     let latestMID = req.headers.latestmessageid;
     let GuildID = req.headers.guildid;
     let ChannelID = req.headers.channelid;
@@ -214,7 +325,8 @@ router.get("/isLatest/", function (req, res, next) {
 
     // console.log(`Getting the last ${Limit} messages sent into the channel`);
 
-    const sqlQuery = `SELECT CASE
+    const sqlQuery = 
+        `SELECT CASE
         WHEN ${latestMID} = (
             SELECT MAX(MessageID)
             FROM Message
@@ -236,6 +348,35 @@ router.get("/isLatest/", function (req, res, next) {
     });
 });
 
+/**
+ * @swagger
+ * /channel/latestmessage:
+ *   get:
+ *     summary: Get the messages up to the latest
+ *     description: Get the messages up to the latest
+ *     tags: [Channel/Latest]
+ *     parameters:
+ *       -  in: header
+ *          name: latestmessageid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *     responses:
+ *       200:
+ *         description: Message deleted
+ *       400:
+ *         description: Error deleting message
+ */
 // Get the latest x messages sent into the channel
 router.get("/latestmessage/", function (req, res, next) {
     console.log("latest message");
@@ -243,7 +384,8 @@ router.get("/latestmessage/", function (req, res, next) {
     let GuildID = req.headers.guildid;
     let ChannelID = req.headers.channelid;
 
-    const sqlQuery = `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
+    const sqlQuery = 
+        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
         FROM Message M
         JOIN User U ON M.UserID = U.UserID
         WHERE M.GuildID = ${GuildID} AND M.ChannelID = ${ChannelID} AND M.MessageID > ${latestMID}
