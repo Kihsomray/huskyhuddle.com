@@ -1,8 +1,18 @@
 var express = require("express");
 var router = express.Router();
-var axios = require("axios");
 
 const databaseConnect = require("../db/db-connect");
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Message
+ *     description: The Message managing API
+ *   - name: Message/Channel
+ *     description: The Message/Channel managing API
+ *   - name: Message/Latest
+ *     description: The Message/Latest managing API
+ */
 
 /**
  * @swagger
@@ -10,11 +20,11 @@ const databaseConnect = require("../db/db-connect");
  *   get:
  *     summary: Returns all messages
  *     description: Returns a json with all messages
+ *     tags: [Message]
  *     responses:
  *       200:
  *         description: All messages
  */
-// YOUR ENDPOINT HERE, It will be called by GET local host 4000 /message/
 // Get all the messages sent across the servers
 router.get("/", function (req, res, next) {
     const sqlQuery = "SELECT * FROM Message;";
@@ -35,6 +45,18 @@ router.get("/", function (req, res, next) {
  *   get:
  *     summary: Get all messages within a channel within a guild
  *     description: Fetches all messages associated with channel within guild.
+ *     tags: [Message/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Successfully fetched messages
@@ -45,8 +67,8 @@ router.get("/", function (req, res, next) {
 router.get("/channel/", function (req, res, next) {
     console.log("Get all messages within a channel within a guild");
 
-    let channelID = req.headers.ChannelID;
-    let guildID = req.headers.GuildID;
+    let channelID = req.headers.channelid;
+    let guildID = req.headers.guildid;
 
     if (!channelID || !guildID) {
         return res.status(400).json({
@@ -54,10 +76,11 @@ router.get("/channel/", function (req, res, next) {
         });
     }
 
-    const sqlQuery = `SELECT Message.MessageContent
-                    FROM Message
-                    JOIN Channel on Message.ChannelID = Channel.ChannelID
-                    WHERE Channel.GuildID = ${guildID} AND Channel.ChannelID = ${channelID};`;
+    const sqlQuery = 
+        `SELECT Message.MessageContent
+        FROM Message
+        JOIN Channel on Message.ChannelID = Channel.ChannelID
+        WHERE Channel.GuildID = ${guildID} AND Channel.ChannelID = ${channelID};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -76,6 +99,18 @@ router.get("/channel/", function (req, res, next) {
  *   get:
  *     summary: Get the latest X messages into this channel
  *     description: Get the latest X messages into this channel
+ *     tags: [Message/Latest]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: limit
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Successfully fetched messages
@@ -83,9 +118,8 @@ router.get("/channel/", function (req, res, next) {
  *         description: Error fetching messages
  */
 //Get the latest X messages into this channel
-//{"Limit" : "5"} as an example as of what to put in the headers
 router.get("/channel/latest/", function (req, res, next) {
-    let channelID = req.headers.ChannelID;
+    let channelID = req.headers.channelid;
     let limit = req.headers.limit;
 
     if (!channelID || limit <= 0 || isNaN(limit)) {
@@ -94,10 +128,11 @@ router.get("/channel/latest/", function (req, res, next) {
         });
     }
 
-    const sqlQuery = `SELECT MessageContent
-                    FROM Message
-                    WHERE ChannelID = ${channelID}
-                    LIMIT ${limit};`;
+    const sqlQuery = 
+        `SELECT MessageContent
+        FROM Message
+        WHERE ChannelID = ${channelID}
+        LIMIT ${limit};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -113,6 +148,28 @@ router.get("/channel/latest/", function (req, res, next) {
  *   post:
  *     summary: Add a message to the channel
  *     description: Add a message to the channel
+ *     tags: [Message/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: content
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: Successfully added message
@@ -121,21 +178,22 @@ router.get("/channel/latest/", function (req, res, next) {
  */
 // Add a message to the channel
 router.post("/channel/", function (req, res) {
-    let channelId = req.headers.ChannelID;
-    let UserID = req.headers.UserID;
-    let GuildID = req.headers.GuildID;
-    let messageContent = req.body.Content;
+    let channelId = req.headers.channelid;
+    let UserID = req.headers.userid;
+    let GuildID = req.headers.guildid;
+    let messageContent = req.headers.content;
 
     console.log("Sending a message to channel");
 
-    if (!channelId || !messageContent) {
-        return res
-            .status(400)
-            .json({ error: "ChannelID, MessageContent are required in body." });
-    }
+    // if (!channelId || !messageContent) {
+    //     return res
+    //         .status(400)
+    //         .json({ error: "ChannelID, MessageContent are required in body." });
+    // }
 
-    const sqlQuery = `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID) 
-                    VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID});`;
+    const sqlQuery = 
+        `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID) 
+        VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID});`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -153,6 +211,23 @@ router.post("/channel/", function (req, res) {
  *   put:
  *     summary: Edit message in a specific channel
  *     description: Edit message in a specific channel
+ *     tags: [Message/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: messageid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: content
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: Successfully edited message
@@ -161,9 +236,9 @@ router.post("/channel/", function (req, res) {
  */
 //Edit message in a specific channel
 router.put("/channel/", function (req, res, next) {
-    let channelId = req.headers.ChannelID;
-    let messageId = req.headers.MessageID;
-    let messageContent = req.body.Content;
+    let channelId = req.headers.channelid;
+    let messageId = req.headers.messageid;
+    let messageContent = req.headers.content;
 
     if (!channelId || !messageId || !messageContent) {
         return res.status(400).json({
@@ -171,8 +246,9 @@ router.put("/channel/", function (req, res, next) {
         });
     }
 
-    const sqlQuery = `UPDATE Message SET MessageContent = "${messageContent}" 
-                    WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
+    const sqlQuery = 
+        `UPDATE Message SET MessageContent = "${messageContent}" 
+        WHERE ChannelID = ${channelId} AND MessageID = ${messageId};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -195,6 +271,18 @@ router.put("/channel/", function (req, res, next) {
  *   delete:
  *     summary: Delete a message from this Channel
  *     description: Delete a message from this Channel
+ *     tags: [Message/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: messageid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Successfully deleted message
@@ -203,8 +291,8 @@ router.put("/channel/", function (req, res, next) {
  */
 // Delete a message from this Channel
 router.delete("/channel", function (req, res, next) {
-    let channelId = req.headers.ChannelID;
-    let messageId = req.headers.MessageID;
+    let channelId = req.headers.channelid;
+    let messageId = req.headers.messageid;
 
     if (!channelId || !messageId) {
         return res
@@ -225,54 +313,4 @@ router.delete("/channel", function (req, res, next) {
     });
 });
 
-// /**
-//  * @swagger
-//  * /message/random:
-//  *   post:
-//  *     summary: Create a new message with a random quote
-//  *     description: Create a new message with a random quote by a user from an external API
-//  *     responses:
-//  *       200:
-//  *         description: Successfully created message
-//  *       400:
-//  *         description: Error creating message
-//  */
-// // Creates a new message with a random quote by a user from an external API
-// router.post("/random/", async function (req, res, next) {
-//     let ChannelId = req.body.ChannelID;
-//     let GuildID = req.body.GuildID;
-//     let UserID = req.body.UserID;
-
-//     if (!ChannelId || !GuildID || !UserID) {
-//         return res.status(400).json({
-//             error: "ChannelID, GuildID, and UserID is required in the body in the request",
-//         });
-//     }
-//     try {
-//         const jokeResponse = await axios.get(
-//             "https://official-joke-api.appspot.com/random_joke"
-//         );
-//         const jokeData = jokeResponse.data;
-
-//         let messageContent = `${jokeData.setup}\n${jokeData.punchline}`;
-
-//         const sqlQuery = `INSERT INTO Message (GuildID, ChannelID, UserID, MessageContent)
-//                         VALUES (${GuildID}, ${ChannelId}, ${UserID}, "${messageContent}");`;
-
-//         databaseConnect.query(sqlQuery, (err, result) => {
-//             if (err) {
-//                 console.log(
-//                     "Error reading SQL statement to create random message:"
-//                 );
-//                 return res.status(400).json(err);
-//             }
-//             return res.status(200).json(result);
-//         });
-//     } catch (error) {
-//         console.error("Error creating random new message");
-//         return res
-//             .status(500)
-//             .json({ error: "Error gathering data from external api" });
-//     }
-// });
 module.exports = router;
