@@ -243,6 +243,31 @@ router.delete("/", function (req, res, next) {
     });
 });
 
+/**
+ * @swagger
+ * /user/auth/
+ *      get:
+ *          summary: Get matching user with matching username and password
+ *          description: Finds user entry in the database with the inputted username and password. Username and userpass need to be passed through the header.
+ *          tags: [User]
+ *          parameters:
+ *              -   in: header
+ *                  name: username
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *              -   in: header
+ *                  name: userpass
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *          responses:
+ *              200:
+ *                  description: Found user with matching username and password
+ *              400:
+ *                  description: Error finding user to match username and password
+ */
+
 // Get all users, returns a json with all guilds     localhost4000/user/auth
 router.get("/auth/", function (req, res, next) {
     const UserName = req.headers.username;
@@ -275,6 +300,26 @@ router.get("/auth/", function (req, res, next) {
     });
 });
 
+/**
+ * @swagger
+ * /user/guild/
+ *      get:
+ *          summary: Finds the guild given user is a part of
+ *          description: Finds the guilds a user is a part of. Takes the userid as input
+ *          tags: [User]
+ *          parameters:
+ *              -   in: header
+ *                  name: userid
+ *                  required: true
+ *                  schema:
+ *                      type: integer
+ *          responses:
+ *              200:
+ *                  description: Found all the guild(s) given user is a part of
+ *              400:
+ *                  description: Error finding guild(s) user is in
+ */
+
 // Get all guilds this user is part of
 router.get("/guild/", function (req, res, next) {
     const UserID = req.headers.userid;
@@ -294,6 +339,31 @@ router.get("/guild/", function (req, res, next) {
         return res.status(200).json(result);
     });
 });
+
+/**
+ * @swagger
+ * /user/createguild/
+ *      post:
+ *          summary: Create guild with inputed user as admin
+ *          description: Creates a guild with given userid and guildname
+ *          tags: [User]
+ *          parameters:
+ *              -   in: header
+ *                  name: userid
+ *                  required: true
+ *                  schema:
+ *                      type: integer
+ *              -   in: header
+ *                  name: guildname
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *          responses:
+ *              200:
+ *                  description: Created a new guild with given user as admin
+ *              400:
+ *                  description: Error creating a new guild with given user as admin
+ */
 
 // create a guild with this user as an admin
 router.post("/createguild/", function (req, res, next) {
@@ -329,208 +399,6 @@ router.post("/createguild/", function (req, res, next) {
     });
 });
 
-/**
- * @swagger
- * /user/test:
- *   get:
- *     summary: Test external API and fetch user data
- *     description: Fetches data from an external API and returns user data from the database.
- *     responses:
- *       200:
- *         description: Successfully fetched user data
- *       400:
- *         description: Error fetching data
- */
-// Test out axios to get some data from another webservice
-router.get("/test/", function (req, res, next) {
-    console.log("User API");
-
-    const fetchData = async (response) => {
-        try {
-            response = await axios.get("http://localhost:4000/");
-            return response;
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    fetchData().then((e) => {
-        console.log(e.data);
-
-        const sqlQuery = "SELECT * FROM User;";
-        databaseConnect.query(sqlQuery, (err, result) => {
-            if (err) {
-                console.log("Error");
-                console.log(err);
-                res.status(400);
-            }
-
-            return res.status(200).json(result);
-        });
-    });
-});
-
-/**
- * @swagger
- * /user/:userId:
- *   get:
- *     summary: Get a user
- *     description: Get a user
- *     responses:
- *       200:
- *         description: User found
- *       400:
- *         description: User not found
- */
-router.get("/:userId", function (req, res, next) {
-    const userid = req.params.userId;
-
-    const sqlQuery = `SELECT * FROM User WHERE UserID = ${userid};`;
-
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error");
-            console.log(err);
-            return res.status(400).json(result);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-/**
- * @swagger
- * /user/auth:
- *   get:
- *     summary: Authenticate a user
- *     description: Authenticate a user using username and password
- *     responses:
- *       200:
- *         description: User authenticated
- *       400:
- *         description: User not found or invalid credentials
- */
-// Get all users, returns a json with all guilds     localhost4000/user/auth
-router.get("/auth/", function (req, res, next) {
-    const UserName = req.headers.username;
-    const UserPass = req.headers.userpass;
-
-    const sqlQuery = `SELECT UserID 
-    FROM User
-    WHERE UserName = '${UserName}' AND UserPass = '${UserPass}';`;
-
-    let exists;
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error");
-            console.log(err);
-            return res.status(400).json({ Exists: "False" });
-        }
-
-        if (result[0] == undefined) {
-            console.log(1);
-            return res.status(400).json({ Exists: 0 });
-        }
-        console.log(result[0].UserID);
-        exists = 1; // {"Exists" : "True"}
-
-        console.log(result);
-
-        return exists
-            ? res.status(200).json({ UserID: result[0].UserID })
-            : res.status(400).json({ Exists: "False" });
-    });
-});
-
-/**
- * @swagger
- * /user/guild:
- *   get:
- *     summary: Get all guilds for a user
- *     description: Fetches all guilds associated with a user.
- *     responses:
- *       200:
- *         description: Successfully fetched guilds
- *       400:
- *         description: Error fetching guilds
- */
-// Get all guilds this user is part of
-router.get("/guild/", function (req, res, next) {
-    const UserID = req.headers.userid;
-
-    const sqlQuery = `SELECT g.GuildID, g.GuildName
-    FROM GuildUser gu
-    JOIN Guild g ON gu.GuildID = g.GuildID
-    WHERE gu.UserID = ${UserID};`;
-
-    console.log(UserID);
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error");
-            console.log(err);
-            return res.status(400).json(result);
-        }
-        return res.status(200).json(result);
-    });
-});
-
-/**
- * @swagger
- * /user/createguild:
- *   post:
- *     summary: Create a new guild
- *     description: Create a new guild with the user as an admin
- *     responses:
- *       200:
- *         description: New guild created
- *       400:
- *         description: Error creating guild
- */
-// create a guild with this user as an admin
-router.post("/createguild/", function (req, res, next) {
-    const UserID = req.headers.userid;
-    const GuildName = req.headers.guildname;
-    const Role = "Admin";
-
-    const sqlQuery = `INSERT INTO Guild (GuildName)
-    VALUES ('${GuildName}');`;
-
-    console.log(UserID);
-    databaseConnect.query(sqlQuery, (err, result) => {
-        if (err) {
-            console.log("Error");
-            console.log(err);
-            return res.status(400).json(result);
-        }
-        const GuildID = result.insertId;
-
-        const sqlQuery2 = `INSERT INTO GuildUser (GuildID, UserID, Role)
-        VALUES (${GuildID}, ${UserID}, '${Role}');`;
-
-        databaseConnect.query(sqlQuery2, (err, result) => {
-            if (err) {
-                console.log("Error");
-                console.log(err);
-                return res.status(400).json(result);
-            }
-            console.log("Everything worked");
-        });
-
-        return res.status(200).json({ GuildID: GuildID });
-    });
-});
-
-/**
- * @swagger
- * /user/test:
- *   get:
- *     summary: Test external API and fetch user data
- *     description: Fetches data from an external API and returns user data from the database.
- *     responses:
- *       200:
- *         description: Successfully fetched user data
- *       400:
- *         description: Error fetching data
- */
 // Test out axios to get some data from another webservice
 router.get("/test/", function (req, res, next) {
     console.log("User API");
@@ -561,17 +429,17 @@ router.get("/test/", function (req, res, next) {
 });
 
 // /**
-// * @swagger
-// * /user/{userId}:
-// *   get:
-// *     summary: Get user by ID
-// *     description: Returns a single user by their ID
-// *     responses:
-// *       200:
-// *         description: A single user
-// *       404:
-// *         description: User not found
-// */
+//
+// /user/{userId}:
+//    get:
+//      summary: Get user by ID
+//      description: Returns a single user by their ID
+//      responses:
+//        200:
+//          description: A single user
+//        404:
+//          description: User not found
+// /
 // router.get("/:userId", function(req, res, next) {
 //   const userid = req.params.userId;
 
