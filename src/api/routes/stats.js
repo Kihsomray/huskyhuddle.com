@@ -10,18 +10,29 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
- * /role:
+ * tags:
+ *   - name: Stats
+ *     description: Gathering Web Application statistics
+ */
+
+/**
+ * @swagger
+ * /stats/users/:
  *   get:
  *     summary: Counts the number of users
- *     description: Retunfs the number of users
+ *     description: Counts the number of users in database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: Returned number of users
+ *         description: Counted number of users
+ *       400:
+ *         description: Error counting number of users
  */
 router.get("/users/", function (req, res, next) {
     console.log("Counting number of users...");
 
-    const sqlQuery = `SELECT COUNT(*) AS UserCount
+    const sqlQuery =
+        `SELECT COUNT(*) AS UserCount
         FROM User;`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -36,18 +47,22 @@ router.get("/users/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Counts the number of Guilds
- *     description: Returns the number of Guilds in the database
+ * /stats/guilds:
+ *   post:
+ *     summary: Counts the number of guilds
+ *     description: Count the number of guilds in the database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: Counts the number of Guilds in the database
+ *         description: Counted number of guilds
+ *       400:
+ *         description: Error counting number of guilds
  */
 router.get("/guilds/", function (req, res, next) {
     console.log("Counting the number of Guilds...");
 
-    const sqlQuery = `SELECT COUNT(*) AS GuildCount
+    const sqlQuery =
+        `SELECT COUNT(*) AS GuildCount
         FROM Guild;`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -62,18 +77,22 @@ router.get("/guilds/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Returns string response "Role API is working properly"
- *     description: Returns response that role API is working
+ * /stats/channels/:
+ *   post:
+ *     summary: Count the number of Channels
+ *     description: Counts the number of Channels in the database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: All roles
+ *         description: Channels counted
+ *       400:
+ *         description: Error counting channels
  */
 router.get("/channels/", function (req, res, next) {
     console.log("Role API");
 
-    const sqlQuery = `SELECT COUNT(*) AS ChannelCount
+    const sqlQuery =
+        `SELECT COUNT(*) AS ChannelCount
         FROM Channel;`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -86,18 +105,22 @@ router.get("/channels/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Counts the number of messages across the databases
- *     description: Returns the number of messages across the databases
+ * /stats/messages/:
+ *   post:
+ *     summary: Count the number of Messages
+ *     description: Counts the number of Messages in the database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: The number of messages sent throught the web application
+ *         description: Messages counted
+ *       400:
+ *         description: Error counting messages
  */
 router.get("/messages/", function (req, res, next) {
     console.log("Counting the number of messages...");
 
-    const sqlQuery = `SELECT COUNT(*) AS MessageCount
+    const sqlQuery =
+        `SELECT COUNT(*) AS MessageCount
         FROM Message;`;
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
@@ -112,13 +135,16 @@ router.get("/messages/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Calculates the average message per users
- *     description: Returns the average message per user
+ * /stats/averagemessages/:
+ *   post:
+ *     summary: Count the average number of messages per user
+ *     description: Counts the average number of messages per user in the database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: The average message per user
+ *         description: Average number of messages per user counted
+ *       400:
+ *         description: Error counting average number of messages per user
  */
 router.get("/averagemessages/", function (req, res, next) {
     console.log("Calculating the average message per user...");
@@ -140,13 +166,16 @@ router.get("/averagemessages/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Counts the number of messages sent by user and sorts them
- *     description: Determines the most active user
+ * /stats/mostactiveuser/:
+ *   post:
+ *     summary: Find the most active user
+ *     description: Counts the messages sent per user and finds the highgest one
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: Returns the most active user based on number of messages sent
+ *         description: Found the most active user
+ *       400:
+ *         description: Error finding the most active user
  */
 router.get("/mostactiveuser/", function (req, res, next) {
     console.log("Determining the most active user...");
@@ -168,13 +197,16 @@ router.get("/mostactiveuser/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Counts the most active channel in a guild
- *     description: Returns the most active channel in a guild
+ * /stats/mostactivechannel/:
+ *   post:
+ *     summary: Find the most active channel
+ *     description: Counts the messages per channel and finds the channel with the most messages
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: Most active active channel in a guild
+ *         description: Found the most active channel
+ *       400:
+ *         description: Error finding the most active channel
  */
 router.get("/mostactivechannel/", function (req, res, next) {
     console.log("Determining the most active channel in a guild...");
@@ -198,13 +230,16 @@ router.get("/mostactivechannel/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
- *   get:
- *     summary: Returns the most active guild based on message count
- *     description: Counts the number of messages and outputs the most active guild
+ * /stats/mostat/:
+ *   post:
+ *     summary: Count the number of Channels
+ *     description: Counts the number of Channels in the database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: THe most active guild based on message count
+ *         description: Channels counted
+ *       400:
+ *         description: Error counting channels
  */
 router.get("/mostactiveguild/", function (req, res, next) {
     console.log("Finding the most active guild...");

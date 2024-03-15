@@ -50,7 +50,7 @@ router.get("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user/
+ * /user/:
  *      post:
  *          summary: Create a new user
  *          description: Create a new user entry in the database. UserName, UserEmail, and User password need to be passed through the header.
@@ -138,7 +138,7 @@ router.post("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user/
+ * /user/:
  *      put:
  *          summary: Update an existing user
  *          description: Update existing user in the database. UserName, UserEmail, and User password, and UserID need to be passed through the header.
@@ -195,7 +195,7 @@ router.put("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user/
+ * /user/:
  *      delete:
  *          summary: Delete an existing user
  *          description: Deletes user entry in the database. User ID need to be passed through the header.
@@ -245,7 +245,7 @@ router.delete("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user/auth/
+ * /user/auth/:
  *      get:
  *          summary: Get matching user with matching username and password
  *          description: Finds user entry in the database with the inputted username and password. Username and userpass need to be passed through the header.
@@ -302,7 +302,7 @@ router.get("/auth/", function (req, res, next) {
 
 /**
  * @swagger
- * /user/guild/
+ * /user/guild/:
  *      get:
  *          summary: Finds the guild given user is a part of
  *          description: Finds the guilds a user is a part of. Takes the userid as input
@@ -342,7 +342,7 @@ router.get("/guild/", function (req, res, next) {
 
 /**
  * @swagger
- * /user/createguild/
+ * /user/createguild/:
  *      post:
  *          summary: Create guild with inputed user as admin
  *          description: Creates a guild with given userid and guildname
