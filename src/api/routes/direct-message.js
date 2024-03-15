@@ -1,18 +1,27 @@
 var express = require('express');
 var router = express.Router();
 
-/***
-* @swagger
-* /direct-message:   
-*   get:
-*     summary: Returns message about API working 
-*     description: Returns a message "Direct Message API is working properly"
-*     responses:
-*       200:
-*         description: All direct messages
-*/
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Unfinished
+ *     description: The unfinished API
+ */
+
+/**
+ * @swagger
+ * /dm:
+ *   get:
+ *     summary: Returns test message
+ *     description: Direct Messages
+ *     tags: [Unfinished]
+ *     responses:
+ *       200:
+ *         description: Direct Messages
+ */
 router.get("/", function(req, res, next) {
-    res.send("Direct Message API is working properly");
+    return res.status(200).json({"test" : "Direct Message API is working properly"});
 });
 
 module.exports = router;
