@@ -4,7 +4,7 @@ var axios = require("axios");
 
 const databaseConnect = require("../db/db-connect");
 
-/*
+/**
  * @swagger
  * /message:
  *   get:
@@ -29,7 +29,7 @@ router.get("/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /message/channel:
  *   get:
@@ -70,7 +70,7 @@ router.get("/channel/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /message/channel/latest:
  *   get:
@@ -107,7 +107,7 @@ router.get("/channel/latest/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /message/channel:
  *   post:
@@ -147,7 +147,7 @@ router.post("/channel/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /message/channel:
  *   put:
@@ -189,7 +189,7 @@ router.put("/channel/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /message/channel:
  *   delete:
@@ -225,7 +225,7 @@ router.delete("/channel", function (req, res, next) {
     });
 });
 
-// /*
+// /**
 //  * @swagger
 //  * /message/random:
 //  *   post:

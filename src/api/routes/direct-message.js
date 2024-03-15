@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-/*
+/***
 * @swagger
 * /direct-message:   
 *   get:

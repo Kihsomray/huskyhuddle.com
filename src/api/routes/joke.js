@@ -4,7 +4,7 @@ var axios = require("axios");
 
 const databaseConnect = require("../db/db-connect");
 
-/*
+/**
  * @swagger
  * /joke/message/
  *   post:
