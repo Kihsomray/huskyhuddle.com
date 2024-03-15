@@ -103,7 +103,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                 whiteSpace: "nowrap",
                 overflow: "hidden",
             }} className="txt-gold-primary">
-                {guild.GuildName}
+                {`${guild.GuildID > 0 ? `[${guild.GuildID}] ` : ""}${guild.GuildName}`}
             </div>
             <div
                 style={{ width: '220px', padding: '10px', alignItems: 'left', justifyContent: 'center' }}
