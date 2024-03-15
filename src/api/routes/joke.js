@@ -6,10 +6,34 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
- * /joke/message/
+ * tags:
+ *   - name: Joke
+ *     description: The Joke managing API
+ */
+
+/**
+ * @swagger
+ * /joke/message:
  *   post:
  *     summary: Create a new message with a random quote
  *     description: Create a new message with a random quote by a user from an external API
+ *     tags: [Joke]
+ *     parameters:
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Successfully created message
@@ -18,13 +42,13 @@ const databaseConnect = require("../db/db-connect");
  */
 
 router.post("/message/", async function (req, res, next) {
-    let ChannelId = req.header.ChannelID;
-    let GuildID = req.header.GuildID;
-    let UserID = req.header.UserID;
+    let ChannelId = req.headers.channelid;
+    let GuildID = req.headers.guildid;
+    let UserID = req.headers.userid;
 
     if (!ChannelId || !GuildID || !UserID) {
         return res.status(400).json({
-            error: "ChannelID, GuildID, and UserID is required in the body in the request",
+            error: "ChannelID, GuildID, and UserID is required in the header in the request",
         });
     }
     try {
@@ -35,8 +59,9 @@ router.post("/message/", async function (req, res, next) {
 
         let messageContent = `${jokeData.setup}\n${jokeData.punchline}`;
 
-        const sqlQuery = `INSERT INTO Message (GuildID, ChannelID, UserID, MessageContent)
-                        VALUES (${GuildID}, ${ChannelId}, ${UserID}, "${messageContent}");`;
+        const sqlQuery = 
+            `INSERT INTO Message (GuildID, ChannelID, UserID, MessageContent)
+            VALUES (${GuildID}, ${ChannelId}, ${UserID}, "${messageContent}");`;
 
         databaseConnect.query(sqlQuery, (err, result) => {
             if (err) {
