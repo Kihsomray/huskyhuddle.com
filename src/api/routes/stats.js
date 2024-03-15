@@ -48,7 +48,7 @@ router.get("/users/", function (req, res, next) {
 /**
  * @swagger
  * /stats/guilds:
- *   post:
+ *   get:
  *     summary: Counts the number of guilds
  *     description: Count the number of guilds in the database
  *     tags: [Stats]
@@ -78,7 +78,7 @@ router.get("/guilds/", function (req, res, next) {
 /**
  * @swagger
  * /stats/channels/:
- *   post:
+ *   get:
  *     summary: Count the number of Channels
  *     description: Counts the number of Channels in the database
  *     tags: [Stats]
@@ -106,7 +106,7 @@ router.get("/channels/", function (req, res, next) {
 /**
  * @swagger
  * /stats/messages/:
- *   post:
+ *   get:
  *     summary: Count the number of Messages
  *     description: Counts the number of Messages in the database
  *     tags: [Stats]
@@ -136,7 +136,7 @@ router.get("/messages/", function (req, res, next) {
 /**
  * @swagger
  * /stats/averagemessages/:
- *   post:
+ *   get:
  *     summary: Count the average number of messages per user
  *     description: Counts the average number of messages per user in the database
  *     tags: [Stats]
@@ -167,7 +167,7 @@ router.get("/averagemessages/", function (req, res, next) {
 /**
  * @swagger
  * /stats/mostactiveuser/:
- *   post:
+ *   get:
  *     summary: Find the most active user
  *     description: Counts the messages sent per user and finds the highgest one
  *     tags: [Stats]
@@ -198,7 +198,7 @@ router.get("/mostactiveuser/", function (req, res, next) {
 /**
  * @swagger
  * /stats/mostactivechannel/:
- *   post:
+ *   get:
  *     summary: Find the most active channel
  *     description: Counts the messages per channel and finds the channel with the most messages
  *     tags: [Stats]
@@ -230,16 +230,16 @@ router.get("/mostactivechannel/", function (req, res, next) {
 
 /**
  * @swagger
- * /stats/mostat/:
- *   post:
- *     summary: Count the number of Channels
- *     description: Counts the number of Channels in the database
+ * /stats/mostactiveguild/:
+ *   get:
+ *     summary: Find the most active guild
+ *     description: Count the number of messages in each guild and find the guild with the most messages
  *     tags: [Stats]
  *     responses:
  *       200:
- *         description: Channels counted
+ *         description: Found the most active guild
  *       400:
- *         description: Error counting channels
+ *         description: Error finding the most guild
  */
 router.get("/mostactiveguild/", function (req, res, next) {
     console.log("Finding the most active guild...");
@@ -263,13 +263,16 @@ router.get("/mostactiveguild/", function (req, res, next) {
 
 /**
  * @swagger
- * /role:
+ * /stats/longestmessage/:
  *   get:
- *     summary: Returns the longest message content
- *     description: Looks thruogh the Message Databse and finds the longest message
+ *     summary: Finds the longest message
+ *     description: Finds the longest message content in the database
+ *     tags: [Stats]
  *     responses:
  *       200:
- *         description: Returns the longest message length
+ *         description: Found the longest message
+ *       400:
+ *         description: Error finding the longest message
  */
 router.get("/longestmessage/", function (req, res, next) {
     console.log("Finding the longest length of a message...");
