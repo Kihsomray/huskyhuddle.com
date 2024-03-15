@@ -11,19 +11,35 @@ const databaseConnect = require("../db/db-connect");
  * @swagger
  * tags:
  *   - name: Admin
- *     description: The guild managing API
+ *     description: The Admin managing API
  *   - name: Admin/Channel
- *     description: The user managing API within guilds
- *   - name: Guild/Channel
- *     description: The channel managing API within guilds.
+ *     description: The Admin/Channel managing API
+ *   - name: Admin/Guild
+ *     description: The Admin/Guild managing API
+ *   - name: Admin/User
+ *     description: The Admin/User managing API
+ * 
+ * 
  */
 
 /**
  * @swagger
  * /admin:
  *   get:
- *     summary: Returns all admin commands
- *     description: Returns a json with all admin commands
+ *     summary: Checks if user is an admin
+ *     description: Returns whether or not user is an admin of specific guild
+ *     tags: [Admin]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: All admin commands
@@ -35,7 +51,8 @@ router.get("/", async function (req, res, next) {
     const UserID = req.headers.userid;
     const GuildID = req.headers.guildid;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -66,7 +83,24 @@ router.get("/", async function (req, res, next) {
  * /admin/channel:
  *   post:
  *     summary: Create a new channel within a guild
- *     description: Create a new channel within a guild with the name provided
+ *     description: Create a new channel within a guild with the name provided checks if the user is an admin
+ *     tags: [Admin/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelname
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: New channel created
@@ -82,7 +116,8 @@ router.post("/channel/", function (req, res, next) {
     const GuildID = req.headers.guildid;
     const ChannelName = req.headers.channelname;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -128,6 +163,28 @@ router.post("/channel/", function (req, res, next) {
  *   put:
  *     summary: Update the name of the channel
  *     description: Update the name of the channel within the specified guild
+ *     tags: [Admin/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelname
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: Channel name updated
@@ -144,7 +201,8 @@ router.put("/channel/", function (req, res, next) {
     const ChannelID = req.headers.channelid;
     const ChannelName = req.headers.channelname;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -178,7 +236,7 @@ router.put("/channel/", function (req, res, next) {
                 console.log(err);
                 return result.status(400).json({ Error: err });
             }
-            return res.status(200).json({ ChannelID: result.insertId });
+            return res.status(200).json({ ChannelID: ChannelID });
         });
     });
 });
@@ -189,6 +247,23 @@ router.put("/channel/", function (req, res, next) {
  *   delete:
  *     summary: Delete a channel
  *     description: Delete a channel within a specified guild
+ *     tags: [Admin/Channel]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: channelid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Channel deleted
@@ -204,7 +279,8 @@ router.delete("/channel/", function (req, res, next) {
     const GuildID = req.headers.guildid;
     const ChannelID = req.headers.channelid;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -246,10 +322,27 @@ router.delete("/channel/", function (req, res, next) {
 
 /**
  * @swagger
- * /guild:
+ * /admin/guild:
  *   put:
  *     summary: Update the name of the guild
  *     description: Update the name of the guild with the specified ID
+ *     tags: [Admin/Guild]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildname
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: Guild name updated
@@ -265,7 +358,8 @@ router.put("/guild/", function (req, res, next) {
     const GuildID = req.headers.guildid;
     const GuildName = req.headers.guildname;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -306,10 +400,22 @@ router.put("/guild/", function (req, res, next) {
 
 /**
  * @swagger
- * /guild:
+ * /admin/guild:
  *   delete:
  *     summary: Delete a guild
  *     description: Delete a guild with the specified guildid
+ *     tags: [Admin/Guild]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: Guild deleted
@@ -324,7 +430,8 @@ router.delete("/guild/", function (req, res, next) {
     const UserID = req.headers.userid;
     const GuildID = req.headers.guildid;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -382,6 +489,28 @@ router.delete("/guild/", function (req, res, next) {
  *   put:
  *     summary: Update a user's role
  *     description: Update a user's role within the specified guild
+ *     tags: [Admin/User]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: useridchange
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: role
+ *          required: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: User's role updated
@@ -398,7 +527,8 @@ router.put("/user/", function (req, res, next) {
     const UserIDToChange = req.headers.useridchange;
     const Role = req.headers.role;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
@@ -439,10 +569,27 @@ router.put("/user/", function (req, res, next) {
 
 /**
  * @swagger
- * /user:
+ * /admin/user:
  *   delete:
  *     summary: Remove a user from the guild
  *     description: Remove a user from the guild with the specified userid and guildid
+ *     tags: [Admin/User]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: useridremove
+ *          required: true
+ *          schema:
+ *            type: integer
  *     responses:
  *       200:
  *         description: User removed
@@ -458,7 +605,8 @@ router.delete("/user/", function (req, res, next) {
     const GuildID = req.headers.guildid;
     const UserIDToRemove = req.headers.useridremove;
 
-    const sqlQueryRole = `SELECT Role
+    const sqlQueryRole = 
+        `SELECT Role
         FROM GuildUser
         WHERE UserID = ${UserID} AND GuildID = ${GuildID};`;
 
