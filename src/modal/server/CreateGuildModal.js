@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-const CreateModal = ({ message, onClose, onSubmit }) => {
+const CreateGuildModal = ({ onClose, onSubmit }) => {
 
     const [result, setResult] = useState('');
+    const [createGuild, setCreateGuild] = useState(false);
 
     const modalStyle = {
         position: "fixed",
@@ -16,7 +17,7 @@ const CreateModal = ({ message, onClose, onSubmit }) => {
         backgroundSize: 'cover',
         backgroundPosition: 'top left',
         backgroundColor: '#676767',
-        height: '20%',
+        height: '25%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -33,7 +34,7 @@ const CreateModal = ({ message, onClose, onSubmit }) => {
 
     const submission = (e) => {
         e.preventDefault();
-        onSubmit(result);
+        onSubmit({ ...{ Result: result }, ...{ CreateGuild: createGuild } });
     }
 
     return (
@@ -42,8 +43,12 @@ const CreateModal = ({ message, onClose, onSubmit }) => {
                 <form>
                     <div className="mb-3">
                         <label htmlFor="result" className="form-label txt-gold-primary">
-                            {message}
-                        </label>
+                            {createGuild ? "Create Guild" : "Join Guild by ID"}
+                        </label><br/>
+                        <button type="reset" className="btn btn-block btn-purple-primary" onClick={() => { setCreateGuild(!createGuild) }}>
+                            {createGuild ? "Join Instead" : "Create Instead"}
+                        </button>
+                        <br/><br/>
                         <input
                             type="text"
                             className="form-control"
@@ -52,11 +57,11 @@ const CreateModal = ({ message, onClose, onSubmit }) => {
                             onChange={(e) => setResult(e.target.value)}
                         />
                     </div>
-                    <button className="btn btn-block btn-purple-secondary" style={{marginRight: "10px"}} onClick={onClose}>
+                    <button className="btn btn-block btn-purple-secondary" style={{ marginRight: "10px" }} onClick={onClose}>
                         Cancel
                     </button>
                     <button className="btn btn-block btn-purple-primary" onClick={submission}>
-                        Create
+                        {createGuild ? "Create" : "Join"}
                     </button>
                 </form>
             </div>
@@ -64,4 +69,4 @@ const CreateModal = ({ message, onClose, onSubmit }) => {
     );
 };
 
-export default CreateModal;
+export default CreateGuildModal;

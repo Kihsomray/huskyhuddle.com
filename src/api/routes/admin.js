@@ -323,6 +323,53 @@ router.delete("/channel/", function (req, res, next) {
     });
 });
 
+// change a guilds name with the name provided.
+// The userid, guildid and guildname is to be passed in the header.
+router.post("/guild/", function (req, res, next) {
+    console.log("/Admin/channel/ POST API");
+
+    const UserID = req.headers.userid;
+    //const GuildID = req.headers.guildid;
+    const GuildName = req.headers.guildname;
+
+    const sqlQueryRole = 
+        `INSERT INTO Guild (GuildName)
+        VALUES ('${GuildName}');`;
+
+    databaseConnect.query(sqlQueryRole, (err, result) => {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+            return result.status(400).json({"Error" : "Uhoh"});
+        }
+
+        const GuildID = result.insertId;
+
+        const sqlQuery = 
+            `INSERT INTO GuildUser (GuildID, UserID, Role)
+            VALUES (${GuildID}, ${UserID}, 'Admin');`;
+        databaseConnect.query(sqlQuery, (err, result) => {
+            if (err) {
+                console.log("Error");
+                console.log(err);
+                return result.status(400).json({"Error" : err});
+            }
+            const sqlQueryChannel = 
+                `INSERT INTO Channel (GuildID, ChannelName)
+                VALUES (${GuildID}, 'General');`;
+            databaseConnect.query(sqlQueryChannel, (err, result) => {
+                if (err) {
+                    console.log("Error");
+                    console.log(err);
+                    return result.status(400).json({"Error" : err});
+                }
+                return res.status(200).json({GuildID : GuildID, GuildName : GuildName});
+            });
+        });
+    });
+});
+
+
 /**
  * @swagger
  * /admin/guild:
