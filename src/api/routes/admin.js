@@ -142,7 +142,8 @@ router.post("/channel/", function (req, res, next) {
         //return res.status(200).json(result[0]);
         // If here the user is an admin
 
-        const sqlQuery = `INSERT INTO Channel (GuildID, ChannelName)
+        const sqlQuery = 
+            `INSERT INTO Channel (GuildID, ChannelName)
             VALUES (${GuildID}, '${ChannelName}');`;
         databaseConnect.query(sqlQuery, (err, result) => {
             if (err) {
@@ -227,7 +228,8 @@ router.put("/channel/", function (req, res, next) {
         //return res.status(200).json(result[0]);
         // If here the user is an admin
 
-        const sqlQuery = `UPDATE Channel
+        const sqlQuery = 
+            `UPDATE Channel
             SET ChannelName = '${ChannelName}'
             WHERE ChannelID = ${ChannelID} AND GuildID = ${GuildID};`;
         databaseConnect.query(sqlQuery, (err, result) => {
@@ -305,7 +307,8 @@ router.delete("/channel/", function (req, res, next) {
         //return res.status(200).json(result[0]);
         // If here the user is an admin
 
-        const sqlQuery = `DELETE FROM Channel
+        const sqlQuery = 
+            `DELETE FROM Channel
             WHERE ChannelID = ${ChannelID} AND GuildID = ${GuildID};`;
         databaseConnect.query(sqlQuery, (err, result) => {
             if (err) {
@@ -384,7 +387,8 @@ router.put("/guild/", function (req, res, next) {
         //return res.status(200).json(result[0]);
         // If here the user is an admin
 
-        const sqlQuery = `UPDATE Guild
+        const sqlQuery = 
+            `UPDATE Guild
             SET GuildName = '${GuildName}'
             WHERE GuildID = ${GuildID};`;
         databaseConnect.query(sqlQuery, (err, result) => {
@@ -468,7 +472,8 @@ router.delete("/guild/", function (req, res, next) {
             console.log("All guildUsers removed");
         });
 
-        const sqlQuery = `DELETE FROM Guild
+        const sqlQuery = 
+            `DELETE FROM Guild
             WHERE GuildID = ${GuildID};`;
         databaseConnect.query(sqlQuery, (err, result) => {
             if (err) {
@@ -553,7 +558,8 @@ router.put("/user/", function (req, res, next) {
         //return res.status(200).json(result[0]);
         // If here the user is an admin
 
-        const sqlQuery = `UPDATE GuildUser
+        const sqlQuery = 
+            `UPDATE GuildUser
             SET Role = '${Role}'
             WHERE GuildID = ${GuildID} AND UserID = ${UserIDToChange};`;
         databaseConnect.query(sqlQuery, (err, result) => {
@@ -631,7 +637,8 @@ router.delete("/user/", function (req, res, next) {
         //return res.status(200).json(result[0]);
         // If here the user is an admin
 
-        const sqlQueryGuildUser = `DELETE FROM GuildUser
+        const sqlQueryGuildUser = 
+            `DELETE FROM GuildUser
             WHERE GuildID = ${GuildID} AND UserID = ${UserIDToRemove};`;
         databaseConnect.query(sqlQueryGuildUser, (err, result) => {
             if (err) {
