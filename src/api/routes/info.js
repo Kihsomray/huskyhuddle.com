@@ -5,10 +5,18 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
- * /info:
+ * tags:
+ *   - name: Info
+ *     description: The Info API
+ */
+
+/**
+ * @swagger
+ * /:
  *   get:
  *     summary: Returns the program name and version
  *     description: Returns a JSON object containing the name and version of the program.
+ *     tags: [Info]
  *     responses:
  *       200:
  *         description: Name and version of the program
