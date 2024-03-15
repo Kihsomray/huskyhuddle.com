@@ -50,6 +50,7 @@ const GuildUsers = ({ guild }) => {
                     scrollBehavior: 'smooth',
                     scrollbarWidth: "thin",
                     scrollbarColor: "#676767 #565656",
+                    height: '100%',
                 }}
             >
                 <div
