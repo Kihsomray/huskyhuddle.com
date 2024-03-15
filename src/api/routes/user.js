@@ -17,10 +17,18 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
+ * tags:
+ *   - name: User
+ *     description: The user managing API
+ */
+
+/**
+ * @swagger
  * /user:
  *   get:
  *     summary: Returns all users
  *     description: Returns a json with all users
+ *      tags: [User]
  *     responses:
  *       200:
  *         description: All users
@@ -42,13 +50,32 @@ router.get("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user:
- *   post:
- *     summary: Create a new user
- *     description: Create a new user
- *     responses:
- *       200:
- *         description: New user created
+ * /user/
+ *      post:
+ *          summary: Create a new user
+ *          description: Create a new user entry in the database. UserName, UserEmail, and User password need to be passed through the header.
+ *          tags: [User]
+ *          parameters:
+ *              -   in: header
+ *                  name: username
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *              -   in: header
+ *                  name: useremail
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *              -   in: header
+ *                  name: userpass
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *          responses:
+ *              200:
+ *                  description: User created
+ *              400:
+ *                  description: Error creating new user
  */
 // Create a new user with the name provided
 // Pass the data(username, useremail, and userpass) in the header
@@ -111,15 +138,38 @@ router.post("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user:
- *   put:
- *     summary: Update a user
- *     description: Update a user
- *     responses:
- *       200:
- *         description: User updated
- */
-// Update a user with a new name, email and password, this requires all three pieces of data even if you only want one.
+ * /user/
+ *      put:
+ *          summary: Update an existing user
+ *          description: Update existing user in the database. UserName, UserEmail, and User password, and UserID need to be passed through the header.
+ *          tags: [User]
+ *          parameters:
+ *              -   in: header
+ *                  name: userid
+ *                  required: true
+ *                  schema:
+ *                      type: integer
+ *              -   in: header
+ *                  name: username
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *              -   in: header
+ *                  name: useremail
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *              -   in: header
+ *                  name: userpass
+ *                  required: true
+ *                  schema:
+ *                      type: string
+ *          responses:
+ *              200:
+ *                  description: User updated
+ *              400:
+ *                  description: Error updating existing user
+ */ // Update a user with a new name, email and password, this requires all three pieces of data even if you only want one.
 // Just input the previous data if you want it to stay the same
 // Pass userid, username, useremail, and userpass in the header
 router.put("/", function (req, res, next) {
@@ -145,13 +195,22 @@ router.put("/", function (req, res, next) {
 
 /**
  * @swagger
- * /user:
- *   delete:
- *     summary: Delete a user
- *     description: Delete a user
- *     responses:
- *       200:
- *         description: User deleted
+ * /user/
+ *      delete:
+ *          summary: Delete an existing user
+ *          description: Deletes user entry in the database. User ID need to be passed through the header.
+ *          tags: [User]
+ *          parameters:
+ *              -   in: header
+ *                  name: userid
+ *                  required: true
+ *                  schema:
+ *                      type: integer
+ *          responses:
+ *              200:
+ *                  description: User deleted
+ *              400:
+ *                  description: Error deleting new user
  */
 // Delete a user and also remove all guildUser that are from that user
 // Pass userid in the header
