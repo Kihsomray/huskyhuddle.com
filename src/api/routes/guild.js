@@ -133,16 +133,38 @@ router.post("/user/", function (req, res, next) {
     let UserID = req.headers.userid;
     let Role = req.headers.role;
 
-    const sqlQuery = `INSERT INTO GuildUser (GuildID, UserID, Role)
-        VALUES (${GuildID}, ${UserID}, '${Role}');`;
+    const sqlQuery = 
+        `INSERT INTO GuildUser (GuildID, UserID, Role)
+        SELECT 
+            ${GuildID},
+            ${UserID},
+            '${Role}'
+        FROM 
+            Guild
+        WHERE 
+            GuildID = ${GuildID};`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log("Error");
             console.log(err);
-            res.status(400);
+            return res.status(400).json({Error : err});
         }
-        return res.status(200).json(result);
+        if (result.affectedRows == 0) {
+            return res.status(400).json({Error : "Bad Input"});
+        } else {
+            const sqlQuery = 
+            `SELECT GuildName FROM Guild WHERE GuildID = ${GuildID};`;
+
+            databaseConnect.query(sqlQuery, (err, result) => {
+                if (err) {
+                    console.log("Error");
+                    console.log(err);
+                    return res.status(400).json({Error : err});
+                }
+                return res.status(200).json(result[0]);
+            });
+        }
     });
 });
 
