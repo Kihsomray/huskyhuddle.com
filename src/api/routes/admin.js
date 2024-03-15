@@ -323,6 +323,31 @@ router.delete("/channel/", function (req, res, next) {
     });
 });
 
+
+/**
+ * @swagger
+ * /admin/guild:
+ *   post:
+ *     summary: Create a new guild
+ *     description: Create a new guild with a default channel named general and a user admin.
+ *     tags: [Admin/Guild]
+ *     parameters:
+ *       -  in: header
+ *          name: userid
+ *          required: true
+ *          schema:
+ *            type: integer
+ *       -  in: header
+ *          name: guildname
+ *          required: true
+ *          schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: Guild name updated
+ *       400:
+ *         description: Error updating guild name
+ */
 // change a guilds name with the name provided.
 // The userid, guildid and guildname is to be passed in the header.
 router.post("/guild/", function (req, res, next) {
