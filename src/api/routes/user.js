@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 var axios = require("axios");
-
 const databaseConnect = require("../db/db-connect");
 
 // /user/ and /user/guild/
@@ -24,14 +23,14 @@ const databaseConnect = require("../db/db-connect");
 
 /**
  * @swagger
- * /user:
- *   get:
- *     summary: Returns all users
- *     description: Returns a json with all users
- *      tags: [User]
- *     responses:
- *       200:
- *         description: All users
+ * /user/:
+ *      get:
+ *          summary: Returns all users
+ *          description: Returns a json with all users
+ *          tags: [User]
+ *          responses:
+ *              200:
+ *                  description: All users
  */
 // Get all users, returns a json with all users and their info
 router.get("/", function (req, res, next) {
