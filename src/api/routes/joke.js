@@ -18,9 +18,9 @@ const databaseConnect = require("../db/db-connect");
  */
 
 router.post("/message/", async function (req, res, next) {
-    let ChannelId = req.header.ChannelID;
-    let GuildID = req.header.GuildID;
-    let UserID = req.header.UserID;
+    let ChannelId = req.headers.ChannelID;
+    let GuildID = req.headers.GuildID;
+    let UserID = req.headers.UserID;
 
     if (!ChannelId || !GuildID || !UserID) {
         return res.status(400).json({

@@ -45,8 +45,8 @@ router.get("/", function (req, res, next) {
 router.get("/channel/", function (req, res, next) {
     console.log("Get all messages within a channel within a guild");
 
-    let channelID = req.header.ChannelID;
-    let guildID = req.header.GuildID;
+    let channelID = req.headers.ChannelID;
+    let guildID = req.headers.GuildID;
 
     if (!channelID || !guildID) {
         return res.status(400).json({
@@ -83,10 +83,10 @@ router.get("/channel/", function (req, res, next) {
  *         description: Error fetching messages
  */
 //Get the latest X messages into this channel
-//{"Limit" : "5"} as an example as of what to put in the header
+//{"Limit" : "5"} as an example as of what to put in the headers
 router.get("/channel/latest/", function (req, res, next) {
-    let channelID = req.header.ChannelID;
-    let limit = req.header.limit;
+    let channelID = req.headers.ChannelID;
+    let limit = req.headers.limit;
 
     if (!channelID || limit <= 0 || isNaN(limit)) {
         return res.status(400).json({
@@ -121,9 +121,9 @@ router.get("/channel/latest/", function (req, res, next) {
  */
 // Add a message to the channel
 router.post("/channel/", function (req, res) {
-    let channelId = req.header.ChannelID;
-    let UserID = req.header.UserID;
-    let GuildID = req.header.GuildID;
+    let channelId = req.headers.ChannelID;
+    let UserID = req.headers.UserID;
+    let GuildID = req.headers.GuildID;
     let messageContent = req.body.Content;
 
     console.log("Sending a message to channel");
@@ -161,8 +161,8 @@ router.post("/channel/", function (req, res) {
  */
 //Edit message in a specific channel
 router.put("/channel/", function (req, res, next) {
-    let channelId = req.header.ChannelID;
-    let messageId = req.header.MessageID;
+    let channelId = req.headers.ChannelID;
+    let messageId = req.headers.MessageID;
     let messageContent = req.body.Content;
 
     if (!channelId || !messageId || !messageContent) {
@@ -203,8 +203,8 @@ router.put("/channel/", function (req, res, next) {
  */
 // Delete a message from this Channel
 router.delete("/channel", function (req, res, next) {
-    let channelId = req.header.ChannelID;
-    let messageId = req.header.MessageID;
+    let channelId = req.headers.ChannelID;
+    let messageId = req.headers.MessageID;
 
     if (!channelId || !messageId) {
         return res
