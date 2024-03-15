@@ -4,8 +4,7 @@ var axios = require("axios");
 
 const databaseConnect = require("../db/db-connect");
 
-
-/*
+/**
  * @swagger
  * /random:
  *   get:
@@ -32,7 +31,7 @@ router.get("/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /random/user:
  *   get:
@@ -76,7 +75,7 @@ router.get("/user/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /random/user:
  *   post:
@@ -118,7 +117,7 @@ router.post("/user/", async function (req, res, next) {
     }
 });
 
-/*
+/**
  * @swagger
  * /random/user/guild:
  *   post:

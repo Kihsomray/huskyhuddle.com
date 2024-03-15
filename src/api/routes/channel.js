@@ -4,7 +4,7 @@ var router = express.Router();
 const databaseConnect = require("../db/db-connect");
 
 // /channel/ and /channel/message/
-/*
+/**
  * @swagger
  * /channel:
  *   get:
@@ -29,7 +29,7 @@ router.get("/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /channel/message:
  *   get:
@@ -51,8 +51,7 @@ router.get("/message/", function (req, res, next) {
 
     console.log(`Getting the last ${Limit} messages sent into the channel`);
 
-    const sqlQuery = 
-        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
+    const sqlQuery = `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
         FROM (
             SELECT MessageID, MessageContent, UserID, MessageDate
             FROM Message
@@ -79,7 +78,7 @@ router.get("/message/", function (req, res, next) {
 
 // POST request to handler to add a message to a channel
 // Send userid, channelid, guildid, and messagecontent
-/*
+/**
  * @swagger
  * /channel/message:
  *   post:
@@ -99,7 +98,7 @@ router.post("/message/", function (req, res) {
     let GuildID = req.headers.guildid;
     let messageContent = req.headers.content;
     let DateTime = new Date();
-    let DateString = DateTime.toLocaleString('en-GB', { timeZone: 'PST' });
+    let DateString = DateTime.toLocaleString("en-GB", { timeZone: "PST" });
     //console.log("Date time is ");
     //console.log(DateString);
 
@@ -108,11 +107,12 @@ router.post("/message/", function (req, res) {
     if (!channelId || !messageContent) {
         return res
             .status(400)
-            .json({ error: "ChannelID, MessageContent are required in header." });
+            .json({
+                error: "ChannelID, MessageContent are required in header.",
+            });
     }
 
-    const sqlQuery = 
-        `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID, MessageDate)
+    const sqlQuery = `INSERT INTO Message (ChannelID, MessageContent, GuildID, UserID, MessageDate)
         VALUES (${channelId}, "${messageContent}", ${GuildID}, ${UserID}, STR_TO_DATE("${DateString}", "%d/%m/%Y, %H:%i:%s"));`;
 
     databaseConnect.query(sqlQuery, (err, result) => {
@@ -126,7 +126,7 @@ router.post("/message/", function (req, res) {
     });
 });
 
-/*
+/**
  * @swagger
  * /channel/message:
  *   put:
@@ -169,7 +169,7 @@ router.put("/message/", function (req, res, next) {
     });
 });
 
-/*
+/**
  * @swagger
  * /channel/message:
  *   delete:
@@ -214,8 +214,7 @@ router.get("/isLatest/", function (req, res, next) {
 
     // console.log(`Getting the last ${Limit} messages sent into the channel`);
 
-    const sqlQuery = 
-        `SELECT CASE
+    const sqlQuery = `SELECT CASE
         WHEN ${latestMID} = (
             SELECT MAX(MessageID)
             FROM Message
@@ -237,8 +236,6 @@ router.get("/isLatest/", function (req, res, next) {
     });
 });
 
-
-
 // Get the latest x messages sent into the channel
 router.get("/latestmessage/", function (req, res, next) {
     console.log("latest message");
@@ -246,8 +243,7 @@ router.get("/latestmessage/", function (req, res, next) {
     let GuildID = req.headers.guildid;
     let ChannelID = req.headers.channelid;
 
-    const sqlQuery = 
-        `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
+    const sqlQuery = `SELECT M.MessageID, M.MessageContent, M.UserID, U.UserName, DATE_FORMAT(M.MessageDate, '%Y-%m-%d, %H-%i-%s') AS MessageDate
         FROM Message M
         JOIN User U ON M.UserID = U.UserID
         WHERE M.GuildID = ${GuildID} AND M.ChannelID = ${ChannelID} AND M.MessageID > ${latestMID}
@@ -256,8 +252,8 @@ router.get("/latestmessage/", function (req, res, next) {
     databaseConnect.query(sqlQuery, (err, result) => {
         if (err) {
             console.log(
-                `Error getting the last ${latestMID} messages sent into the channel`
-                + err
+                `Error getting the last ${latestMID} messages sent into the channel` +
+                    err
             );
             return res.status(400).json({
                 error: err,
@@ -266,7 +262,5 @@ router.get("/latestmessage/", function (req, res, next) {
         return res.status(200).json(result);
     });
 });
-
-
 
 module.exports = router;
