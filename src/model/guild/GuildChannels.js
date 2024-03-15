@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import CreateModal from '../../modal/server/CreateModal';
 import { useCookies } from 'react-cookie';
 import WarningModal from '../../modal/warning/WarningModal';
+import { set } from 'mongoose';
 
 const GuildChannels = ({ onSelectedChannel, guild }) => {
 
@@ -44,21 +45,26 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
         onSelectedChannel(channel);
     };
 
+    const refresh = async (select) => {
+        await axios.get(
+            "http://localhost:4000/guild/channel/",
+            { headers: { "guildid": guild.GuildID } }
+        ).then(e => {
+            console.log(e.data.length > 0, !selectedChannel)
+            if (e.data.length > 0 && select) {
+                onChannelSelected(e.data[0]);
+            }
+            setChannels(e.data);
+        }).catch((_) => {
+            console.log("unable to fetch guild channels");
+        });
+    };
+
     useEffect(() => {
-        (async () => {
-            await axios.get(
-                "http://localhost:4000/guild/channel/",
-                { headers: { "guildid": guild.GuildID } }
-            ).then(e => {
-                if (e.data.length > 0 && !selectedChannel) {
-                    onChannelSelected(e.data[0]);
-                }
-                setChannels(e.data);
-            }).catch((_) => {
-                console.log("unable to fetch guild channels");
-            });
-        })();
-    }, [guild.GuildName, channels.length]);
+        setSelectedChannel(null);
+        refresh(true);
+    }, [guild.GuildID]);
+
 
     return (
         <div style={{ height: '100%', backgroundColor: '#565656' }}>
@@ -76,6 +82,7 @@ const GuildChannels = ({ onSelectedChannel, guild }) => {
                             const channel = {ChannelID: e1.data.ChannelID, ChannelName: e};
                             setChannels([...channels, ...[channel]]);
                             onChannelSelected(channel);
+                            refresh(false);
                         }).catch((_) => {
                             setWarning(true);
                             console.log("unable to create new channel");
